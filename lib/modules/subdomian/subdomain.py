@@ -275,20 +275,20 @@ class Sub:
         logger.info(f"{Back.MAGENTA}执行任务：域名收集{Back.RESET}")
         task: list = [
             # 综合搜索引擎
-            #self.google_, self.so_, self.bing_, self.baidu_, self.yandex_, self.sougou_,
+            self.google_, self.so_, self.bing_, self.baidu_, self.yandex_, self.sougou_,
             # 网络空间搜索引擎
-            #self.censys_, self.fullhunt_, self.binaryedge_api_, self.fofa_, self.hunter_, self.zoomeye_,
+            self.censys_, self.fullhunt_, self.binaryedge_api_, self.fofa_, self.hunter_, self.zoomeye_,
             # 威胁情报
             self.virustotal_,
             # DNS数据集
-            #self.sitedossier_, self.robtex_, self.dnsdumpster_, self.securitytrails_,
+            self.sitedossier_, self.robtex_, self.dnsdumpster_, self.securitytrails_,
         ]
         datasets: list = self.get_datasets()
         logger.info(f"({len(task + datasets)}) modules were successfully loaded!")
 
         # 先执行自定义的DNS数据集
-        #queue = get_queue(datasets)
-        #thread_task(task=self.run_datasets, args=[queue], thread_count=len(datasets))
+        queue = get_queue(datasets)
+        thread_task(task=self.run_datasets, args=[queue], thread_count=len(datasets))
 
         # 执行内置的模块
         queue = get_queue(task)
