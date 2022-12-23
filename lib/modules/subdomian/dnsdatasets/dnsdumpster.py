@@ -16,21 +16,25 @@ from lib.config.logger import logger
 
 class Dnsdumpster:
     def __init__(self, domain: str) -> None:
-        self.domain = domain
+        self.domain: str = domain
         self.result_domain: list = []
         self.url: str = f"https://dnsdumpster.com/"
+        self.headers: dict = {
+            'Referer': 'https://dnsdumpster.com',
+            'Content-Type': 'application/x-www-form-urlencoded',
+        }
 
     def parse_resqonse(self, response: str) -> bool:
         """
         解析resqonse包
         :return:
         """
-        selector = Selector(response)  # 创建Selector类实例
+        selector = Selector(response)
         res: list = selector.css('td[class="col-md-4"] ::text').getall()
         if res:
             for i in res:
                 if i.__contains__(self.domain):
-                    domain = domain_format(i)
+                    domain: str = domain_format(i)
                     self.result_domain.append(domain)
             return True
         else:
@@ -41,27 +45,25 @@ class Dnsdumpster:
         请求接口，返回响应内容
         :return:
         """
-        try:
-            with Client(verify=False, timeout=10) as c:
-                c.get(self.url)  # 自动获取返回的set-cookies
-                headers = {
-                    'Referer': 'https://dnsdumpster.com',
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                }
+        with Client(verify=False, timeout=10) as c:
+            try:
+                # 先获取返回的set-cookies
+                c.get(self.url)
                 data = {
+                    # 从返回的set-cookies中，拿到csrftoken
                     'csrfmiddlewaretoken': c.cookies.get('csrftoken'),
                     'targetip': self.domain,
                     'user': 'free'
                 }
-                response2 = c.post(self.url, headers=headers, data=data)
-            if response2.status_code == 200:
-                return response2.text
-            else:
-                logger.debug(f"dnsdumpster connect error！ Code： {response2.status_code}")
-                # logger.debug(response2.text)
+                response = c.post(self.url, headers=self.headers, data=data)
+            except Exception as e:
+                logger.error(f"{self.url} {e}")
                 return False
-        except Exception as e:
-            logger.error(f"{self.url} {e}")
+        if response.status_code == 200:
+            return response.text
+        else:
+            logger.debug(f"dnsdumpster connect error！ Code： {response.status_code}")
+            # logger.debug(response.text)
             return False
 
     def get_domain(self) -> list:

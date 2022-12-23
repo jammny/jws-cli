@@ -15,8 +15,8 @@ logger.setLevel(logging.DEBUG)
 
 # 定义处理器
 logger_HANDLER = logging.StreamHandler(stdout)
-logger_HANDLER.setLevel(logging.INFO)
-#logger_HANDLER.setLevel(logging.DEBUG)
+# logger_HANDLER.setLevel(logging.INFO)
+logger_HANDLER.setLevel(logging.DEBUG)
 
 logger_file = logging.FileHandler(filename="jws.log", mode='w')
 logger_file.setLevel(logging.DEBUG)
