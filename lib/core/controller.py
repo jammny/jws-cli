@@ -14,7 +14,7 @@ from lib.core.fingerprint import Finger
 
 
 class Option:
-    def __init__(self, args: dict) -> None:
+    def __init__(self, args: dict):
         self.target = None
         self.args: dict = args
         # 用于添加URLs
@@ -43,7 +43,7 @@ class Option:
 
         logger.info(f"报告输出路径：{REPORTS}/{self.target}.html")
 
-    def args_sub(self, target=None) -> list:
+    def args_sub(self, target=None):
         """
         子域名收集
         :return:
@@ -70,7 +70,7 @@ class Option:
             sub_results: list = Sub(target).run(brute_status)
             return sub_results
 
-    def args_finger(self, target=None) -> list:
+    def args_finger(self, target=None):
         """
         指纹识别
         :return:

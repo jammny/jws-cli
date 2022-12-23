@@ -5,6 +5,8 @@
 作者：jammny
 文件描述：收集securitytrails的子域名信息
 """
+from typing import Any
+
 from httpx import Client
 
 from lib.config.logger import logger
@@ -37,7 +39,7 @@ class Securitytrails:
             # logger.debug(response)
             return False
 
-    def send_request(self) -> dict | bool:
+    def send_request(self) -> Any:
         """
         请求接口，返回响应内容
         :return:

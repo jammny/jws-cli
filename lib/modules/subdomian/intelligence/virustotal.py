@@ -6,6 +6,7 @@
 文件描述：收集virustotal的子域名信息
 """
 from time import sleep
+from typing import Any
 
 from httpx import Client
 from lib.config.logger import logger
@@ -36,7 +37,7 @@ class Virustotal:
         else:
             return False
 
-    def send_request(self) -> dict | bool:
+    def send_request(self) -> Any:
         """
         请求接口，返回响应内容
         :return:

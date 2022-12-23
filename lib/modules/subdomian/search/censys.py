@@ -6,6 +6,7 @@
 文件描述：模拟censys登录，搜索域名数据
 """
 from time import sleep
+from typing import Any
 
 from httpx import Client
 from parsel import Selector
@@ -26,7 +27,7 @@ class Censys:
         self.session_id: str = ''
         self.csrftoken: str = ''
 
-    def get_csrftoken(self) -> list | bool:
+    def get_csrftoken(self) -> Any:
         """
         登录接口
         :return:
@@ -106,7 +107,7 @@ class Censys:
             logger.debug("Censys crawl to the end！")
             return False
 
-    def send_request(self, cookies) -> str | bool:
+    def send_request(self, cookies) -> Any:
         """
         请求接口，返回响应内容
         :return:

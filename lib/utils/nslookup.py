@@ -8,7 +8,7 @@
 from dns import resolver
 
 
-def a_record(domain) -> list:
+def a_record(domain):
     """
     dns解析，获取A记录
     :param domain:

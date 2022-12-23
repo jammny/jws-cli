@@ -13,7 +13,7 @@ from IPy import IP
 def domain_format(data: str):
     """
     提取域名
-    :param url:
+    :param data:
     :return:
     """
     # 处理 https://www.baidu.com

@@ -6,6 +6,7 @@
 文件描述：谷歌搜索引擎的爬虫程序，基于谷歌镜像网站。
 """
 from time import sleep
+from typing import Any
 
 from httpx import Client
 from parsel import Selector
@@ -39,7 +40,7 @@ class Google:
                 self.result_domain.append(domain)
             return True
 
-    def google_req(self) -> str | bool:
+    def google_req(self) -> Any:
         """
         请求接口，返回响应内容
         :return:

@@ -7,6 +7,7 @@
 """
 from time import sleep
 from ast import literal_eval
+from typing import Any
 
 from httpx import Client
 
@@ -57,7 +58,7 @@ class Robtex:
         else:
             return False
 
-    def send_request(self, url) -> str | bool:
+    def send_request(self, url) -> Any:
         """
         请求接口，返回响应内容
         :return:

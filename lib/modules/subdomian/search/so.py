@@ -6,6 +6,7 @@
 文件描述：360搜索引擎的爬虫程序
 """
 from time import sleep
+from typing import Any
 
 from httpx import Client
 from parsel import Selector
@@ -42,7 +43,7 @@ class So:
                 self.result_domain.append(domain)
             return True
 
-    def send_request(self) -> str | bool:
+    def send_request(self) -> Any:
         """
         请求接口，返回响应内容
         :return:

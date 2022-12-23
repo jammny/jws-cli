@@ -5,6 +5,8 @@
 作者：jammny
 文件描述：binaryedge api接口调用
 """
+from typing import Any
+
 from httpx import Client
 
 from lib.config.logger import logger
@@ -36,7 +38,7 @@ class Binaryedge:
             # logger.debug(response)
             return False
 
-    def send_request(self) -> bool | dict:
+    def send_request(self) -> Any:
         """
         发送搜索请求
         """

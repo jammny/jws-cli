@@ -6,6 +6,7 @@
 文件描述：搜狗搜索引擎的爬虫程序
 """
 from time import sleep
+from typing import Any
 
 from httpx import Client
 from parsel import Selector
@@ -43,7 +44,7 @@ class Yandex:
         else:
             return False
 
-    def yandex_req(self) -> str | bool:
+    def yandex_req(self) -> Any:
         """
         请求接口，返回响应内容
         :return:

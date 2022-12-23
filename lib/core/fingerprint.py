@@ -13,7 +13,7 @@ from typing import Any
 
 from httpx import Client
 from tinydb import TinyDB
-from colorama import Back, Fore
+from colorama import Back
 from mmh3 import hash
 
 from lib.config.settings import FINGER, USER_AGENTS, console
@@ -98,7 +98,7 @@ class Finger:
             print('error', item['method'])
             return ''
 
-    def webAlive(self, target: str) -> Any | None:
+    def webAlive(self, target: str) -> Any:
         """
         网站存活探测
         :param target: 有可能是完整url，也有可能是域名。

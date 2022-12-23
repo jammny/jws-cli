@@ -35,6 +35,9 @@ def main():
 
 if __name__ == "__main__":
     try:
+        from lib.config.settings import BANNER
+        from lib.config.logger import logger
+        from lib.core.check import CheckAll
         from lib.core.controller import Option
         from lib.config.settings import BANNER
         from lib.config.logger import logger

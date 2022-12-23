@@ -102,7 +102,7 @@ class Custom:
         else:
             return False
 
-    def parse_response(self, response: str | dict) -> bool:
+    def parse_response(self, response) -> bool:
         """
         解析响应包数据
         :return:
@@ -116,7 +116,7 @@ class Custom:
         else:
             return False
 
-    def send_request(self) -> str | dict | bool:
+    def send_request(self):
         """
         发送接口请求
         :return: response.text， response.json(), bool
