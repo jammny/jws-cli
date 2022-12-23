@@ -1,0 +1,44 @@
+#!/usr/bin/env python 
+# -*- coding : utf-8-*-
+# coding:unicode_escape
+"""
+作者：jammny
+文件描述： 生成报告核心代码
+"""
+from jinja2 import Environment, FileSystemLoader
+from tinydb import TinyDB
+from lib.config.settings import REPORTS
+
+
+class Report:
+    def __init__(self, target):
+        self.target = target
+        self.db = TinyDB(f"{REPORTS}/{target}.json")
+
+    def write_report(self, data):
+        env = Environment(loader=FileSystemLoader('db'))
+        template = env.get_template('template.html')
+        with open(f"{REPORTS}/{self.target}.html", 'w+') as f:
+            html_content = template.render(target=self.target, data=data)
+            f.write(html_content)
+
+    def db_insert(self, name, data):
+        groups = self.db.table(name)
+        for i in data:
+            groups.insert(i)
+        return groups.all()
+
+    def db_select(self):
+        """
+        读取数据库中的所有数据
+        :return:
+        """
+        groups = self.db.tables()
+        return {i: self.db.table(i).all() for i in groups}
+
+    def run(self, name: str, data: list):
+        # 将数据写入数据库
+        self.db_insert(name, data)
+        data = self.db_select()
+        # 将需要渲染的数据写入模板
+        self.write_report(data)

@@ -1,0 +1,11 @@
+rich~=12.6.0
+colorama~=0.4.4
+pyyaml~=6.0
+httpx~=0.23.0
+parsel==1.7.0
+dnspython~=2.2.1
+IPy~=1.1
+tinydb~=4.7.0
+mmh3~=3.0
+jinja2~=3.1.2
+

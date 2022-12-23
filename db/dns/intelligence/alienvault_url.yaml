@@ -1,0 +1,18 @@
+id: alienvault_url
+
+type: json
+
+rule:
+  while: False
+  request:
+    header:
+      User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+    method: get
+    timeout: 10
+    url: https://otx.alienvault.com/api/v1/indicators/domain/{domain}/url_list?limit=500&page=1
+
+  response:
+    code: 200
+    key:
+      - url_list
+      - hostname

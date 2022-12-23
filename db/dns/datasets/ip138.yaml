@@ -1,0 +1,19 @@
+id: ip138
+# https://site.ip138.com/
+
+type: html
+
+rule:
+  while: False
+  request:
+    header:
+      User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+    method: get
+    timeout: 10
+    url: https://site.ip138.com/{domain}/domain.htm
+
+  response:
+    code: 200
+    selector:
+      method: css
+      data: div[id="J_subdomain"] p a::text

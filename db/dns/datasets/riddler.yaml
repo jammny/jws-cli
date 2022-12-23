@@ -1,0 +1,28 @@
+id: riddler
+# https://riddler.io/search
+
+type: html
+
+rule:
+  while:
+
+  start_page:
+  add_num:
+
+  request:
+    url: "https://riddler.io/search?q=pld:{domain}"
+    method: get
+    header:
+      User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36
+      sec-ch-ua: '"Google Chrome";v="107", "Chromium";v="107", "Not=A?Brand";v="24"'
+      sec-ch-ua-mobile: ?0
+      sec-ch-ua-platform: '"Linux"'
+    # 响应很慢很慢
+    timeout: 10
+
+
+  response:
+    code: 200
+    selector:
+      method: css
+      data: table[class="table search-resuts col-lg-12"] a::text

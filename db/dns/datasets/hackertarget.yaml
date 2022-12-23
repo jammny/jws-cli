@@ -1,0 +1,24 @@
+id: hackertarget
+# https://api.hackertarget.com/hostsearch/
+# 国内网络应该访问不上
+
+type: txt
+
+rule:
+  # 循环配置
+  while: False
+  start_page:
+  add_num:
+
+  # 请求配置
+  request:
+    url: "https://api.hackertarget.com/hostsearch/?q={domain}"
+    method: get
+    header:
+      User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36
+    # 响应很慢很慢
+    timeout: 10
+
+  # 解析响应
+  response:
+    code: 200

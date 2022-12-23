@@ -1,0 +1,20 @@
+id: certspotter
+# 通过certspotter，收集包含相同证书的域名信息
+
+type: json
+
+rule:
+  while: False
+
+  request:
+    header:
+      User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+    method: get
+    timeout: 10
+    url: https://api.certspotter.com/v1/issuances?include_subdomains=true&expand=dns_names&domain={domain}
+
+  response:
+    # [{"domain":["xxxx.domain.cn", ...]}, ...]
+    code: 200
+    key:
+      - dns_names

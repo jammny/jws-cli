@@ -1,0 +1,42 @@
+# zoomeye可以免费注册帐号密码
+# https://www.zoomeye.org/
+zoomeye_mail:
+zoomeye_pass:
+
+# hunter的api可免费获取，每天限量500条数据
+# https://hunter.qianxin.com/
+hunter_key:
+
+# fullhunt的api可免费获取
+# https://securitytrails.com
+securitytrails_key:
+
+# fullhunt的api可免费获取
+# https://fullhunt.io/search
+fullhunt_key:
+
+# Binaryedge免费注册获取API, 有效期只有1个月，到期之后可以再次生成，每月可以查询250次。
+# https://app.binaryedge.io/account/api
+binaryedge_key:
+
+# censys可以免费注册一个账号，填上你的账号密码即可。
+# https://search.censys.io/
+censys_username:
+censys_password:
+
+# fofa的api需要自费获取，因为我有key，所以就加一个吧
+# https://fofa.info/
+fofa_email:
+fofa_key:
+fofa_size:
+
+# 自定义user-agent
+user-agent:
+  - Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+  - Mozilla/5.0 (Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0
+  - Mozilla/5.0 (Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0
+  - Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:57.0) Gecko/20100101 Firefox/57.0
+  - Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:58.0) Gecko/20100101 Firefox/58.0
+  - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36
+  - Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0
+

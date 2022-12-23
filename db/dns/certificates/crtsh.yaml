@@ -1,0 +1,19 @@
+id: crt.sh
+# 通过crt.sh查询dns解析记录
+
+type: json
+
+rule:
+  while: False
+
+  request:
+    header:
+      User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+    method: get
+    timeout: 10
+    url: https://crt.sh/?q={domain}&output=json
+
+  response:
+    code: 200
+    key:
+      - common_name
