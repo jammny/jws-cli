@@ -16,22 +16,34 @@ class Virustotal:
     def __init__(self, domain: str) -> None:
         self.domain: str = domain
         self.result_domain: list = []
-        self.url = f"https://www.virustotal.com/ui/domains/{self.domain}/subdomains?relationships=resolutions&cursor" \
-                   f"=&limit=10 "
-        self.page = 1
+        self.url: str = f"https://www.virustotal.com/ui/domains/{self.domain}/subdomains?relationships=resolutions" \
+                        f"&cursor=&limit=10"
+        self.page: int = 1
+        self.headers: dict = {
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0",
+            'Content-Type': 'application/json',
+            'X-Tool': 'vt-ui-main',
+            'X-App-Version': 'v1x132x0',
+            'Accept-Ianguage': 'en-US,en;q=0.9,es;q=0.8',
+            'X-Vt-Anti-Abuse-Header': 'MTQ5NTc4NTM1OTItWkc5dWRDQmlaU0JsZG1scy0xNjY4MTQ5NzAxLjcyNw==',
+            'Te': 'trailers'
+        }
 
     def parse_resqonse(self, response: dict) -> bool:
         """
         解析resqonse包
         :return:
         """
+        # links中包含了本次请求的链接和下一条请求的链接
         links: dict = response['links']
+        # 如果存在下一条链接
         if links.__contains__('next'):
             data: list = response['data']
             for i in data:
-                domain = i['id']
+                domain: str = i['id']
                 self.result_domain.append(domain)
             logger.debug(f"virustotal current page：{self.page}")
+            # 获取下一页的链接，每一页只能读取十条数据
             self.url = links['next']
             return True
         else:
@@ -43,16 +55,7 @@ class Virustotal:
         :return:
         """
         try:
-            headers: dict = {
-                "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0",
-                'Content-Type': 'application/json',
-                'X-Tool': 'vt-ui-main',
-                'X-App-Version': 'v1x132x0',
-                'Accept-Ianguage': 'en-US,en;q=0.9,es;q=0.8',
-                'X-Vt-Anti-Abuse-Header': 'MTQ5NTc4NTM1OTItWkc5dWRDQmlaU0JsZG1scy0xNjY4MTQ5NzAxLjcyNw==',
-                'Te': 'trailers'
-            }
-            with Client(verify=False, headers=headers, timeout=10) as c:
+            with Client(verify=False, headers=self.headers, timeout=10) as c:
                 response = c.get(self.url)
                 if response.status_code == 200:
                     return response.json()
@@ -72,7 +75,7 @@ class Virustotal:
         """
         logger.info("Running virustotal...")
         while True:
-            response: dict | bool = self.send_request()
+            response = self.send_request()
             if not response:
                 break
             elif self.parse_resqonse(response):
@@ -81,10 +84,11 @@ class Virustotal:
                 logger.debug("virustotal crawl to the end！")
                 break
             sleep(1)
-        # 去重复
-        self.result_domain = list(set(self.result_domain))
-        logger.info(f"Virustotal：{len(self.result_domain)} results found!")
-        logger.debug(f"Virustotal：{self.result_domain}")
+        if self.result_domain:
+            # 去重复
+            self.result_domain = list(set(self.result_domain))
+            logger.info(f"Virustotal：{len(self.result_domain)} results found!")
+            logger.debug(f"Virustotal：{self.result_domain}")
         return self.result_domain
 
     def run(self):

@@ -30,10 +30,11 @@ class Brute:
         try:
             # 如果能够成功解析出IP，说明存在泛解析
             ip: list = a_record(domain)
-            logger.warn(f"域名存在泛解析！默认忽略解析到{ip}的域名！")
+            # logger.warn(f"域名存在泛解析！默认忽略解析到{ip}的域名！")
             self.generic = ip
         except:
-            logger.debug(f"域名不存在泛解析！")
+            # logger.debug(f"域名不存在泛解析！")
+            pass
 
     def dns_resolver(self, queue, task, progress) -> None:
         """

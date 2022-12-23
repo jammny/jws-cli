@@ -39,31 +39,6 @@ class Sub:
         # 存域名泛解析的结果
         self.generic: list = []
 
-    def domain_validation(self, queue) -> None:
-        """
-        主要验证被动收集的域名
-        :return: 存货的域名
-        """
-        while not queue.empty():  # 如果queue不为空，就取出target
-            domain = queue.get()
-            try:
-                ip = a_record(domain)
-                # 忽视和泛解析相同的结果
-                if ip and self.generic != ip:
-                    self.valid_result.append({'subdomain': domain, 'method': 'passive', 'ip': ip})
-            except Exception as e:
-                pass
-
-    def remove_duplicate(self) -> None:
-        """
-        去掉重复的域名数据
-        :return:
-        """
-        data: list = [i['subdomain'] for i in self.valid_result]
-        for i in self.brute_result:
-            if not data.__contains__(i['subdomain']) and i['ip'] != self.generic:
-                self.valid_result.append(i)
-
     def task_run(self, queue) -> None:
         """
         多线程任务执行入口
@@ -73,27 +48,6 @@ class Sub:
         while not queue.empty():
             task = queue.get()
             task()
-
-    def brute_(self) -> None:
-        """
-        爆破模块
-        :return: {'subdomain': 'xxx', 'method': 'brute', 'ip': ['xxxx']}
-        """
-        res: list = brute.Brute(self.target).run()
-        self.brute_result.extend(res)
-
-    def generic_parsing(self) -> None:
-        """
-        检测域名泛解析
-        :return:
-        """
-        domain = f"jammny.{self.target}"
-        try:
-            ip = a_record(domain)
-            logger.warn(f"域名泛解析到IP：{ip}, 程序将自动忽略解析到该IP的域名")
-            self.generic = ip
-        except Exception as e:
-            pass
 
     def fofa_(self) -> None:
         """
@@ -266,6 +220,51 @@ class Sub:
             res: list = custom.Custom(self.target, dataset).run()
             self.passive_result.extend(res)
 
+    def brute_(self) -> None:
+        """
+        爆破模块
+        :return: {'subdomain': 'xxx', 'method': 'brute', 'ip': ['xxxx']}
+        """
+        self.brute_result = brute.Brute(self.target).run()
+
+    def generic_parsing(self) -> None:
+        """
+        检测域名泛解析
+        :return:
+        """
+        domain = f"generictest.{self.target}"
+        try:
+            ip = a_record(domain)
+            logger.warn(f"域名泛解析到IP：{ip}, 程序将自动忽略解析到该IP的域名")
+            self.generic = ip
+        except:
+            logger.debug(f"域名不存在泛解析！")
+
+    def domain_validation(self, queue) -> None:
+        """
+        主要验证被动收集的域名
+        :return: 存货的域名
+        """
+        while not queue.empty():
+            domain = queue.get()
+            try:
+                ip = a_record(domain)
+                # 忽视和泛解析相同的结果
+                if ip and self.generic != ip:
+                    self.valid_result.append({'subdomain': domain, 'method': 'passive', 'ip': ip})
+            except:
+                pass
+
+    def remove_duplicate(self) -> None:
+        """
+        去掉重复的域名数据
+        :return:
+        """
+        data: list = [i['subdomain'] for i in self.valid_result]
+        for i in self.brute_result:
+            if not data.__contains__(i['subdomain']) and i['ip'] != self.generic:
+                self.valid_result.append(i)
+
     def run(self, brute_status) -> list:
         """
         类统一执行入口
@@ -303,14 +302,12 @@ class Sub:
 
         # 域名存活验证
         logger.info("Running domain validation...")
-        # 去重列表中的字典数据
+        # 列表去重, 获取所以被动收集的内容
         passive_result: list = list(set(self.passive_result))
-        queue = Queue()
-        for i in passive_result:
-            queue.put(i)
-        thread_task(task=self.domain_validation, args=[queue], thread_count=300)
+        queue = get_queue(passive_result)
+        thread_task(task=self.domain_validation, args=[queue])
 
-        # 域名去重复
+        # 将被动收集和爆破收集的域名合并，去重复
         self.remove_duplicate()
 
         end = time()
