@@ -5,6 +5,8 @@
 作者：jammny
 文件描述：通过dnsdumpster查看dns解析记录，筛选其中域名
 """
+from typing import Any
+
 from httpx import Client
 from parsel import Selector
 
@@ -34,7 +36,7 @@ class Dnsdumpster:
         else:
             return False
 
-    def send_request(self) -> str | bool:
+    def send_request(self) -> Any:
         """
         请求接口，返回响应内容
         :return:

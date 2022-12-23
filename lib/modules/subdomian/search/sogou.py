@@ -6,6 +6,7 @@
 文件描述：搜狗搜索引擎的爬虫程序
 """
 from time import sleep
+from typing import Any
 
 from httpx import Client
 from parsel import Selector
@@ -45,7 +46,7 @@ class Sogou:
                     self.result_domain.append(domain)
             return True
 
-    def sogou_req(self) -> str | bool:
+    def sogou_req(self) -> Any:
         """
         请求接口，返回响应内容
         :return:
@@ -74,7 +75,7 @@ class Sogou:
         """
         logger.info("Running Sogou SE...")
         while True:
-            response: bool | str = self.sogou_req()
+            response = self.sogou_req()
             # 如果返回False，退出循环
             if not response:
                 # 网络异常

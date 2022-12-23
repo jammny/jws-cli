@@ -6,8 +6,10 @@
 文件描述：
 """
 from lib.config.logger import logger
-from lib.utils.qqwry import updateQQwry
 from lib.config.settings import QQWRY
+
+from lib.utils.qqwry import updateQQwry
+
 from lib.core.proxy import HttpProxy
 
 

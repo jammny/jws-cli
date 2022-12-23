@@ -10,6 +10,7 @@ Hunter语法：
 from time import sleep
 from random import choice
 from base64 import b64encode
+from typing import Any
 
 from httpx import Client
 
@@ -57,7 +58,7 @@ class Hunter:
             # logger.debug(response)
             return False
 
-    def send_request(self) -> bool | dict:
+    def send_request(self) -> Any:
         """
         发送搜索请求并做子域匹配
         """

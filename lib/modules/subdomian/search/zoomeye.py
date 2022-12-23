@@ -6,6 +6,7 @@
 文件描述：ZoomEye API接口调用
 """
 from random import choice
+from typing import Any
 
 from httpx import Client
 
@@ -24,7 +25,7 @@ class ZoomEye:
         self.url: str = f'https://api.zoomeye.org/web/search?query={query}'
         self.results: list = []
 
-    def login(self) -> bool | str:
+    def login(self) -> Any:
         """
         登陆获取用户token
         :return:
@@ -56,7 +57,7 @@ class ZoomEye:
         logger.info(f"ZoomEye Query：{self.query}, {len(self.results)} results found!")
         logger.debug(f"ZoomEye Query：{self.results}")
 
-    def send_request(self) -> dict | bool:
+    def send_request(self) -> Any:
         """
         ZoomEye 接口请求
         :return:

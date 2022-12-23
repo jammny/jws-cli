@@ -7,6 +7,8 @@
 Hunter语法：
 
 """
+from typing import Any
+
 from httpx import Client
 
 from lib.config.logger import logger
@@ -34,7 +36,7 @@ class Fullhunt:
             logger.debug(response)
             return False
 
-    def send_request(self) -> bool | dict:
+    def send_request(self) -> Any:
         """
         发送搜索请求
         """
