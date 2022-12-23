@@ -1,9 +1,9 @@
 ### 安装使用 
 1、git clone https://github.com/jammny/jws-cli  
 2、python jws-cli.py  
-3、域名收集：python jws-cli.py -t gxtcmu.edu.cn --sub  
-4、爆破域名模式：python jws-cli.py -t gxtcmu.edu.cn --sub --brute  
-5、域名收集+指纹识别：python jws-cli.py -t gxtcmu.edu.cn --sub --finger  
+3、域名收集：python jws-cli.py -t target.com --sub  
+4、爆破域名模式：python jws-cli.py -t target.com --sub --brute  
+5、域名收集+指纹识别：python jws-cli.py -t target.com --sub --finger  
 6、url指纹识别：python jws-cli.py -t https://target.com --finger  
 
 ### 配置API
