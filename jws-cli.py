@@ -5,8 +5,6 @@ from argparse import ArgumentParser
 from os import system
 
 
-
-
 def main():
     parser = ArgumentParser(description="tip：目标是做一款全自动化信息收集加漏洞扫描工具，解放双手，做回自己。 —— by jammny.")
     parser.add_argument("-t", nargs='?', const=True, type=str, dest="target", required=False, help="目标(必选参数)")
