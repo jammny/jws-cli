@@ -123,7 +123,7 @@ class Finger:
                     response = c.get(https_url)
                     return response
                 except Exception as e:
-                    logger.debug(f"{target} {e}")
+                    # logger.debug(f"{target} {e}")
                     return None
 
     def finger(self, queue) -> None:

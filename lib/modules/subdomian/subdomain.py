@@ -296,16 +296,16 @@ class Sub:
         # 判断是否存在域名泛解析
         self.generic_parsing()
 
-        # 爆破任务
-        if brute_status:
-            self.brute_()
-
         # 域名存活验证
         logger.info("Running domain validation...")
         # 列表去重, 获取所以被动收集的内容
         passive_result: list = list(set(self.passive_result))
         queue = get_queue(passive_result)
         thread_task(task=self.domain_validation, args=[queue])
+
+        # 爆破任务
+        if brute_status:
+            self.brute_()
 
         # 将被动收集和爆破收集的域名合并，去重复
         self.remove_duplicate()

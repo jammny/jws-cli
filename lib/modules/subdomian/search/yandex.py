@@ -31,9 +31,7 @@ class Yandex:
         """
         selector = Selector(response)  # 创建Selector类实例
         # css选择器获取包含域名的链接
-        # res1: list = selector.css('a[class="link serp-item__title-link"]').xpath('@href').getall()
         res1: list = selector.css('b ::text').getall()
-        # res2: list = selector.css('a[class="link pager__next"]').getall()
         # 如果css选择器获取数据为空，返回False，终止循环
         if res1:
             logger.debug(f"Yandex current page： {self.page + 1}")
