@@ -10,7 +10,7 @@ from lib.config.settings import REPORTS
 from lib.core.update import Update
 from lib.core.report import Report
 from lib.modules.subdomian.subdomain import Sub
-from lib.core.fingerprint import Finger
+from lib.modules.fingerprint import Finger
 
 
 class Option:
