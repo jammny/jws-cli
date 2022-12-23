@@ -4,10 +4,7 @@ from sys import stdout, argv
 from argparse import ArgumentParser
 from os import system
 
-from lib.config.settings import BANNER
-from lib.config.logger import logger
 
-from lib.core.check import CheckAll
 
 
 def main():
@@ -41,6 +38,9 @@ def main():
 if __name__ == "__main__":
     try:
         from lib.core.controller import Option
+        from lib.config.settings import BANNER
+        from lib.config.logger import logger
+        from lib.core.check import CheckAll
         from colorama import init
         init(autoreset=True)
         main()
