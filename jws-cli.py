@@ -45,5 +45,5 @@ if __name__ == "__main__":
     except ModuleNotFoundError as e:
         moduleName: str = str(e).split("'")[1]
         print(f"未找到相关模块: {moduleName}")
-        print(f"尝试进行安装：pip3 install -r requirements.txt ")
+        print(f"尝试进行安装...")
         system("pip install -r requirements.txt")
