@@ -73,7 +73,6 @@ class So:
             response = self.send_request()
             # 如果返回None，退出循环
             if not response:
-                logger.debug("网络异常！")
                 break
             elif response.__contains__("访问异常页面"):
                 logger.warn("遇到360人机验证！")
@@ -91,6 +90,7 @@ class So:
                 logger.debug("360so crawl to the end！")
                 break
             sleep(1)
+
         if self.result_domain:
             self.result_domain = list(set(self.result_domain))
             logger.info(f"360so SE：{len(self.result_domain)} results found!")

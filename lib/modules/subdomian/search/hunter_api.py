@@ -95,6 +95,7 @@ class Hunter:
                     break
 
         result: list = [i['domain'] for i in self.result]
+
         if result:
             logger.info(f"Hunter Query：{self.query} , {len(result)} results found!")
             logger.debug(f"Hunter: {self.result}")

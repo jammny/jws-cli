@@ -84,6 +84,7 @@ class Google:
                 logger.debug("Google crawl to the end！")
                 break
             sleep(1)
+
         if self.result_domain:
             self.result_domain = list(set(self.result_domain))
             logger.info(f"Google SE：{len(self.result_domain)} results found!")

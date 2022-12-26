@@ -16,6 +16,7 @@ from lib.modules.fingerprint import Finger
 class Option:
     def __init__(self, args: dict):
         self.target = None
+        # 获取命令行参数
         self.args: dict = args
         # 用于添加URLs
         self.urls: list = []
@@ -32,14 +33,18 @@ class Option:
         target: str = self.target
         # 域名收集
         sub: list = self.args_sub(target)
-        Report(target).run('valid_sub', sub)
+        report = Report(target)
+        report.run('valid_sub', sub)
 
         # 指纹识别，从扫描结果中将域名单独提取出来
         domain = [i['subdomain'] for i in sub]
+        # 将数据写入tmp目录，保存成txt格式
+        report.write_tmp('valid_sub', domain)
+
         if domain:
             sub_web: list = self.args_finger(domain)
             self.urls += [i['url'] for i in sub_web]
-            Report(self.target).run('valid_sub_web', sub_web)
+            report.run('valid_sub_web', sub_web)
 
         logger.info(f"报告输出路径：{REPORTS}/{self.target}.html")
 
@@ -48,23 +53,30 @@ class Option:
         子域名收集
         :return:
         """
+        # 设置爆破模式
         if self.args['brute']:
             brute_status = True
         else:
             brute_status = False
+
         if target is None:
-            # 单独模式
+            # 单独调用
             target = self.target
             sub_results: list = Sub(target).run(brute_status)
             # 生成报告
-            Report(self.target).run('valid_sub', sub_results)
-            if self.args['finger']:
-                # 指纹识别，从扫描结果中将域名单独提取出来
-                domain = [i['subdomain'] for i in sub_results]
-                if domain:
-                    sub_web: list = self.args_finger(domain)
-                    self.urls += [i['url'] for i in sub_web]
-                    Report(self.target).run('valid_sub_web', sub_web)
+            report = Report(target)
+            report.run('valid_sub', sub_results)
+            # 从扫描结果中将域名单独提取出来
+            domain = [i['subdomain'] for i in sub_results]
+            # 将数据写入tmp目录，保存成txt格式
+            report.write_tmp('valid_sub', domain)
+
+            # 判断是否需要进行指纹识别
+            if self.args['finger'] and domain:
+                sub_web: list = self.args_finger(domain)
+                # 生成报告
+                Report(self.target).run('valid_sub_web', sub_web)
+
             logger.info(f"报告输出路径：{REPORTS}/{self.target}_sub.html")
         else:
             sub_results: list = Sub(target).run(brute_status)
