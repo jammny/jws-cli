@@ -14,9 +14,8 @@ class CheckAll:
     def __init__(self):
         pass
 
-    def version_check(self):
+    def py_check(self):
         """py版本检测"""
-        # python版本
         py_version: str = platform.python_version()
         a: list = py_version.split('.')
         b: int = int(a[0])
@@ -50,8 +49,9 @@ class CheckAll:
                 logger.warn(f"缺少第三方模块，可能将无法使用完整功能。")
 
     def run(self):
-        logger.info("程序兼容性检测...")
-        self.version_check()
+        logger.info("Checking for the latest version...")
+
+        self.py_check()
         self.report_check()
-        # self.update_check()
+        self.update_check()
         # self.mod_check()

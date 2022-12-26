@@ -75,10 +75,12 @@ class Dnsdumpster:
         response: str | bool = self.send_request()
         if response:
             self.parse_resqonse(response)
-        # 去重复
-        self.result_domain = list(set(self.result_domain))
-        logger.info(f"Dnsdumpster：{len(self.result_domain)} results found!")
-        logger.debug(f"Dnsdumpster：{self.result_domain}")
+
+        if self.result_domain:
+            # 去重复
+            self.result_domain = list(set(self.result_domain))
+            logger.info(f"Dnsdumpster：{len(self.result_domain)} results found!")
+            logger.debug(f"Dnsdumpster：{self.result_domain}")
         return self.result_domain
 
     def run(self):

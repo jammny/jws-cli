@@ -147,11 +147,11 @@ class Censys:
                 else:
                     break
                 sleep(1)
-            if self.result_domain:
-                self.result_domain = list(set(self.result_domain))
-                logger.info(f"Censys：{len(self.result_domain)} results found!")
-                logger.debug(f"Censys：{self.result_domain}")
-            return self.result_domain
+
+        if self.result_domain:
+            logger.info(f"Censys：{len(self.result_domain)} results found!")
+            logger.debug(f"Censys：{self.result_domain}")
+        return self.result_domain
 
     def run(self):
         pass

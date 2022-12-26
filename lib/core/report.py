@@ -5,9 +5,15 @@
 作者：jammny
 文件描述： 生成报告核心代码
 """
+from os import mkdir
+from pathlib import Path
+
 from jinja2 import Environment, FileSystemLoader
 from tinydb import TinyDB
+
 from lib.config.settings import REPORTS
+
+from lib.config.settings import TMP
 
 
 class Report:
@@ -35,6 +41,19 @@ class Report:
         """
         groups = self.db.tables()
         return {i: self.db.table(i).all() for i in groups}
+
+    def write_tmp(self, name, data):
+        """
+        将结果写入tmp， 供其他程序调用
+        :return:
+        """
+        tmp_dir = Path(f"{TMP}/{self.target}")
+        # 如果目录不存在就创建
+        if not tmp_dir.exists():
+            mkdir(tmp_dir)
+        # 写入txt
+        with open(f'{TMP}/{self.target}/{name}.txt', encoding="utf-8", mode="w") as f:
+            f.write("\n".join(data))
 
     def run(self, name: str, data: list):
         # 将数据写入数据库

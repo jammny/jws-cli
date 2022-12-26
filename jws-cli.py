@@ -1,5 +1,9 @@
 #!/usr/bin/env python 
 # -- coding:utf-8
+"""
+作者：jammny
+文件描述： 命令行参数配置，程序入口。
+"""
 from sys import stdout, argv
 from argparse import ArgumentParser
 from os import system
@@ -28,7 +32,7 @@ def main():
     # 程序兼容性检测
     CheckAll().run()
     if len(argv) == 1:
-        logger.warning('TIPS：输入"-h" 获取帮助')
+        logger.warning('TIPS：Enter "-h" for help')
         exit(0)
     Option(args.__dict__).run()
 
@@ -47,6 +51,6 @@ if __name__ == "__main__":
         main()
     except ModuleNotFoundError as e:
         moduleName: str = str(e).split("'")[1]
-        print(f"未找到相关模块: {moduleName}")
-        print(f"尝试进行安装...")
+        print(f"{moduleName} module was not found!")
+        print(f"Trying to install...")
         system("pip install -r requirements.txt")

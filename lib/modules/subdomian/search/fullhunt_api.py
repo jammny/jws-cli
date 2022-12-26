@@ -71,6 +71,8 @@ class Fullhunt:
         response: bool | dict = self.send_request()
         if response:
             self.parse_response(response)
+
+        if self.result_domain:
             logger.info(f"Fullhunt：{len(self.result_domain)} results found!")
             logger.debug(self.result_domain)
         return self.result_domain

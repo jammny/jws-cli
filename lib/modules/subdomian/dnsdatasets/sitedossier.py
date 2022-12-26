@@ -82,8 +82,10 @@ class Sitedossier:
                 self.page += 100
             else:
                 break
-        logger.info(f"Sitedossier：{len(self.result_domain)} results found!")
-        logger.debug(f"Sitedossier：{self.result_domain}")
+
+        if self.result_domain:
+            logger.info(f"Sitedossier：{len(self.result_domain)} results found!")
+            logger.debug(f"Sitedossier：{self.result_domain}")
         return self.result_domain
 
     def run(self):

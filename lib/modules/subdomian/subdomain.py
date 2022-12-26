@@ -5,7 +5,6 @@
 文件描述：子域名收集模块
 """
 import os
-from queue import Queue
 from time import time
 
 import yaml
@@ -16,14 +15,14 @@ from lib.config.logger import logger
 
 from lib.utils.nslookup import a_record
 from lib.utils.thread import thread_task, get_queue
-from . import custom
+from lib.modules.subdomian import custom
 
-from .bruteforc import brute
+from lib.modules.subdomian.bruteforc import brute
 
-from .search import sogou, censys, zoomeye, bing, so, baidu, yandex, google, hunter_api, binaryedge_api, fofa_api, fullhunt_api
+from lib.modules.subdomian.search import sogou, censys, zoomeye, bing, so, baidu, yandex, google, hunter_api, binaryedge_api, fofa_api, fullhunt_api
 
-from .intelligence import virustotal
-from .dnsdatasets import robtex, dnsdumpster, sitedossier, securitytrails_api
+from lib.modules.subdomian.intelligence import virustotal
+from lib.modules.subdomian.dnsdatasets import robtex, dnsdumpster, sitedossier, securitytrails_api
 
 
 class Sub:
@@ -302,6 +301,7 @@ class Sub:
         passive_result: list = list(set(self.passive_result))
         queue = get_queue(passive_result)
         thread_task(task=self.domain_validation, args=[queue])
+        logger.info(f"Number of valid domain names: {len(self.valid_result)}")
 
         # 爆破任务
         if brute_status:

@@ -87,6 +87,7 @@ class Yandex:
                 logger.debug("Yandex crawl to the end！")
                 break
             sleep(1)
+
         if self.result_domain:
             # 去重
             self.result_domain = list(set(self.result_domain))
