@@ -49,9 +49,10 @@ class CheckAll:
                 logger.warn(f"缺少第三方模块，可能将无法使用完整功能。")
 
     def run(self):
-        logger.info("Checking for the latest version...")
-
+        logger.info("Checking for the program compatibility...")
         self.py_check()
         self.report_check()
-        self.update_check()
         # self.mod_check()
+        logger.info("Checking for the latest version...")
+        self.update_check()
+
