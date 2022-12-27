@@ -76,7 +76,6 @@ class Finger:
                     # 如果头部没有关键字
                     if k not in headers:
                         return ''
-                logger.debug(item)
                 return item['cms']
             # 如果是匹配身体
             if item['location'] == "body":

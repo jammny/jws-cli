@@ -18,7 +18,7 @@ rule:
       Content-Type: application/x-www-form-urlencoded
     data: "{'ecmsfrom': '127.0.0.1', 'show': '未知', 'num': '', 'classid': '',  'keywords': '{domain}'}"
     # 响应很慢很慢
-    timeout: 60
+    timeout: 30
 
 
   response:
