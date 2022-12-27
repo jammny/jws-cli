@@ -1,6 +1,5 @@
 #!/usr/bin/env python 
 # -*- coding : utf-8-*-
-# coding:unicode_escape
 from time import time
 
 from rich.progress import Progress
@@ -9,7 +8,6 @@ from lib.utils.thread import thread_task, get_queue
 from lib.utils.nslookup import a_record
 
 from lib.config.logger import logger
-from lib.config.settings import SUBNAMES
 
 
 class Brute:
@@ -30,10 +28,10 @@ class Brute:
         try:
             # 如果能够成功解析出IP，说明存在泛解析
             ip: list = a_record(domain)
-            # logger.warn(f"域名存在泛解析！默认忽略解析到{ip}的域名！")
+            # logger.warn(f"域名{self.target}存在泛解析！默认忽略解析到{ip}的域名！")
             self.generic = ip
         except:
-            # logger.debug(f"域名不存在泛解析！")
+            # logger.debug(f"域名{self.target}不存在泛解析！")
             pass
 
     def dns_resolver(self, queue, task, progress) -> None:
@@ -55,19 +53,12 @@ class Brute:
                 if not progress.finished:
                     progress.update(task, advance=1)
 
-    def run(self) -> list:
+    def run(self, domain) -> list:
         """
         子域名爆破，执行入口
         :return: 爆破结果
         """
         start = time()
-        logger.info("Running Subdomain Brute...")
-        # 读取一级字典
-        with open(SUBNAMES, mode="r", encoding="utf-8") as f:
-            data = f.readlines()
-        # 清理 \n ， 并处理成 www.domain.com 格式
-        domain: list = [f"{i.rstrip()}.{self.target}" for i in data]
-        logger.info(f"Number of dictionary：{len(domain)}")
         # 检测泛解析
         self.generic_parsing()
         # 进度条

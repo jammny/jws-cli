@@ -8,19 +8,18 @@ import os
 from time import time
 
 import yaml
+import tldextract
 from colorama import Back
 
-from lib.config.settings import console, DNS
+from lib.config.settings import console, DNS, SUBNAMES, SUBWORIDS
 from lib.config.logger import logger
 
 from lib.utils.nslookup import a_record
 from lib.utils.thread import thread_task, get_queue
+
 from lib.modules.subdomian import custom
-
-from lib.modules.subdomian.bruteforc import brute
-
+from lib.modules.subdomian.bruteforc import brute, dnsgen
 from lib.modules.subdomian.search import sogou, censys, zoomeye, bing, so, baidu, yandex, google, hunter_api, binaryedge_api, fofa_api, fullhunt_api
-
 from lib.modules.subdomian.intelligence import virustotal
 from lib.modules.subdomian.dnsdatasets import robtex, dnsdumpster, sitedossier, securitytrails_api
 
@@ -35,8 +34,11 @@ class Sub:
         self.brute_result: list = []
         # 存最终的域名存活数据
         self.valid_result: list = []
-        # 存域名泛解析的结果
-        self.generic: list = []
+        # 存根域名泛解析的结果
+        self.root_generic: list = []
+        # 存一级域名泛解析结果
+        self.dnsgen_generic: list = []
+
 
     def task_run(self, queue) -> None:
         """
@@ -219,27 +221,33 @@ class Sub:
             res: list = custom.Custom(self.target, dataset).run()
             self.passive_result.extend(res)
 
-    def brute_(self) -> None:
-        """
-        爆破模块
-        :return: {'subdomain': 'xxx', 'method': 'brute', 'ip': ['xxxx']}
-        """
-        self.brute_result = brute.Brute(self.target).run()
-
-    def generic_parsing(self) -> None:
+    def generic_parsing(self, domian):
         """
         检测域名泛解析
         :return:
         """
-        domain = f"generictest.{self.target}"
+        domain = f"generictest.{domian}"
         try:
             ip = a_record(domain)
-            logger.warn(f"域名泛解析到IP：{ip}, 程序将自动忽略解析到该IP的域名")
-            self.generic = ip
+            logger.warn(f"域名 {domian} 泛解析到IP：{ip}, 程序将自动忽略解析到该IP的域名")
+            return ip
         except:
-            logger.debug(f"域名不存在泛解析！")
+            # logger.debug(f"域名不存在泛解析！")
+            return None
 
-    def domain_validation(self, queue) -> None:
+    def check_domain_alive(self):
+        """
+        判断域名存活
+        :return:
+        """
+        logger.info("Running domain validation...")
+        # 列表去重, 获取所以被动收集的内容
+        passive_result: list = list(set(self.passive_result))
+        queue = get_queue(passive_result)
+        thread_task(task=self.domains_validation, args=[queue], thread_count=30)
+        logger.info(f"Subdomain Passive: {len(self.valid_result)} results found!")
+
+    def domains_validation(self, queue,) -> None:
         """
         主要验证被动收集的域名
         :return: 存货的域名
@@ -249,10 +257,24 @@ class Sub:
             try:
                 ip = a_record(domain)
                 # 忽视和泛解析相同的结果
-                if ip and self.generic != ip:
+                if ip and self.root_generic != ip:
                     self.valid_result.append({'subdomain': domain, 'method': 'passive', 'ip': ip})
             except:
                 pass
+
+    def brute_(self) -> None:
+        """
+        爆破模块
+        :return: {'subdomain': 'xxx', 'method': 'brute', 'ip': ['xxxx']}
+        """
+        logger.info("Running Subdomain Brute...")
+        # 读取一级字典
+        with open(SUBNAMES, mode="r", encoding="utf-8") as f:
+            data = f.readlines()
+        # 清理\n，并拼接子域，处理成 www.domain.com 格式
+        domain: list = [f"{i.rstrip()}.{self.target}" for i in data]
+        logger.info(f"Number of dictionary：{len(domain)}")
+        self.brute_result = brute.Brute(self.target).run(domain)
 
     def remove_duplicate(self) -> None:
         """
@@ -261,13 +283,55 @@ class Sub:
         """
         data: list = [i['subdomain'] for i in self.valid_result]
         for i in self.brute_result:
-            if not data.__contains__(i['subdomain']) and i['ip'] != self.generic:
+            if not data.__contains__(i['subdomain']) and i['ip'] != self.root_generic:
                 self.valid_result.append(i)
+
+    def dnsgen_generic_parsing(self, queue):
+        """
+        多线程泛解析, 主要为了排除一级域名中存在泛解析的目标。
+        :return:
+        """
+        while not queue.empty():
+            domain = queue.get()
+            if self.generic_parsing(domain):
+                self.dnsgen_generic.append(domain)
+
+    def dnsgen_(self):
+        """
+        进行域名置换，发现更多潜在的子域名
+        :return:
+        """
+        logger.info("Running fuzz...")
+        data: list = [i['subdomain'] for i in self.valid_result]
+
+        # 一级域名泛解析筛选
+        queue = get_queue(data)
+        thread_task(self.dnsgen_generic_parsing, args=[queue], thread_count=30)
+
+        # 读取置换用的字典
+        with open(SUBWORIDS, mode='r', encoding='utf-8') as f:
+            wordlist = f.read().splitlines()
+
+        for d in self.dnsgen_generic:
+            # 从发现的一级域名, 删除存在泛解析的数据
+            if d in data:
+                data.remove(d)
+            # 从读取的置换字典中，删除存在泛解析的数据
+            tmp = tldextract.extract(d).subdomain
+            if tmp in wordlist:
+                wordlist.remove(tmp)
+
+        # 返回迭代器, 需要转成list
+        domains = dnsgen.run(data, wordlist)
+        domains: list = list(domains)
+        logger.info(f"Generate the fuzz dictionary：{len(domains)}")
+        # 因为之前爆破的数据已经合并了，所以这里可以覆盖掉原来的数据
+        self.brute_result = brute.Brute(self.target).run(domains)
 
     def run(self, brute_status) -> list:
         """
         类统一执行入口
-        :return:
+        :return:m
         """
         start = time()
         logger.info(f"{Back.MAGENTA}执行任务：域名收集{Back.RESET}")
@@ -292,23 +356,24 @@ class Sub:
         queue = get_queue(task)
         thread_task(task=self.task_run, args=[queue], thread_count=len(task))
 
-        # 判断是否存在域名泛解析
-        self.generic_parsing()
+        # 判断根域名是否存在泛解析
+        ip = self.generic_parsing(self.target)
+        if ip:
+            self.root_generic = ip
 
         # 域名存活验证
-        logger.info("Running domain validation...")
-        # 列表去重, 获取所以被动收集的内容
-        passive_result: list = list(set(self.passive_result))
-        queue = get_queue(passive_result)
-        thread_task(task=self.domain_validation, args=[queue])
-        logger.info(f"Number of valid domain names: {len(self.valid_result)}")
+        self.check_domain_alive()
 
         # 爆破任务
         if brute_status:
             self.brute_()
-
-        # 将被动收集和爆破收集的域名合并，去重复
-        self.remove_duplicate()
+            # 将被动收集和爆破收集的域名合并，去重复
+            self.remove_duplicate()
+            logger.info(f"Effective collection quantity：{Back.RED}{len(self.valid_result)}{Back.RESET}")
+            # 利用字典进行域名置换
+            self.dnsgen_()
+            # 将原来的有效数据和置换爆破收集的域名合并，去重复
+            self.remove_duplicate()
 
         end = time()
         logger.info(f"Subdomain task finished! Total time：{end - start}")

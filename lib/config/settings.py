@@ -20,7 +20,6 @@ BANNER: str = (
     "\n"
 )
 
-
 # 操作系统信息
 OSNAME: str = platform.system()
 
@@ -37,26 +36,39 @@ QQWRY: str = os.path.join(DIRNAME, 'db/qqwry.dat')
 with open(os.path.join(DIRNAME, 'db/config.yaml'), mode="r", encoding="utf-8") as f:
     CONFIG_DATA = yaml.load(f.read(), Loader=yaml.FullLoader)
 
+"""
+子域名模块
+"""
 # 子域名爆破字典
 SUBNAMES: str = os.path.join(DIRNAME, 'db/subnames.txt')
+# 置换字典
+SUBWORIDS: str = os.path.join(DIRNAME, 'db/subwords.txt')
+# dns数据集配置文件
+DNS = os.path.join(DIRNAME, 'db/dns')
 
+"""
+POC模块
+"""
 # POC目录
 POC: str = os.path.join(DIRNAME, 'db/poc')
 
+"""
+爬虫/代理模块
+"""
 # 代理文件
 HTTP_PROXY = os.path.join(DIRNAME, 'db/http_proxy.txt')
-
-# 报告/结果输出路径
-REPORTS: str = os.path.join(DIRNAME, 'reports')
-TMP: str = os.path.join(DIRNAME, 'reports/tmp')
-
-# dns 路径
-DNS = os.path.join(DIRNAME, 'db/dns')
-
 # 获取User-Agents
 USER_AGENTS = CONFIG_DATA['user-agent']
 
-# 第三方模块
+"""
+报告/结果输出
+"""
+REPORTS: str = os.path.join(DIRNAME, 'reports')
+TMP: str = os.path.join(DIRNAME, 'reports/tmp')
+
+"""
+第三方模块
+"""
 MOD: dict = {
     "afrog": os.path.join(DIRNAME, 'thirdparty/afrog/afrog'),
 }
