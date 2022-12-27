@@ -82,13 +82,13 @@ class Robtex:
         :return:
         """
         logger.info("Running Robtex...")
-        response: str | bool = self.send_request(self.url)
+        response = self.send_request(self.url)
         if response:
             self.parse_resqonse(response)
         if self.ip:
             for ip in self.ip:
                 url: str = f"https://freeapi.robtex.com/pdns/reverse/{ip}"
-                response2: str | bool = self.send_request(url)
+                response2 = self.send_request(url)
                 if response2:
                     self.parse_resqonse2(response2)
             sleep(1)

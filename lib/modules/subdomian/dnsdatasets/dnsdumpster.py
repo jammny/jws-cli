@@ -72,7 +72,7 @@ class Dnsdumpster:
         :return:
         """
         logger.info("Running Dnsdumpster...")
-        response: str | bool = self.send_request()
+        response = self.send_request()
         if response:
             self.parse_resqonse(response)
 

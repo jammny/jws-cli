@@ -62,7 +62,7 @@ class ZoomEye:
         ZoomEye 接口请求
         :return:
         """
-        jwt: str | False = self.login()
+        jwt = self.login()
         try:
             if jwt:  # 判断是否登陆成功
                 with Client(headers=self.headers, verify=False) as c:

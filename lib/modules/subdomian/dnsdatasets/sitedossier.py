@@ -73,7 +73,7 @@ class Sitedossier:
         logger.info("Running Sitedossier...")
         n = 0
         while True:
-            response: str | bool = self.send_request()
+            response = self.send_request()
             if not response:
                 break
             elif self.parse_resqonse(response):

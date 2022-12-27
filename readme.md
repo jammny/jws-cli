@@ -11,7 +11,7 @@
 2、当然这里建议花点时间配置一下api，可以将信息收集得更全面。
 
 ### 子域收集模块  
-1、常用搜索引擎（12）：baidu、bing、fofa、google、hunter、yandex、zoomeye、360so、sougou、fullhunt、binaryedge、censys  
+1、常用搜索引擎（12）：baidu、bing、fofa、google（国内镜像）、hunter、yandex、zoomeye、360so、sougou、fullhunt、binaryedge、censys  
 2、威胁情报平台（2）: alienvault、virustotal  
 3、开放的DNS数据集（10）：sitedossier、securitytrails、robtex、dnsdumpster、chinaz、rapiddns、ip138、riddler、qianxian、hackertarget  
 4、SSL证书（2）：crtsh、certspotter  
