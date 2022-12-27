@@ -65,7 +65,7 @@ class Binaryedge:
             logger.warn(f"{self.name} api key error!")
             return self.result_domain
 
-        response: bool | dict = self.send_request()
+        response = self.send_request()
         if response:
             self.parse_response(response)
 

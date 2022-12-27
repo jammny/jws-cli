@@ -138,7 +138,7 @@ class Censys:
                 return self.result_domain
 
             while True:
-                response: str | bool = self.send_request(cookies)
+                response = self.send_request(cookies)
                 if not response:
                     break
                 elif self.parse_resqonse(response):

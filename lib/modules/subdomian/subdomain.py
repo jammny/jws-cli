@@ -306,7 +306,7 @@ class Sub:
 
         # 一级域名泛解析筛选
         queue = get_queue(data)
-        thread_task(self.dnsgen_generic_parsing, args=[queue], thread_count=30)
+        thread_task(self.dnsgen_generic_parsing, args=[queue], thread_count=10)
 
         # 读取置换用的字典
         with open(SUBWORIDS, mode='r', encoding='utf-8') as f:
@@ -369,7 +369,6 @@ class Sub:
             self.brute_()
             # 将被动收集和爆破收集的域名合并，去重复
             self.remove_duplicate()
-            logger.info(f"Effective collection quantity：{Back.RED}{len(self.valid_result)}{Back.RESET}")
             # 利用字典进行域名置换
             self.dnsgen_()
             # 将原来的有效数据和置换爆破收集的域名合并，去重复
