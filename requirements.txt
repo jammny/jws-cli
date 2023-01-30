@@ -1,5 +1,6 @@
 rich~=12.6.0
 colorama~=0.4.4
+coloredlogs~=15.0.1
 pyyaml~=6.0
 httpx~=0.23.0
 parsel==1.7.0
@@ -10,3 +11,5 @@ mmh3~=3.0
 jinja2~=3.1.2
 click~=8.1.3
 tldextract~=3.4.0
+
+cdx_toolkit~=0.9.34

@@ -61,3 +61,39 @@ def blacklist_cidr(ip):
         '112.90.80.0/24'
     ]
     return all(i not in cidr for i in black_list)
+
+
+def match_subdomains(domain, html, distinct=True, fuzzy=True):
+    """
+    Use regexp to match subdomains
+
+    :param  str domain: main domain
+    :param  str html: response html text
+    :param  bool distinct: deduplicate results or not (default True)
+    :param  bool fuzzy: fuzzy match subdomain or not (default True)
+    :return set/list: result set or list
+    """
+    if fuzzy:
+        regexp = r'(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?\.){0,}' \
+                 + domain.replace('.', r'\.')
+        result = re.findall(regexp, html, re.I)
+        if not result:
+            return set()
+        deal = map(lambda s: s.lower(), result)
+        if distinct:
+            return set(deal)
+        else:
+            return list(deal)
+    else:
+        regexp = r'(?:\>|\"|\'|\=|\,)(?:http\:\/\/|https\:\/\/)?' \
+                 r'(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?\.){0,}' \
+                 + domain.replace('.', r'\.')
+        result = re.findall(regexp, html, re.I)
+        if not result:
+            return set()
+        regexp = r'(?:http://|https://)'
+        deal = map(lambda s: re.sub(regexp, '', s[1:].lower()), result)
+        if distinct:
+            return set(deal)
+        else:
+            return list(deal)

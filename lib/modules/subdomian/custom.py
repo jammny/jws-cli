@@ -136,7 +136,7 @@ class Custom:
                     response = c.post(self.url, data=data)
 
         except Exception as e:
-            logger.error(f'{self.url} {e}')
+            logger.warning(f'{self.url} {e}')
             return False
 
         # 判断响应码是否一致
@@ -151,7 +151,7 @@ class Custom:
             else:
                 return False
         else:
-            logger.warn(f"{self.id} error! response code: {response.status_code}")
+            logger.warnning(f"{self.id} error! response code: {response.status_code}")
             # logger.debug(response.text)
             return False
 

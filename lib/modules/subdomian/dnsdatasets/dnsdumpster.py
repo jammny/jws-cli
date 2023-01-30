@@ -66,7 +66,7 @@ class Dnsdumpster:
             # logger.debug(response.text)
             return False
 
-    def get_domain(self) -> list:
+    def get_domain(self):
         """
         https://dnsdumpster.com/
         :return:
