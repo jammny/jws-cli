@@ -13,6 +13,7 @@ from colorama import Back
 
 from lib.config.settings import console, DNS, SUBNAMES, SUBWORIDS
 from lib.config.logger import logger
+from lib.modules.subdomian.vulnerability.dns_zone_transfer import AXFR
 
 from lib.utils.nslookup import a_record
 from lib.utils.thread import thread_task, get_queue
@@ -189,6 +190,14 @@ class Sub:
         res: list = dnsdumpster.Dnsdumpster(self.target).get_domain()
         self.passive_result.extend(res)
 
+    def dns_zone_transfer_(self):
+        """
+        dns_zone_transfer 域
+        :return: ['xxxx']
+        """
+        res: list = AXFR(self.target).run()
+        self.passive_result.extend(res)
+
     def get_datasets(self):
         """
         从目录中获取自定义DNS数据集的文件内容
@@ -334,7 +343,7 @@ class Sub:
         :return:m
         """
         start = time()
-        logger.info(f"{Back.MAGENTA}执行任务：域名收集{Back.RESET}")
+        logger.critical(f"{Back.MAGENTA}执行任务：域名收集{Back.RESET}")
         task: list = [
             # 综合搜索引擎
             self.google_, self.so_, self.bing_, self.baidu_, self.yandex_, self.sougou_,
@@ -344,6 +353,8 @@ class Sub:
             self.virustotal_,
             # DNS数据集
             self.sitedossier_, self.robtex_, self.dnsdumpster_, self.securitytrails_,
+            # DNS域传输
+            self.dns_zone_transfer_
         ]
         datasets: list = self.get_datasets()
         logger.info(f"({len(task + datasets)}) modules were successfully loaded!")
@@ -376,7 +387,7 @@ class Sub:
 
         end = time()
         logger.info(f"Subdomain task finished! Total time：{end - start}")
-        logger.info(f"Effective collection quantity：{Back.RED}{len(self.valid_result)}{Back.RESET}")
+        logger.warning(f"Effective collection quantity：{Back.RED}{len(self.valid_result)}{Back.RESET}")
         logger.debug(self.valid_result)
-        console.print(self.valid_result)
+        # console.print(self.valid_result)
         return self.valid_result

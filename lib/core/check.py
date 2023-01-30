@@ -5,7 +5,7 @@ from colorama import Fore
 from httpx import Client
 
 from lib.config.logger import logger
-from lib.config.settings import REPORTS, MOD, VERSION
+from lib.config.settings import REPORTS, MOD, VERSION, TMP
 
 
 class CheckAll:
@@ -28,6 +28,8 @@ class CheckAll:
         """报告输出目录检测"""
         if not path.exists(REPORTS):
             mkdir(REPORTS)
+        if not path.exists(TMP):
+            mkdir(TMP)
 
     def update_check(self):
         """软件更新检测"""
