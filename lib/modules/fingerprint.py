@@ -91,7 +91,7 @@ class Finger:
             for k in keyword:
                 if ico_hash != k:
                     return ''
-            logger.debug(item)
+            # logger.debug(item)
             return item['cms']
         else:
             print('error', item['method'])
@@ -170,7 +170,10 @@ class Finger:
                 'ico_hash': ico_hash
             }
             self.result.append(tmp)
-            logger.info(tmp)
+            if cms != '':
+                logger.warning(tmp)
+            else:
+                logger.info(tmp)
 
     def run(self) -> list:
         """
@@ -178,7 +181,7 @@ class Finger:
         :return:
         """
         start = time()
-        logger.info(f"{Back.MAGENTA}执行任务：指纹识别{Back.RESET}")
+        logger.critical(f"执行任务：指纹识别")
         logger.info(f"Get the target number：{len(self.target)}")
         logger.info(f"Number of data fingerprints：{len(self.db)}")
         queue = get_queue(self.target)
@@ -187,5 +190,4 @@ class Finger:
         logger.info(f"Effective collection quantity：{Back.RED}{len(self.result)}{Back.RESET}")
         logger.info(f"Fingerprint task finished! Total time：{end - start}")
         logger.debug(self.result)
-        console.print(self.result)
         return self.result

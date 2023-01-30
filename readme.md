@@ -6,11 +6,10 @@
 | ----- | ----------- |
 | 子域名收集 | success |
 | 指纹识别 | success |
-| CDN识别 | None    |
-| 端口扫描 | None    |
+| CDN识别 | success    |
+| 端口扫描 | success    |
 | C段扫描 | None    |
 | POC扫描 | None    |
-
 
 ## 下载与部署 
 1. 建议在kali下运行：`git clone https://github.com/jammny/jws-cli`
@@ -53,6 +52,22 @@
 ![img_4.png](img_4.png)
 
 2. 域名收集+指纹识别：`python3 jws-cli.py -t example.com --sub --finger`
+
+## CDN识别
+
+1. CDN识别：`python3 jws-cli.py -t example.com --cdn`
+
+![img_6.png](img_6.png)
+
+## 端口扫描
+
+1. 可以在文件`/db/config.yaml`配置扫描参数：
+
+![img_7.png](img_7.png)
+
+2. 端口扫描+指纹识别：`python3 jws-cli.py -t example.com --port --finger`
+
+![img_9.png](img_9.png)
 
 # 报告输出
 1. `/reports/`目录下会生成对应目标的html报告文件:

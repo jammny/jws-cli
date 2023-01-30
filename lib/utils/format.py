@@ -97,3 +97,22 @@ def match_subdomains(domain, html, distinct=True, fuzzy=True):
             return set(deal)
         else:
             return list(deal)
+
+
+def rex_ip(data: list):
+    """
+    内网ip过滤
+    :param data:
+    :return: dict
+    """
+    rex = re.compile(
+        '^(127\\.0\\.0\\.1)|(localhost)|(10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|(172\\.((1[6-9])|(2\\d)|(3[01]))\\.\\d{1,3}\\.\\d{1,3})|(192\\.168\\.\\d{1,3}\\.\\d{1,3})$')
+    internal_network_ip = [rex.search(i).group() for i in data if rex.search(i)]
+    external_network_ip = [i for i in data if not rex.search(i)]
+    # print(internal_network_ip)
+    # print(external_network_ip)
+    results = {
+        'internal_network_ip': internal_network_ip,
+        'external_network_ip': external_network_ip
+    }
+    return results

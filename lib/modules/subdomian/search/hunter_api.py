@@ -70,7 +70,7 @@ class Hunter:
                 if response.status_code == 200:
                     return response.json()
                 else:
-                    logger.warn(f"Hunter connect error！ Code：{response.status_code}")
+                    logger.warning(f"Hunter connect error！ Code：{response.status_code}")
                     return False
         except Exception as e:
             logger.error(f"Hunter connect error! {e}")
@@ -98,7 +98,7 @@ class Hunter:
 
         if result:
             logger.info(f"Hunter Query：{self.query} , {len(result)} results found!")
-            logger.debug(f"Hunter: {self.result}")
+            logger.debug(f"Hunter: {result}")
         return result
 
     def run(self):
