@@ -343,7 +343,7 @@ class Sub:
         :return:m
         """
         start = time()
-        logger.critical(f"{Back.MAGENTA}执行任务：域名收集{Back.RESET}")
+        logger.critical(f"执行任务：域名收集")
         task: list = [
             # 综合搜索引擎
             self.google_, self.so_, self.bing_, self.baidu_, self.yandex_, self.sougou_,

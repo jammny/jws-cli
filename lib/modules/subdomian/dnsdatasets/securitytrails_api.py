@@ -53,7 +53,7 @@ class Securitytrails:
             with Client(verify=False, headers=headers) as c:
                 response = c.get(self.url)
                 if response.status_code == 200:
-                    logger.debug(response.text)
+                    # logger.debug(response.text)
                     return response.json()
                 else:
                     logger.debug(f"securitytrails connect error！ Code： {response.status_code}")

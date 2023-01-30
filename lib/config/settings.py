@@ -5,7 +5,7 @@ from rich.console import Console
 
 console = Console(color_system='auto', style=None)
 
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 
 BANNER: str = (
     "\033[1;31m\n"
@@ -45,6 +45,17 @@ SUBNAMES: str = os.path.join(DIRNAME, 'db/subnames.txt')
 SUBWORIDS: str = os.path.join(DIRNAME, 'db/subwords.txt')
 # dns数据集配置文件
 DNS = os.path.join(DIRNAME, 'db/dns')
+
+"""
+CDN模块
+"""
+CDN_KEY: str = CONFIG_DATA['cdn_key']
+
+"""
+端口扫描
+"""
+PORT: str = CONFIG_DATA['port']
+PORT_THREAD: int = CONFIG_DATA['port_thread']
 
 """
 POC模块
