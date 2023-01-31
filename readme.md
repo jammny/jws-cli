@@ -20,7 +20,7 @@
 
 ![img_1.png](img_1.png)
 
-3. 信息一键收集：`python3 jws-cli.py -t example.com --auto`  
+3. 自动化一键收集：`python3 jws-cli.py -t example.com --auto`  
 
 ## 域名收集
 
