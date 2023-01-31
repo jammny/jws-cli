@@ -20,6 +20,8 @@
 
 ![img_1.png](img_1.png)
 
+3. 信息一键收集：`python3 jws-cli.py -t example.com --auto`  
+
 ## 域名收集
 
 1. 默认情况下，使用内置的模块进行域名收集，具体模块包括：  
