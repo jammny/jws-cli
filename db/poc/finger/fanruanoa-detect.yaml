@@ -1,0 +1,15 @@
+id: fanruan-oa-detect
+
+info:
+  name: FanRuan报表
+  author: jammny
+  severity: info
+
+rules:
+  r0:
+    request:
+      method: GET
+      path:
+      - /WebReport/ReportServer
+      - /ReportServer
+    expression: response.status_code == 200 and response.text.__contains__('DeploySuccess._init')
