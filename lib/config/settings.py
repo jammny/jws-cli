@@ -5,7 +5,7 @@ from rich.console import Console
 
 console = Console(color_system='auto', style=None)
 
-VERSION = "0.0.2"
+VERSION = "0.0.3"
 
 BANNER: str = (
     "\033[1;31m\n"
