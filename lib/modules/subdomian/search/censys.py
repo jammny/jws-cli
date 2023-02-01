@@ -45,7 +45,7 @@ class Censys:
                 else:
                     return False
         except Exception as e:
-            logger.error(e)
+            logger.warning(e)
             return False
 
     def parse_csrftoken(self, response: str) -> str:
@@ -84,7 +84,7 @@ class Censys:
                     # logger.debug(response.text)
                     return False
         except Exception as e:
-            logger.error(f"{url} {e}")
+            logger.warning(f"{url} {e}")
             return False
 
     def parse_resqonse(self, response: str) -> bool:
@@ -123,7 +123,7 @@ class Censys:
                 # logger.debug(response.text)
                 return False
         except Exception as e:
-            logger.error(f"{url} {e}")
+            logger.warning(f"{url} {e}")
             return False
 
     def get_domain(self) -> list:

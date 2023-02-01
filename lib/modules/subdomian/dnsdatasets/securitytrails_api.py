@@ -60,7 +60,7 @@ class Securitytrails:
                     # logger.debug(response.text)
                     return False
         except Exception as e:
-            logger.error(f"{self.url} {e}")
+            logger.warning(f"{self.url} {e}")
             return False
 
     def get_domain(self) -> list:

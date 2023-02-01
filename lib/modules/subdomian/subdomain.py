@@ -11,7 +11,7 @@ import yaml
 import tldextract
 from colorama import Back
 
-from lib.config.settings import console, DNS, SUBNAMES, SUBWORIDS
+from lib.config.settings import DNS, SUBNAMES, SUBWORIDS
 from lib.config.logger import logger
 from lib.modules.subdomian.vulnerability.dns_zone_transfer import AXFR
 
@@ -20,7 +20,8 @@ from lib.utils.thread import thread_task, get_queue
 
 from lib.modules.subdomian import custom
 from lib.modules.subdomian.bruteforc import brute, dnsgen
-from lib.modules.subdomian.search import sogou, censys, zoomeye, bing, so, baidu, yandex, google, hunter_api, binaryedge_api, fofa_api, fullhunt_api
+from lib.modules.subdomian.search import sogou, censys, zoomeye, bing, so, baidu, yandex, google, hunter_api, \
+    binaryedge_api, fofa_api, fullhunt_api
 from lib.modules.subdomian.intelligence import virustotal
 from lib.modules.subdomian.dnsdatasets import robtex, dnsdumpster, sitedossier, securitytrails_api
 
@@ -49,6 +50,8 @@ class Sub:
         """
         while not queue.empty():
             task = queue.get()
+            if task == u'end_tag':  # 接收到结束码，就结束
+                break
             task()
 
     def fofa_(self) -> None:
@@ -227,6 +230,8 @@ class Sub:
         """
         while not queue.empty():
             dataset = queue.get()
+            if dataset == u'end_tag':  # 接收到结束码，就结束
+                break
             res: list = custom.Custom(self.target, dataset).run()
             self.passive_result.extend(res)
 
@@ -263,6 +268,8 @@ class Sub:
         """
         while not queue.empty():
             domain = queue.get()
+            if domain == u'end_tag':  # 接收到结束码，就结束
+                break
             try:
                 ip = a_record(domain)
                 # 忽视和泛解析相同的结果
@@ -302,6 +309,8 @@ class Sub:
         """
         while not queue.empty():
             domain = queue.get()
+            if domain == u'end_tag':  # 接收到结束码，就结束
+                break
             if self.generic_parsing(domain):
                 self.dnsgen_generic.append(domain)
 

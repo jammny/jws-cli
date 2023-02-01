@@ -43,7 +43,7 @@ def blacklist_ipaddress(data):
     :return:
     """
     black_list = [
-        '微软', '阿里', 'Microsoft', 'CDN', 'Azure', '华为', "亚马逊", '腾讯云', '网宿', 'Amazon', '运营商：IP',
+        '微软', '阿里云', '阿里云BGP数据中心', 'Microsoft', 'CDN', 'Azure', '华为', "亚马逊", '腾讯云', '网宿', 'Amazon', '运营商：IP',
         '世纪互联BGP数据中心', '内部网', '局域网'
     ]
     return all(i not in data for i in black_list)
@@ -65,7 +65,7 @@ def blacklist_cidr(ip):
 
 def match_subdomains(domain, html, distinct=True, fuzzy=True):
     """
-    Use regexp to match subdomains
+    正则
 
     :param  str domain: main domain
     :param  str html: response html text
@@ -74,16 +74,16 @@ def match_subdomains(domain, html, distinct=True, fuzzy=True):
     :return set/list: result set or list
     """
     if fuzzy:
-        regexp = r'(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?\.){0,}' \
-                 + domain.replace('.', r'\.')
+        regexp = r'(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?\.){0,}' + domain.replace('.', r'\.')
         result = re.findall(regexp, html, re.I)
         if not result:
             return set()
         deal = map(lambda s: s.lower(), result)
         if distinct:
-            return set(deal)
+            return list(set(deal))
         else:
             return list(deal)
+
     else:
         regexp = r'(?:\>|\"|\'|\=|\,)(?:http\:\/\/|https\:\/\/)?' \
                  r'(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?\.){0,}' \

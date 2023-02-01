@@ -60,6 +60,7 @@ PORT_THREAD: int = CONFIG_DATA['port_thread']
 """
 POC模块
 """
+POC_ENGINE = CONFIG_DATA['poc_setting']
 # POC目录
 POC: str = os.path.join(DIRNAME, 'db/poc')
 

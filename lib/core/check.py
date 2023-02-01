@@ -54,7 +54,7 @@ class CheckAll:
         logger.info("Checking for the program compatibility...")
         self.py_check()
         self.report_check()
-        # self.mod_check()
+        self.mod_check()
         logger.info("Checking for the latest version...")
-        #self.update_check()
+        self.update_check()
 

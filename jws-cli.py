@@ -19,10 +19,10 @@ def main():
     parser.add_argument("--finger", nargs='?', const=True, type=str, dest="finger", required=False, help="指纹识别")
     parser.add_argument("--cdn", nargs='?', const=True, type=str, dest="cdn", required=False, help="CDN识别")
     parser.add_argument("--port", nargs='?', const=True, type=str, dest="port", required=False, help="端口扫描")
-    '''
-    
     parser.add_argument("--cidr", nargs='?', const=True, type=str, dest="cidr", required=False, help="C段扫描")
     parser.add_argument("--poc", nargs='?', const=True, type=str, dest="poc", required=False, help="POC漏洞扫描")
+    '''
+    
     parser.add_argument("--xray", nargs='?', const=True, type=str, dest="xray", required=False, help="xray网站扫描")
     parser.add_argument("--fofa", nargs='?', const=True, type=str, dest="fofa", required=False, help="fofa信息索引")
     parser.add_argument("--proxy", dest="proxy", action='store_true', required=False, help="可选：代理")
