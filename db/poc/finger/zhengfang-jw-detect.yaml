@@ -1,0 +1,16 @@
+id: zhengfang-jw-detect
+
+info:
+  name: 正方软件教学综合信息服务平台
+  author: jammny
+  severity: info
+
+rules:
+  r0:
+    request:
+      method: GET
+      path:
+      - /
+      - /jwglxt/xtgl/login_slogin.html
+      - /xtgl/login_slogin.html
+    expression: response.status_code == 200 and response.text.__contains__('xtgl/login_slogin.html') or response.text.__contains__('xtgl/init_cxBrowser.html')
