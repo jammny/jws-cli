@@ -86,7 +86,7 @@
 
 ![img_12.png](img/img_12.png)
 
-3. 为了达到开箱即用的目的，现阶段支持使用第三方的扫描引擎：[afrog](https://github.com/zan8in/afrog "afrog")。， 将`afrog`在文件`/db/config.yaml`配置参数即可：
+3. 为了达到开箱即用的目的，现阶段支持使用第三方的扫描引擎：[afrog](https://github.com/zan8in/afrog "afrog")；将`afrog`在文件`/db/config.yaml`配置参数即可：
 
 ![img_11.png](img/img_11.png)
 
