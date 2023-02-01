@@ -10,7 +10,7 @@ from httpx import Client
 from parsel import Selector
 
 from lib.config.logger import logger
-from lib.utils.format import domain_format
+from lib.utils.format import domain_format, match_subdomains
 
 
 class Custom:
@@ -55,41 +55,12 @@ class Custom:
             return False
 
     def parse_json(self, response):
-        key: list = self.response['key']
-
         if not response:
             return False
-
-        # 解析类型1：[{"domain":["xxxx.domain.cn", ...]}, ...]
-        # 先判断外面是不是列表
-        if isinstance(response, list):
-            for i in response:
-                data = i[key[0]]
-                # 判断第二层 是不是列表
-                if isinstance(data, list):
-                    for d in data:
-                        domain = domain_format(d)
-                        self.result_domain.append(domain)
-                else:
-                    domain = domain_format(data)
-                    self.result_domain.append(domain)
-
-        # 解析类型2：{'passive_dns': [{'hostname': ''}, ...], ...}
-        # 先判断外面是不是字典
-        elif isinstance(response, dict):
-            data = response[key[0]]
-            #  判断第二层 是不是列表
-            if isinstance(data, list):
-                for i in data:
-                    data2 = i[key[1]]
-                    # 判断第三层 是不是列表
-                    if isinstance(data2, list):
-                        for d in data:
-                            domain = domain_format(d)
-                            self.result_domain.append(domain)
-                    else:
-                        domain = domain_format(data2)
-                        self.result_domain.append(domain)
+        # 提取域名内容
+        results = match_subdomains(self.domain, response)
+        if results:
+            self.result_domain += results
         return True
 
     def parse_txt(self, response):
@@ -141,17 +112,9 @@ class Custom:
 
         # 判断响应码是否一致
         if response.status_code == self.code:
-            # 选择解析类型
-            if self.type == 'html':
-                return response.text
-            elif self.type == 'json':
-                return response.json()
-            elif self.type == 'txt':
-                return response.text
-            else:
-                return False
+            return response.text
         else:
-            logger.warnning(f"{self.id} error! response code: {response.status_code}")
+            logger.warning(f"{self.id} error! response code: {response.status_code}")
             # logger.debug(response.text)
             return False
 

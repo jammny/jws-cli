@@ -61,7 +61,7 @@ class Sitedossier:
                         logger.debug(response.text)
                     return False
         except Exception as e:
-            logger.error(f"{url} {e}")
+            logger.warning(f"{url} {e}")
             return False
 
     def get_domain(self) -> list:

@@ -8,8 +8,8 @@
 | 指纹识别 | success |
 | CDN识别 | success    |
 | 端口扫描 | success    |
-| C段扫描 | None    |
-| POC扫描 | None    |
+| C段扫描 | success    |
+| POC扫描 | success    |
 
 ## 下载与部署 
 1. 建议在kali下运行：`git clone https://github.com/jammny/jws-cli`
@@ -71,6 +71,29 @@
 
 ![img_9.png](img_9.png)
 
+3. 哦对了，端口扫描最好放到服务器上跑，比较稳定。
+
+## C段扫描
+
+1. C段扫描+指纹识别：`python3 jws-cli.py -t 192.168.2.1 --cidr --finger`
+
+![img_10.png](img_10.png)
+
+## POC扫描
+
+1. 程序内置了一个poc扫描框架，但是目前能使用的poc较少，后续开放poc编写规则以及模板。
+2. poc扫描： `python3 jws-cli.py -t http://example.com --poc`
+
+![img_12.png](img_12.png)
+
+3. 为了达到开箱即用的目的，现阶段支持使用第三方的扫描引擎：`afrog`， 在文件`/db/config.yaml`配置参数即可：
+
+![img_11.png](img_11.png)
+
+4. 调用afrog扫描：
+
+![img_13.png](img_13.png)
+
 # 报告输出
 1. `/reports/`目录下会生成对应目标的html报告文件:
 
@@ -78,4 +101,5 @@
 
 ## 后续更新：
 1. 子域收集将加入代理，用于解决人机验证问题。   
-2. 加入C段扫描模块。  
+2. poc模块将兼容其他工具的poc，比如说：afrog。  
+3. 将添加邮件通知、微信通知模块。

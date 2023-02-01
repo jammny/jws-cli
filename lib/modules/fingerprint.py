@@ -135,6 +135,8 @@ class Finger:
         global cms
         while not queue.empty():
             target: str = queue.get()
+            if target == u'end_tag':  # 接收到结束码，就结束
+                break
             # web存活探测
             response = self.webAlive(target)
             # 如果url不可访问，就直接退出

@@ -57,7 +57,7 @@ class Dnsdumpster:
                 }
                 response = c.post(self.url, headers=self.headers, data=data)
             except Exception as e:
-                logger.error(f"{self.url} {e}")
+                logger.warning(f"{self.url} {e}")
                 return False
         if response.status_code == 200:
             return response.text
