@@ -2,14 +2,15 @@
 
 > 前言：目标是做一款全自动化信息收集工具，仅需一行命令就解放双手。为了提升脚本小子的编程能力，因此有了这个项目。
 
-| 目标功能      | 完成状态 |
-| ----- | ----------- |
+| 目标功能   | 完成状态 |
+| -- | ----------- |
 | 子域名收集 | success |
 | 指纹识别 | success |
 | CDN识别 | success    |
 | 端口扫描 | success    |
 | C段扫描 | success    |
 | POC扫描 | success    |
+| Xray扫描 | success    |
 
 ## 下载与部署 
 1. 建议在kali下运行：`git clone https://github.com/jammny/jws-cli`
@@ -86,13 +87,20 @@
 
 ![img_12.png](img/img_12.png)
 
-3. 为了达到开箱即用的目的，现阶段支持使用第三方的扫描引擎：[afrog](https://github.com/zan8in/afrog "afrog")；将`afrog`在文件`/db/config.yaml`配置参数即可：
+3. 为了达到开箱即用的目的，现阶段支持使用第三方的扫描引擎：[afrog](https://github.com/zan8in/afrog "afrog")。， 将`afrog`在文件`/db/config.yaml`配置参数即可：
 
 ![img_11.png](img/img_11.png)
 
 4. 调用afrog扫描：
 
 ![img_13.png](img/img_13.png)
+
+## XRAY扫描
+
+1. 调用xray扫描： `python3 jws-cli.py -t http://example.com --xray`
+
+![img.png](img/img_14.png)
+
 
 # 报告输出
 1. `/reports/`目录下会生成对应目标的html报告文件:

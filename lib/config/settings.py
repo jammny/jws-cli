@@ -5,21 +5,6 @@ from rich.console import Console
 
 console = Console(color_system='auto', style=None)
 
-VERSION = "0.0.3"
-
-BANNER: str = (
-    "\033[1;31m\n"
-    "   ___  _    _ _____        _____  _     _____ \n"
-    "  |_  || |  | /  ___|      /  __ \| |   |_   _|\n"
-    "    | || |  | \ `--. ______| /  \/| |     | |  \n"
-    "    | || |/\| |`--. \______| |    | |     | |  \n"
-    "/\__/ /\  /\  /\__/ /      | \__/\| |_____| |_ \n"
-    "\____/  \/  \/\____/        \____/\_____/\___/ \n"
-    "\n"
-    f" \033[0m\033[1;34m jammny@fighter-team.cn    Version: {VERSION} \033[0m\n"
-    "\n"
-)
-
 # 操作系统信息
 OSNAME: str = platform.system()
 
@@ -35,6 +20,23 @@ QQWRY: str = os.path.join(DIRNAME, 'db/qqwry.dat')
 # config.yaml配置数据
 with open(os.path.join(DIRNAME, 'db/config.yaml'), mode="r", encoding="utf-8") as f:
     CONFIG_DATA = yaml.load(f.read(), Loader=yaml.FullLoader)
+
+# 版本信息
+VERSION = CONFIG_DATA['version']
+
+# logo信息
+BANNER: str = (
+    "\033[1;31m\n"
+    "   ___  _    _ _____        _____  _     _____ \n"
+    "  |_  || |  | /  ___|      /  __ \| |   |_   _|\n"
+    "    | || |  | \ `--. ______| /  \/| |     | |  \n"
+    "    | || |/\| |`--. \______| |    | |     | |  \n"
+    "/\__/ /\  /\  /\__/ /      | \__/\| |_____| |_ \n"
+    "\____/  \/  \/\____/        \____/\_____/\___/ \n"
+    "\n"
+    f" \033[0m\033[1;34m jammny@fighter-team.cn    Version: {VERSION} \033[0m\n"
+    "\n"
+)
 
 """
 子域名模块
@@ -83,4 +85,8 @@ TMP: str = os.path.join(DIRNAME, 'reports/tmp')
 """
 MOD: dict = {
     "afrog": os.path.join(DIRNAME, 'thirdparty/afrog/afrog'),
+    "xray": os.path.join(DIRNAME, 'thirdparty/xray/xray'),
+}
+MOD_DIR: dict = {
+    "xray_dir": os.path.join(DIRNAME, 'thirdparty/xray'),
 }
