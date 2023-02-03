@@ -41,6 +41,8 @@ class Brute:
         """
         while not queue.empty():
             domain: str = queue.get()
+            if domain == u'end_tag':
+                break
             try:
                 ip: list = a_record(domain)
                 if ip != self.generic:
