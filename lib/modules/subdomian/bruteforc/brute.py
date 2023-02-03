@@ -67,7 +67,7 @@ class Brute:
         with Progress() as progress:
             task = progress.add_task('[red]', total=len(domain))
             queue = get_queue(domain)
-            thread_task(task=self.dns_resolver, thread_count=1000, args=[queue, task, progress])
+            thread_task(task=self.dns_resolver, thread_count=600, args=[queue, task, progress])
         end = time()
         logger.info(f"Subdomain Brute: {len(self.result)} results found! Run time：{end - start}")
         logger.debug(self.result)
