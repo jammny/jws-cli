@@ -345,6 +345,7 @@ class Sub:
         logger.info(f"Generate the fuzz dictionary：{len(domains)}")
         # 因为之前爆破的数据已经合并了，所以这里可以覆盖掉原来的数据
         self.brute_result = brute.Brute(self.target).run(domains)
+        logger.info(f"Fuzz finshed!")
 
     def run(self, brute_status) -> list:
         """
