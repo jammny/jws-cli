@@ -128,7 +128,7 @@ class Custom:
             self.page += self.num
             logger.debug(f"{self.id} current page: {self.page}")
             self.url: str = url.replace('{page}', str(self.page))
-            response: str | dict | bool = self.send_request()
+            response = self.send_request()
             if response:
                 # 解析请求
                 if not self.parse_response(response):
@@ -145,7 +145,7 @@ class Custom:
         if self.w:
             return self.circular_process()
         else:
-            response: str | dict | bool = self.send_request()
+            response = self.send_request()
             if response:
                 # 解析请求
                 self.parse_response(response)

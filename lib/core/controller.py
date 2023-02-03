@@ -40,7 +40,7 @@ class Option:
     def args_auto(self):
         target: str = self.target
         report = Report(target)
-        '''
+
         # 域名收集
         sub_results: list = self.args_sub(target)
         # 生成报告
@@ -76,7 +76,7 @@ class Option:
         data_tmp = rex_ip(ip_results)
         external_network_ip = data_tmp['external_network_ip']
         report.write_tmp('valid_ip', ip_results)
-        
+
         # 端口扫描
         port_results: list = self.args_port(external_network_ip)
         # 生成报告
@@ -112,7 +112,7 @@ class Option:
         if poc_results:
             # 生成报告
             report.run('valid_poc', poc_results)
-        '''
+
         # xray扫描
         self.args_xray(self.urls, target)
 
@@ -240,7 +240,6 @@ class Option:
         xray(urls, name)
         return
 
-
     def run(self):
         """
         类统一入口
@@ -277,6 +276,6 @@ class Option:
         # POC扫描
         elif self.args['poc']:
             self.args_poc()
-        # POC扫描
+        # XRAY扫描
         elif self.args['xray']:
             self.args_xray()
