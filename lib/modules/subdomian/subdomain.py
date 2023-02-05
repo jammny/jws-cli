@@ -297,6 +297,7 @@ class Sub:
         去掉重复的域名数据
         :return:
         """
+        logger.info("整合数据..")
         data: list = [i['subdomain'] for i in self.valid_result]
         for i in self.brute_result:
             if not data.__contains__(i['subdomain']) and i['ip'] != self.root_generic:
@@ -394,7 +395,6 @@ class Sub:
             self.dnsgen_()
             # 将原来的有效数据和置换爆破收集的域名合并，去重复
             self.remove_duplicate()
-
         end = time()
         logger.info(f"Subdomain task finished! Total time：{end - start}")
         logger.warning(f"Effective collection quantity：{Back.RED}{len(self.valid_result)}{Back.RESET}")
