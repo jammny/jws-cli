@@ -36,7 +36,6 @@ def xray(urls: list, target=None):
     """
     logger.critical(f"执行任务：Xray扫描")
     os.chdir(MOD_DIR['xray_dir'])
-
     if target is None:
         name = GetKey().random_key(7)
         with open(f"{TMP}/xray_{name}.txt", encoding="utf-8", mode="w+") as f:
@@ -48,7 +47,10 @@ def xray(urls: list, target=None):
     else:
         with open(f"{TMP}/{target}/valid_all_url.txt", mode="r") as f:
             urls_tmp = f.readlines()
-        for url in urls_tmp:
+        for u in urls_tmp:
+            url = u.rstrip()
             name = GetKey().random_key(7)
-            system(f"{MOD['xray']} webscan --browser-crawler {url} --html-output {REPORTS}/xray_{name}.html")
+            cmd = f"{MOD['xray']} webscan --browser-crawler {url} --html-output {REPORTS}/xray_{name}.html"
+            print(cmd)
+            # system(cmd)
     os.chdir(DIRNAME)
