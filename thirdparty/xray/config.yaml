@@ -65,7 +65,7 @@ plugins:
   path-traversal:
     enabled: true
   phantasm:                             # poc 插件
-    enabled: true
+    enabled: false
     depth: 1
     auto_load_poc: false                # 除内置 poc 外，额外自动加载当前目录以 "poc-" 为文件名前缀的POC文件，等同于在 include_poc 中增加 "./poc-*"
     exclude_poc: []                     # 排除哪些 poc, 支持 glob 语法, 如: "/home/poc/*thinkphp*" 或 "poc-yaml-weblogic*"
