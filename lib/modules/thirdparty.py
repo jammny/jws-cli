@@ -50,7 +50,5 @@ def xray(urls: list, target=None):
         for u in urls_tmp:
             url = u.rstrip()
             name = GetKey().random_key(7)
-            cmd = f"{MOD['xray']} webscan --browser-crawler {url} --html-output {REPORTS}/xray_{name}.html"
-            print(cmd)
-            # system(cmd)
+            system(f"{MOD['xray']} webscan --browser-crawler {url} --html-output {REPORTS}/xray_{name}.html")
     os.chdir(DIRNAME)

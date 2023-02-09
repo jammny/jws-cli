@@ -105,7 +105,8 @@ class Option:
         cidr_web_url = [i['url'] for i in cidr_web]
         report.write_tmp('valid_cidr_url', cidr_web_url)
         self.urls += cidr_web_url
-        report.write_tmp('valid_all_url', self.urls)
+        all_url = list(set(self.urls))
+        report.write_tmp('valid_all_url', all_url)
 
         # POC扫描
         poc_results: list = self.args_poc(self.urls, target)
