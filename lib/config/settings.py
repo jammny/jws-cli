@@ -49,6 +49,11 @@ SUBWORIDS: str = os.path.join(DIRNAME, 'db/subwords.txt')
 DNS = os.path.join(DIRNAME, 'db/dns')
 
 """
+目录扫描模块
+"""
+DICC: str = os.path.join(DIRNAME, 'db/dicc.txt')
+DICC_CONFIG = os.path.join(DIRNAME, 'db/dirsearch.ini')
+"""
 CDN模块
 """
 CDN_KEY: str = CONFIG_DATA['cdn_key']

@@ -16,7 +16,7 @@ from lib.modules.portscan import Port
 from lib.modules.subdomian.subdomain import Sub
 from lib.modules.fingerprint import Finger
 from lib.modules.cdn_recognition import CDN
-from lib.modules.thirdparty import afrog, xray
+from lib.modules.thirdparty import afrog, xray, dirsearch
 
 from lib.utils.format import rex_ip, blacklist_ipaddress, blacklist_cidr
 
@@ -40,7 +40,7 @@ class Option:
     def args_auto(self):
         target: str = self.target
         report = Report(target)
-
+        '''
         # 域名收集
         sub_results: list = self.args_sub(target)
         # 生成报告
@@ -114,9 +114,11 @@ class Option:
             # 生成报告
             report.run('valid_poc', poc_results)
 
-        # xray扫描
-        self.args_xray(self.urls, target)
 
+        # xray扫描
+        self.args_xray(self.urls, target)'''
+        # 目录扫描
+        self.args_dir(self.urls, target)
         logger.info(f"报告输出路径：{REPORTS}/{self.target}.html")
 
     def args_sub(self, target=None):
@@ -241,6 +243,18 @@ class Option:
         xray(urls, name)
         return
 
+    def args_dir(self, urls=None, name=None):
+        """
+        poc扫描
+        :param name:
+        :param urls:
+        :return:
+        """
+        if urls is None:
+            urls: list = [self.target]
+        dirsearch(urls, name)
+        return
+
     def run(self):
         """
         类统一入口
@@ -277,6 +291,10 @@ class Option:
         # POC扫描
         elif self.args['poc']:
             self.args_poc()
+        # 目录扫描
+        elif self.args['dir']:
+            self.args_dir()
         # XRAY扫描
         elif self.args['xray']:
             self.args_xray()
+

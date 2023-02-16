@@ -12,7 +12,7 @@ from os import system
 def main():
     parser = ArgumentParser(description="tip：目标是做一款全自动化信息收集加漏洞扫描工具，解放双手，做回自己。 —— by jammny.")
     parser.add_argument("-t", nargs='?', const=True, type=str, dest="target", required=False, help="目标(必选参数)")
-    parser.add_argument("-T", nargs='?', const=True, type=str, dest="files", required=False, help="目标文件(必选参数)")
+    # parser.add_argument("-T", nargs='?', const=True, type=str, dest="files", required=False, help="目标文件(必选参数)")
     parser.add_argument("--update", dest="update", action='store_true', required=False, help="更新数据")
     parser.add_argument("--auto", nargs='?', const=True, type=str, dest="auto", required=False, help="全自动化扫描")
     parser.add_argument("--sub", nargs='?', const=True, type=str, dest="sub", required=False, help="域名收集")
@@ -22,6 +22,7 @@ def main():
     parser.add_argument("--port", nargs='?', const=True, type=str, dest="port", required=False, help="端口扫描")
     parser.add_argument("--cidr", nargs='?', const=True, type=str, dest="cidr", required=False, help="C段扫描")
     parser.add_argument("--poc", nargs='?', const=True, type=str, dest="poc", required=False, help="POC漏洞扫描")
+    parser.add_argument("--dir", nargs='?', const=True, type=str, dest="dir", required=False, help="目录扫描")
     parser.add_argument("--xray", nargs='?', const=True, type=str, dest="xray", required=False, help="xray网站扫描")
     '''
     parser.add_argument("--fofa", nargs='?', const=True, type=str, dest="fofa", required=False, help="fofa信息索引")

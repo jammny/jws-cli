@@ -7,7 +7,7 @@
 """
 import os
 from os import system
-from lib.config.settings import TMP, MOD, REPORTS, DIRNAME, MOD_DIR
+from lib.config.settings import TMP, MOD, REPORTS, DIRNAME, MOD_DIR, DICC, DICC_CONFIG
 from lib.config.logger import logger
 from lib.utils.encrypt import GetKey
 
@@ -52,3 +52,16 @@ def xray(urls: list, target=None):
             name = GetKey().random_key(7)
             system(f"{MOD['xray']} webscan --browser-crawler {url} --html-output {REPORTS}/xray_{name}.html")
     os.chdir(DIRNAME)
+
+
+def dirsearch(urls: list, target=None):
+    """
+
+    :return:
+    """
+    logger.critical(f"执行任务：dirsearch扫描")
+    if target is None:
+        system(f"dirsearch -u {urls[0]} -w {DICC} --config={DICC_CONFIG} -o {REPORTS}/dirsearch.xml --format=xml")
+    else:
+        system(f"dirsearch -l {TMP}/{target}/valid_all_url.txt -o {REPORTS}/{target}_dirsearch.xml --format=xml"
+               f"-w {DICC} --config={DICC_CONFIG}")
