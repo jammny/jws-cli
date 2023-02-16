@@ -61,7 +61,7 @@ def dirsearch(urls: list, target=None):
     """
     logger.critical(f"执行任务：dirsearch扫描")
     if target is None:
-        system(f"dirsearch -u {urls[0]} -w {DICC} --config={DICC_CONFIG} -o {REPORTS}/dirsearch.xml --format=xml")
+        system(f"dirsearch -u {urls[0]} -w {DICC} --config={DICC_CONFIG} -o {REPORTS}/dirsearch.csv --format=csv")
     else:
-        system(f"dirsearch -l {TMP}/{target}/valid_all_url.txt -o {REPORTS}/{target}_dirsearch.xml --format=xml"
+        system(f"dirsearch -l {TMP}/{target}/valid_all_url.txt -o {REPORTS}/{target}_dirsearch.csv --format=csv "
                f"-w {DICC} --config={DICC_CONFIG}")
