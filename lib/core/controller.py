@@ -40,7 +40,7 @@ class Option:
     def args_auto(self):
         target: str = self.target
         report = Report(target)
-        '''
+
         # 域名收集
         sub_results: list = self.args_sub(target)
         # 生成报告
@@ -114,11 +114,12 @@ class Option:
             # 生成报告
             report.run('valid_poc', poc_results)
 
-
-        # xray扫描
-        self.args_xray(self.urls, target)'''
         # 目录扫描
         self.args_dir(self.urls, target)
+
+        # xray扫描
+        self.args_xray(self.urls, target)
+
         logger.info(f"报告输出路径：{REPORTS}/{self.target}.html")
 
     def args_sub(self, target=None):
