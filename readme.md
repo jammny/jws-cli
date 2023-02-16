@@ -8,6 +8,7 @@
 | 指纹识别 | success |
 | CDN识别 | success    |
 | 端口扫描 | success    |
+| 目录扫描 | success    |
 | C段扫描 | success    |
 | POC扫描 | success    |
 | Xray扫描 | success    |
@@ -74,6 +75,10 @@
 
 3. 哦对了，端口扫描最好放到服务器上跑，比较稳定。
 
+## 目录扫描
+
+1. 目录扫描：`python3 jws-cli.py -t example.com --dir`
+
 ## C段扫描
 
 1. C段扫描+指纹识别：`python3 jws-cli.py -t 192.168.2.1 --cidr --finger`
@@ -111,3 +116,4 @@
 1. 子域收集将加入代理，用于解决人机验证问题。   
 2. poc模块将兼容其他工具的poc，比如说：afrog。  
 3. 将添加邮件通知、微信通知模块。
+4. 将支持批量目标扫描。

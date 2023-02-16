@@ -57,7 +57,7 @@ plugins:
   dirscan:
     enabled: true
     depth: 1                            # 检测深度，定义 http://t.com/a/ 深度为 1, http://t.com/a 深度为 0
-    dictionary: "dicc.txt"                      # 自定义检测字典, 配置后将与内置字典**合并**
+    dictionary: ""                      # 自定义检测字典, 配置后将与内置字典**合并**
   fastjson:
     enabled: true
   jsonp:
@@ -65,7 +65,7 @@ plugins:
   path-traversal:
     enabled: true
   phantasm:                             # poc 插件
-    enabled: false
+    enabled: true
     depth: 1
     auto_load_poc: false                # 除内置 poc 外，额外自动加载当前目录以 "poc-" 为文件名前缀的POC文件，等同于在 include_poc 中增加 "./poc-*"
     exclude_poc: []                     # 排除哪些 poc, 支持 glob 语法, 如: "/home/poc/*thinkphp*" 或 "poc-yaml-weblogic*"
