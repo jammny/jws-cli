@@ -13,7 +13,7 @@ from parsel import Selector
 
 from lib.utils.format import domain_format
 
-from lib.config.logger import logger
+from lib.core.logger import logger
 
 
 class So:

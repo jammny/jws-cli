@@ -7,61 +7,63 @@
 """
 import os
 from os import system
-from lib.config.settings import TMP, MOD, REPORTS, DIRNAME, MOD_DIR, DICC, DICC_CONFIG
-from lib.config.logger import logger
+from lib.core.settings import TMP, MOD, REPORTS, DIRNAME, MOD_DIR, DICC, DICC_CONFIG
 from lib.utils.encrypt import GetKey
 
 
-def afrog(urls: list, target=None):
+def wafw00f(target_list=None, target=None):
     """
 
-    :param file_path:
-    :return:
     """
-    logger.critical(f"执行任务：afrog扫描")
-    if target is None:
-        name = GetKey().random_key(7)
-        with open(f"{TMP}/afrog_{name}.txt", encoding="utf-8", mode="w+") as f:
-            f.write("\n".join(urls))
-        system(f"{MOD['afrog']} -T {TMP}/afrog_{name}.txt -o afrog_{name}.html")
+    if target_list:
+        for i in target_list:
+            system(f"wafw00f {i}")
     else:
-        system(f"{MOD['afrog']} -T {TMP}/{target}/valid_all_url.txt -o afrog_{target}.html")
+        system(f"wafw00f -i {TMP}/{target}/valid_all_url.txt -o {TMP}/{target}/waf.json")
 
 
-def xray(urls: list, target=None):
+def dirsearch(target_list=None, target=None):
+    """
+
+    :return:
+    """
+    if target_list:
+        for url in target_list:
+            system(f"dirsearch -u {url} -w {DICC} --config={DICC_CONFIG}")
+    else:
+        system(f"dirsearch -l {TMP}/{target}/valid_no_waf_urls.txt -w {DICC} --config={DICC_CONFIG} "
+               f"--exclude-text 'Sorry for the inconvenience' -o {TMP}/{target}/dir.json --format=json")
+
+
+def afrog(target_list=None, target=None):
     """
 
     :param file_path:
     :return:
     """
-    logger.critical(f"执行任务：Xray扫描")
+    if target_list:
+        for url in target_list:
+            system(f"{MOD['afrog']} -t {url}")
+    else:
+        system(f"{MOD['afrog']} -T {TMP}/{target}/valid_no_waf_urls.txt -o {target}_afrog.html")
+
+
+def xray(target_list=None, target=None):
+    """
+
+    :param :
+    :return:
+    """
     os.chdir(MOD_DIR['xray_dir'])
-    if target is None:
-        name = GetKey().random_key(7)
-        with open(f"{TMP}/xray_{name}.txt", encoding="utf-8", mode="w+") as f:
-            f.write("\n".join(urls))
-        with open(f"{TMP}/xray_{name}.txt", mode="r") as f:
-            urls_tmp = f.readlines()
-        for url in urls_tmp:
+    if target_list:
+        for url in target_list:
+            name = GetKey().random_key(7)
             system(f"{MOD['xray']} webscan --browser-crawler {url} --html-output {REPORTS}/xray_{name}.html")
     else:
-        with open(f"{TMP}/{target}/valid_all_url.txt", mode="r") as f:
+        with open(f"{TMP}/{target}/valid_no_waf_urls.txt", mode="r") as f:
             urls_tmp = f.readlines()
         for u in urls_tmp:
             url = u.rstrip()
             name = GetKey().random_key(7)
             system(f"{MOD['xray']} webscan --browser-crawler {url} --html-output {REPORTS}/xray_{name}.html")
     os.chdir(DIRNAME)
-
-
-def dirsearch(urls: list, target=None):
-    """
-
-    :return:
-    """
-    logger.critical(f"执行任务：dirsearch扫描")
-    if target is None:
-        system(f"dirsearch -u {urls[0]} -w {DICC} --config={DICC_CONFIG} -o {REPORTS}/dirsearch.csv --format=csv")
-    else:
-        system(f"dirsearch -l {TMP}/{target}/valid_all_url.txt -o {REPORTS}/{target}_dirsearch.csv --format=csv "
-               f"-w {DICC} --config={DICC_CONFIG}")

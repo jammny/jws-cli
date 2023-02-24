@@ -14,8 +14,8 @@ from typing import Any
 
 from httpx import Client
 
-from lib.config.logger import logger
-from lib.config.settings import USER_AGENTS, CONFIG_DATA
+from lib.core.logger import logger
+from lib.core.settings import USER_AGENTS, CONFIG_DATA
 
 
 class Hunter:

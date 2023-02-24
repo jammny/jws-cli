@@ -10,10 +10,10 @@ from time import time
 
 import httpx
 import yaml
-from colorama import Fore, Back
+from colorama import Fore
 
-from lib.config.settings import POC, console
-from lib.config.logger import logger
+from lib.core.settings import POC, console
+from lib.core.logger import logger
 
 from lib.utils.thread import thread_task, get_queue
 

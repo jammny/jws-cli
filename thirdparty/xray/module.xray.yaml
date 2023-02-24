@@ -1,4 +1,5 @@
 Client:
+    active_paths: []
     allow_methods:
         - HEAD
         - GET
@@ -19,6 +20,7 @@ Client:
     max_qps: 500
     max_redirect: 5
     max_resp_body_size: 2.097152e+06
+    passive_mode: false
     pkcs12:
         Password: ""
         Path: ""
@@ -32,6 +34,7 @@ Reverse:
         dns_server_ip: ""
         http_base_url: ""
         remote_server: false
+        reverse_api: ""
         reverse_server_url: ""
         rmi_server_addr: ""
     db_file_path: ""
@@ -73,6 +76,8 @@ Reverse:
 # Client.max_conns_per_host [int]                 同一 host 最大允许的连接数，可以根据目标主机性能适当增大
 # Client.enable_http2       [bool]                是否启用 http2, 开启可以提升部分网站的速度，但目前不稳定有崩溃的风险
 # Client.pkcs12             []                    
+# Client.passive_mode       [bool]                被动模式, 值为true时, 所有请求都会返回FakeResponse
+# Client.active_paths       [slice-string]        被动模式下, 仍会主动发起请求的路径
 # Client.fail_retries       [int]                 请求失败的重试次数，0 则不重试
 # Client.max_redirect       [int]                 单个请求最大允许的跳转数
 # Client.max_resp_body_size []                    最大允许的响应大小, 默认 2M

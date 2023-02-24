@@ -8,7 +8,7 @@ import time
 
 import cdx_toolkit
 
-from lib.config.logger import logger
+from lib.core.logger import logger
 from lib.utils.format import match_subdomains
 
 

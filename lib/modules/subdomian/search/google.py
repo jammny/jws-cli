@@ -11,7 +11,7 @@ from typing import Any
 from httpx import Client
 from parsel import Selector
 
-from lib.config.logger import logger
+from lib.core.logger import logger
 
 
 class Google:

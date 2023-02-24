@@ -8,8 +8,8 @@
 from ast import literal_eval
 from httpx import Client, stream
 from rich.progress import Progress
-from lib.config.logger import logger
-from lib.config.settings import HTTP_PROXY
+from lib.core.logger import logger
+from lib.core.settings import HTTP_PROXY
 from lib.utils.thread import thread_task
 
 

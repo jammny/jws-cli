@@ -228,19 +228,19 @@ subdomain:
       enabled: true
     fofa:
       enabled: false
-      email: ""
-      key: ""
+      email: "1304945616@qq.com"
+      key: "7ea86e7a709bada6ae044d3cbedee912"
     ip138:
       enabled: true
     myssl:
       enabled: true
     riskiq:
       enabled: false
-      user: ""
-      key: ""
+      user: "jammny.hao@qq.com"
+      key: "69ff4d152f1d722d08f115f1f0942e8c30d43b3e3245b129301a216decc13942"
     quake:
-      enabled: false
-      key: ""
+      enabled: true
+      key: "8af7ed28-59e9-46a1-b8b5-89a25d434f99"
     baidu:
       enabled: true
       page_limit: 12

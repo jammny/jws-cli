@@ -6,7 +6,7 @@ from typing import Tuple, Union
 import struct
 import urllib.request
 import zlib
-from lib.config.logger import logger
+from lib.core.logger import logger
 
 __all__ = ['QQwry', 'updateQQwry']
 

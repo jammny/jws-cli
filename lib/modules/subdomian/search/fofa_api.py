@@ -11,8 +11,8 @@ from random import choice
 
 from httpx import Client
 
-from lib.config.settings import USER_AGENTS, CONFIG_DATA
-from lib.config.logger import logger
+from lib.core.settings import USER_AGENTS, CONFIG_DATA
+from lib.core.logger import logger
 
 from lib.utils.format import domain_format
 

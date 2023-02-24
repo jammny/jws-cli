@@ -52,6 +52,10 @@ vuln-scan:
     webhook_output: ""
 
 # 
+# target-parser.target              [string]              目标，如URL、域名、IP、CIDR，转化为x.EventTarget以及[]x.EventTarget事件
+# target-parser.group_size          [int]                 每次生成的[]x.EventTarget的大小，当<=0时，将一次性解析单次输入全部输出
+# target-parser.flag                [map-string-string]   
+# 
 # vuln-scan.config_file             [string]              漏洞扫描配置文件名
 # vuln-scan.log_level               [string]              日志等级
 # vuln-scan.plugins                 [string]              指定运行的插件名，以 ',' 分割
@@ -79,7 +83,3 @@ vuln-scan:
 # service-scan.skip_web_fingerprint [bool]                跳过对http服务的web指纹识别
 # service-scan.max_service_per_host [int]                 单主机最大服务数量（超过部分将不进行探测）
 # service-scan.flag                 [map-string-string]   
-# 
-# target-parser.target              [string]              目标，如URL、域名、IP、CIDR，转化为x.EventTarget以及[]x.EventTarget事件
-# target-parser.group_size          [int]                 每次生成的[]x.EventTarget的大小，当<=0时，将一次性解析单次输入全部输出
-# target-parser.flag                [map-string-string]   

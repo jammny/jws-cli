@@ -1,4 +1,4 @@
-# 版本
+# 版本号
 version: 0.0.4
 
 # zoomeye可以免费注册帐号密码
@@ -37,6 +37,7 @@ fofa_size: 2000
 # https://api.tjit.net/user/key
 cdn_key:
 
+
 # 自定义user-agent
 user-agent:
   - Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
@@ -47,10 +48,32 @@ user-agent:
   - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36
   - Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0
 
-# 默认扫描端口
-port: 21,22,23,80-99,135,139,442-445,666,800,801,808,880,888,889,1000,1010,1080,1081,1082,1118,1211,1214,1433,1888,2008,2020,2100,2375,2379,27017,3000-10010,11115,12018,12443,14000,16080,18000-18098,19001,19080,20000,20720,21000,21501,21502,28018,20880
-port_thread: 600
 
-# POC扫描引擎
-# 可选参数： system, afrog
-poc_setting: afrog
+# 端口扫描模块，参数配置
+# port: '21,22,23,80-99,135,139,442-445,666,800,801,808,880,888,889,1000-2379,3000-10010,11115,12018,12443,14000,16080,18000-18098,19001,19080,20000,20720,21000,21501,21502,28018,20880,27017'
+# port: '1-65535'              # 扫描端口, 可选参数：1-65535 或 21,22,80-90,8000-9000
+port: '80,443'
+port_thread: 1000            # 端口扫描线程, 如果VPS网络建议设置线程:：1000
+port_timeout: 3              # 建议就3, 网络差就调至5
+port_method: 'socket'        # 端口扫描方式, 可选参数：socket, syn, udp
+skip_alive: False            # 开启后，程序无论主机是否存活都将进行端口扫描
+
+
+# C段扫描，参数配置
+cidr_method: 'fofa'         # 扫描方式，可选参数：fofa, system
+cidr_blacklist: [
+    '微软', '阿里云', '阿里云BGP节点', '阿里云BGP服务器', '阿里巴巴', 'Microsoft', 'CDN', 'Azure', '华为', '华为云',
+    '腾讯云', '网宿', 'Amazon', '运营商：IP','世纪互联BGP数据中心', '内部网', '局域网', '对方和您在同一内部网', '亚马逊',
+]
+
+
+# POC扫描，参数配置
+poc_setting: 'afrog'        # POC扫描引擎, 可选参数： system, afrog
+
+
+# 自动化测试，可以选择关闭的模块
+port_scan: True
+cidr_scan: True
+dir_scan: True
+poc_scan: True
+xray_scan: True

@@ -9,7 +9,7 @@ import ast
 from httpx import Client
 from parsel import Selector
 
-from lib.config.logger import logger
+from lib.core.logger import logger
 from lib.utils.format import domain_format, match_subdomains
 
 
