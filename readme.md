@@ -2,27 +2,29 @@
 
 > 前言：目标是做一款全自动化信息收集工具，仅需一行命令就解放双手。为了提升脚本小子的编程能力，因此有了这个项目。
 
-| 目标功能   | 完成状态 |
-| -- | ----------- |
-| 子域名收集 | success |
-| 指纹识别 | success |
-| CDN识别 | success    |
-| 端口扫描 | success    |
-| 目录扫描 | success    |
-| C段扫描 | success    |
-| POC扫描 | success    |
-| Xray扫描 | success    |
+| 目标功能      | 完成状态    |
+|-----------|---------|
+| 子域名收集     | success |
+| 指纹识别      | success |
+| CDN识别     | success |
+| 端口扫描      | success |
+| C段扫描      | success |
+| waf识别     | success |
+| 目录扫描      | success |
+| POC扫描     | success |
+| Xray扫描    | success |
+| 支持批量扫描    | success |
+| 邮箱/微信推送报告 | ——      |
+| 代理负载均衡    | ——      |
 
 ## 下载与部署 
-1. 建议在kali下运行：`git clone https://github.com/jammny/jws-cli`
+1. 扫描器建议在Linux服务器上运行：`git clone https://github.com/jammny/jws-cli`
 
-2. 初始化安装依赖：`python3 jws-cli.py`  
+2. 初始化安装依赖：`pip install -r requirements.txt`  
 
-![img.png](img/img.png)
+3. 程序运行：`python3 jws-cli.py`  
 
-![img_1.png](img/img_1.png)
-
-3. 自动化一键收集：`python3 jws-cli.py -t example.com --auto`  
+![img.png](img.png)
 
 ## 域名收集
 
@@ -112,8 +114,3 @@
 
 ![img_5.png](img/img_5.png)
 
-## 后续更新：
-1. 子域收集将加入代理，用于解决人机验证问题。   
-2. poc模块将兼容其他工具的poc，比如说：afrog。  
-3. 将添加邮件通知、微信通知模块。
-4. 将支持批量目标扫描。
