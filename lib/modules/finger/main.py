@@ -5,21 +5,23 @@
 作者：jammny
 文件描述：简单实现一个web指纹识别工具。
 """
+import time
 from re import compile, findall
 from random import choice
-from time import time
 from codecs import lookup
-from typing import Any
+
 
 from httpx import Client
 from tinydb import TinyDB
-from colorama import Back
+
+
 from mmh3 import hash
 
-from lib.config.settings import FINGER, USER_AGENTS, console
-from lib.config.logger import logger
+from lib.core.settings import FINGER, USER_AGENTS
+from lib.core.logger import logger
 
-from lib.utils.thread import thread_task, get_queue
+from . import table
+from ...utils.thread import threadpool_task, get_queue
 
 
 class Finger:
@@ -97,7 +99,7 @@ class Finger:
             print('error', item['method'])
             return ''
 
-    def webAlive(self, target: str) -> Any:
+    def webAlive(self, target: str):
         """
         网站存活探测
         :param target: 有可能是完整url，也有可能是域名。
@@ -111,7 +113,7 @@ class Finger:
         else:
             http_url: str = target
             https_url: str = target
-        with Client(headers=self.headers, verify=False, cookies=self.cookies, follow_redirects=True) as c:
+        with Client(headers=self.headers, verify=False, cookies=self.cookies, follow_redirects=True, timeout=3) as c:
             # 先测试是否存在http，如果存在就不测https了，网站指纹大概率相同。
             try:
                 response = c.get(http_url)
@@ -125,23 +127,20 @@ class Finger:
                     # logger.debug(f"{target} {e}")
                     return None
 
-    def finger(self, queue) -> None:
+    def finger(self, queue):
         """
-        指纹识别，多线程调用方法
+        多线程调用方法
         :param self:
-        :param queue:
+        :param target:
         :return:
         """
-        global cms
         while not queue.empty():
-            target: str = queue.get()
-            if target == u'end_tag':  # 接收到结束码，就结束
-                break
+            target: str = queue.get(timeout=4)
             # web存活探测
             response = self.webAlive(target)
             # 如果url不可访问，就直接退出
             if not response:
-                continue
+                return
             # 获取目标链接
             target_url: str = str(response.url)
             # 获取标题
@@ -152,7 +151,6 @@ class Finger:
                 title: str = ""
             # 获取网站的ico hash
             ico_hash = self.get_icon_hash(target_url)
-            #
             data: dict = {
                 'res_body': response.text,
                 'res_headers': response.headers,
@@ -168,28 +166,25 @@ class Finger:
                 'url': target_url,
                 'cms': cms,
                 'title': title,
-                'code': response.status_code,
+                'code': str(response.status_code),
                 'ico_hash': ico_hash
             }
             self.result.append(tmp)
-            if cms != '':
-                logger.warning(tmp)
-            else:
-                logger.info(tmp)
+            logger.debug(tmp)
 
     def run(self) -> list:
         """
         类统一执行入口
         :return:
         """
-        start = time()
-        logger.critical(f"执行任务：指纹识别")
         logger.info(f"Get the target number：{len(self.target)}")
         logger.info(f"Number of data fingerprints：{len(self.db)}")
-        queue = get_queue(self.target)
-        thread_task(task=self.finger, args=[queue], thread_count=len(self.target))
-        end = time()
-        logger.info(f"Effective collection quantity：{Back.RED}{len(self.result)}{Back.RESET}")
-        logger.info(f"Fingerprint task finished! Total time：{end - start}")
-        logger.debug(self.result)
+        start_time = time.time()
+        # 调用多线程
+        queue_obj = get_queue(self.target)
+        threadpool_task(task=self.finger, args=[queue_obj], thread_count=100)
+        logger.info(f"Finger task finished! Total time：{time.time() - start_time}")
+        logger.info(f"Effective collection quantity：{len(self.result)}")
+        # 图表展示
+        table.show_table(self.result)
         return self.result

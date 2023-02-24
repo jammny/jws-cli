@@ -9,7 +9,7 @@ from time import sleep
 from typing import Any
 
 from httpx import Client
-from lib.config.logger import logger
+from lib.core.logger import logger
 
 
 class Virustotal:

@@ -2,12 +2,17 @@
 # -*- coding : utf-8-*-
 from time import time
 
-from rich.progress import Progress
+from rich.progress import (
+    BarColumn,
+    Progress,
+    TimeRemainingColumn,
+    TransferSpeedColumn,
+)
 
-from lib.utils.thread import thread_task, get_queue
+from lib.utils.thread import get_queue, threadpool_task
 from lib.utils.nslookup import a_record
 
-from lib.config.logger import logger
+from lib.core.logger import logger
 
 
 class Brute:
@@ -40,7 +45,7 @@ class Brute:
         :return:
         """
         while not queue.empty():
-            domain: str = queue.get()
+            domain: str = queue.get(timeout=4)
             if domain == u'end_tag':
                 break
             try:
@@ -64,10 +69,20 @@ class Brute:
         # 检测泛解析
         self.generic_parsing()
         # 进度条
-        with Progress() as progress:
+        progress = Progress(
+            BarColumn(bar_width=40),
+            "[progress.percentage]{task.percentage:>3.1f}%",
+            # "•",
+            # DownloadColumn(),
+            # "•",
+            TransferSpeedColumn(),
+            "•",
+            TimeRemainingColumn(),
+        )
+        with progress:
             task = progress.add_task('[red]', total=len(domain))
-            queue = get_queue(domain)
-            thread_task(task=self.dns_resolver, thread_count=600, args=[queue, task, progress])
+            queue_obj = get_queue(domain)
+            threadpool_task(task=self.dns_resolver, args=[queue_obj, task, progress], thread_count=3000)
         end = time()
         logger.info(f"Subdomain Brute: {len(self.result)} results found! Run time：{end - start}")
         logger.debug(self.result)

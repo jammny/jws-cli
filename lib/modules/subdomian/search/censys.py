@@ -13,8 +13,8 @@ from parsel import Selector
 
 from lib.utils.format import domain_format
 
-from lib.config.logger import logger
-from lib.config.settings import CONFIG_DATA
+from lib.core.logger import logger
+from lib.core.settings import CONFIG_DATA
 
 
 class Censys:

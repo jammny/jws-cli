@@ -9,10 +9,9 @@ from time import time
 
 import yaml
 import tldextract
-from colorama import Back
 
-from lib.config.settings import DNS, SUBNAMES, SUBWORIDS
-from lib.config.logger import logger
+from lib.core.settings import DNS, SUBNAMES, SUBWORIDS
+from lib.core.logger import logger
 from lib.modules.subdomian.vulnerability.dns_zone_transfer import AXFR
 
 from lib.utils.nslookup import a_record
@@ -24,6 +23,8 @@ from lib.modules.subdomian.search import sogou, censys, zoomeye, bing, so, baidu
     binaryedge_api, fofa_api, fullhunt_api
 from lib.modules.subdomian.intelligence import virustotal
 from lib.modules.subdomian.dnsdatasets import robtex, dnsdumpster, sitedossier, securitytrails_api
+
+from . import table
 
 
 class Sub:
@@ -40,7 +41,6 @@ class Sub:
         self.root_generic: list = []
         # 存一级域名泛解析结果
         self.dnsgen_generic: list = []
-
 
     def task_run(self, queue) -> None:
         """
@@ -297,7 +297,6 @@ class Sub:
         去掉重复的域名数据
         :return:
         """
-        logger.info("整合数据..")
         data: list = [i['subdomain'] for i in self.valid_result]
         for i in self.brute_result:
             if not data.__contains__(i['subdomain']) and i['ip'] != self.root_generic:
@@ -336,6 +335,7 @@ class Sub:
             if d in data:
                 data.remove(d)
             # 从读取的置换字典中，删除存在泛解析的数据
+
             tmp = tldextract.extract(d).subdomain
             if tmp in wordlist:
                 wordlist.remove(tmp)
@@ -353,8 +353,8 @@ class Sub:
         类统一执行入口
         :return:m
         """
+        logger.info(f"Target: {self.target}")
         start = time()
-        logger.critical(f"执行任务：域名收集")
         task: list = [
             # 综合搜索引擎
             self.google_, self.so_, self.bing_, self.baidu_, self.yandex_, self.sougou_,
@@ -363,7 +363,7 @@ class Sub:
             # 威胁情报
             self.virustotal_,
             # DNS数据集
-            self.sitedossier_, self.robtex_, self.dnsdumpster_, self.securitytrails_,
+            self.dnsdumpster_, self.sitedossier_, self.securitytrails_, self.robtex_,
             # DNS域传输
             self.dns_zone_transfer_
         ]
@@ -373,7 +373,7 @@ class Sub:
         # 先执行自定义的DNS数据集
         queue = get_queue(datasets)
         thread_task(task=self.run_datasets, args=[queue], thread_count=len(datasets))
-
+        
         # 执行内置的模块
         queue = get_queue(task)
         thread_task(task=self.task_run, args=[queue], thread_count=len(task))
@@ -385,7 +385,7 @@ class Sub:
 
         # 域名存活验证
         self.check_domain_alive()
-
+        
         # 爆破任务
         if brute_status:
             self.brute_()
@@ -397,7 +397,7 @@ class Sub:
             self.remove_duplicate()
         end = time()
         logger.info(f"Subdomain task finished! Total time：{end - start}")
-        logger.warning(f"Effective collection quantity：{Back.RED}{len(self.valid_result)}{Back.RESET}")
-        logger.debug(self.valid_result)
-        # console.print(self.valid_result)
+        logger.info(f"Effective collection quantity：{len(self.valid_result)}")
+        # 数据展示
+        table.show_table(self.valid_result)
         return self.valid_result

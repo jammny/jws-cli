@@ -11,7 +11,7 @@ from typing import Any
 
 from httpx import Client
 
-from lib.config.logger import logger
+from lib.core.logger import logger
 
 
 class Robtex:
@@ -69,7 +69,7 @@ class Robtex:
                 if response.status_code == 200:
                     return response.text
                 else:
-                    logger.debug(f"robtex connect error！ Code： {response.status_code}")
+                    logger.warning(f"robtex connect error！ Code： {response.status_code}")
                     # logger.debug(response.text)
                     return False
         except Exception as e:

@@ -5,8 +5,8 @@
 作者：jammny
 文件描述：
 """
-from lib.config.logger import logger
-from lib.config.settings import QQWRY
+from lib.core.logger import logger
+from lib.core.settings import QQWRY
 
 from lib.utils.qqwry import updateQQwry
 

@@ -9,6 +9,8 @@ import re
 
 from IPy import IP
 
+from lib.core.settings import CIDR_BLACKLIST
+
 
 def domain_format(data: str):
     """
@@ -42,11 +44,11 @@ def blacklist_ipaddress(data):
     物理IP地址 黑名单过滤
     :return:
     """
-    black_list = [
-        '微软', '阿里云', '阿里云BGP数据中心', 'Microsoft', 'CDN', 'Azure', '华为', "亚马逊", '腾讯云', '网宿', 'Amazon', '运营商：IP',
-        '世纪互联BGP数据中心', '内部网', '局域网'
-    ]
-    return all(i not in data for i in black_list)
+    black_list = CIDR_BLACKLIST
+    for i in black_list:
+        if i in data:
+            return False
+    return True
 
 
 def blacklist_cidr(ip):

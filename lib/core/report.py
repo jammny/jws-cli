@@ -11,9 +11,9 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 from tinydb import TinyDB
 
-from lib.config.settings import REPORTS
+from lib.core.settings import REPORTS
 
-from lib.config.settings import TMP
+from lib.core.settings import TMP
 
 
 class Report:

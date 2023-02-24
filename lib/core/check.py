@@ -4,8 +4,8 @@ from os import path, mkdir
 from colorama import Fore
 from httpx import Client
 
-from lib.config.logger import logger
-from lib.config.settings import REPORTS, MOD, VERSION, TMP
+from lib.core.logger import logger
+from lib.core.settings import REPORTS, MOD, VERSION, TMP
 
 
 class CheckAll:

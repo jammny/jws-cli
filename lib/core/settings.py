@@ -63,6 +63,14 @@ CDN_KEY: str = CONFIG_DATA['cdn_key']
 """
 PORT: str = CONFIG_DATA['port']
 PORT_THREAD: int = CONFIG_DATA['port_thread']
+PORT_TIMEOUT: int = CONFIG_DATA['port_timeout']
+PORT_METHOD: int = CONFIG_DATA['port_method']
+
+"""
+C段扫描
+"""
+CIDR_METHOD: str = CONFIG_DATA['cidr_method']
+CIDR_BLACKLIST: list = CONFIG_DATA['cidr_blacklist']
 
 """
 POC模块

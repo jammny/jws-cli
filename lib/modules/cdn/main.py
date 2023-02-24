@@ -11,12 +11,14 @@ from random import choice
 from dns import resolver
 from httpx import Client
 
-from lib.utils.thread import thread_task, get_queue
+from lib.utils.thread import get_queue, threadpool_task
 from lib.utils.qqwry import QQwry
 
-from lib.config.logger import logger
-from lib.config.settings import USER_AGENTS, CDN_KEY
-from lib.config.settings import QQWRY
+from lib.core.logger import logger
+from lib.core.settings import USER_AGENTS, CDN_KEY
+from lib.core.settings import QQWRY
+
+from .table import show_table
 
 
 class CDN:
@@ -86,11 +88,10 @@ class CDN:
                             ip.append(j.address)
                 if len(ip) > 1:
                     # 如果识别结果有多个，大概率就是CDN
-                    logger.debug(f"{domain} {ip}")
                     logger.warning(f"{domain} has CDNS!")
                     cdn: str = "true"
                 else:
-                    logger.info(f"{domain} has not CDNS!")
+                    logger.debug(f"{domain} has not CDNS!")
                     # dns解析只有一个IP，但不一定就没CDN，保险起见可以使用多地ping复测一下
                     # logger.info(f"Running multiple ping...")
                     # cdn: str = self.m_ping(domain)
@@ -112,13 +113,12 @@ class CDN:
         :return:
         """
         start = time()
-        logger.critical(f"执行任务：CDN识别")
         logger.info(f"Get the target number：{len(self.target)}")
         queue = get_queue(self.target)
-        thread_task(task=self.dns_lookup, args=[queue], thread_count=3)
+        threadpool_task(task=self.dns_lookup, args=[queue], thread_count=100)
         end = time()
         logger.info(f"Cdn task finished! Total time：{end - start}")
-        logger.debug(self.result)
+        show_table(self.result)
         return self.result
 
 

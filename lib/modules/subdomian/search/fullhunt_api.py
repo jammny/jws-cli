@@ -11,8 +11,8 @@ from typing import Any
 
 from httpx import Client
 
-from lib.config.logger import logger
-from lib.config.settings import CONFIG_DATA
+from lib.core.logger import logger
+from lib.core.settings import CONFIG_DATA
 
 
 class Fullhunt:
