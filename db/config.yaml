@@ -51,8 +51,7 @@ user-agent:
 
 # 端口扫描模块，参数配置
 # port: '21,22,23,80-99,135,139,442-445,666,800,801,808,880,888,889,1000-2379,3000-10010,11115,12018,12443,14000,16080,18000-18098,19001,19080,20000,20720,21000,21501,21502,28018,20880,27017'
-# port: '1-65535'              # 扫描端口, 可选参数：1-65535 或 21,22,80-90,8000-9000
-port: '80,443'
+port: '1-65535'              # 扫描端口, 可选参数：1-65535 或 21,22,80-90,8000-9000
 port_thread: 1000            # 端口扫描线程, 如果VPS网络建议设置线程:：1000
 port_timeout: 3              # 建议就3, 网络差就调至5
 port_method: 'socket'        # 端口扫描方式, 可选参数：socket, syn, udp
@@ -72,8 +71,8 @@ poc_setting: 'afrog'        # POC扫描引擎, 可选参数： system, afrog
 
 
 # 自动化测试，可以选择关闭的模块
-port_scan: True
-cidr_scan: True
-dir_scan: True
-poc_scan: True
-xray_scan: True
+# port_scan: True
+# cidr_scan: True
+# dir_scan: True
+# poc_scan: True
+# xray_scan: True
