@@ -116,20 +116,26 @@ class Option:
         # WAF扫描
         self.args_waf(target=name)
         no_waf_urls = []
-        with open(f"{TMP}/{name}/waf.json", mode='r') as f:
-            waf = json.load(f)
-        for i in waf:
-            if not i['detected']:
-                no_waf_urls.append(i['url'])
-            i['detected'] = str(i['detected'])
+        try:
+            with open(f"{TMP}/{name}/waf.json", mode='r') as f:
+                waf = json.load(f)
+            for i in waf:
+                if not i['detected']:
+                    no_waf_urls.append(i['url'])
+                i['detected'] = str(i['detected'])
+        except:
+            waf = []
         report.run('valid_waf', waf)
         report.write_tmp('valid_no_waf_urls', no_waf_urls)
         
         # 目录扫描
         self.args_dir(target=name)
-        with open(f"{TMP}/{name}/dir.json", mode='r') as f:
-            tmp = json.load(f)
-        dir_results = tmp['results']
+        try:
+            with open(f"{TMP}/{name}/dir.json", mode='r') as f:
+                tmp = json.load(f)
+                dir_results = tmp['results']
+        except:
+            dir_results = []
         report.run('valid_dir', dir_results)
 
         # POC扫描

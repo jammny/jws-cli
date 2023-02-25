@@ -5,8 +5,8 @@
 文件描述:
 """
 import re
+import threading
 
-from socket import AF_INET, SOCK_STREAM, socket
 from scapy.layers.inet import IP, TCP, UDP
 
 from rich.progress import Progress, BarColumn, TransferSpeedColumn, TimeRemainingColumn
@@ -15,7 +15,11 @@ from scapy.volatile import RandShort
 
 from lib.core.settings import PORT_TIMEOUT, PORT_METHOD
 from .rules import PROBES, signs_rules, SERVER
-from lib.utils.thread import threadpool_task, get_queue
+from lib.utils.thread import threadpool_task
+
+from socket import AF_INET, SOCK_STREAM, socket
+
+lock = threading.Lock()
 
 
 class PortScan:
@@ -70,8 +74,9 @@ class PortScan:
         """
         while True:
             try:
-                if queue.empty():
-                    break
+                with lock:
+                    if queue.empty():
+                        break
                 port = queue.get()
                 conn = socket(AF_INET, SOCK_STREAM)
                 conn.settimeout(PORT_TIMEOUT)
@@ -156,9 +161,3 @@ class PortScan:
         return self.results
 
 
-if __name__ == '__main__':
-    targets = ['3306', '80', '22', '65535']
-    queue = get_queue(targets)
-    host = '127.0.0.1'
-    results = PortScan().run(host, queue, thread_count=600)
-    print(results)

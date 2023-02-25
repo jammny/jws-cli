@@ -22,9 +22,8 @@
 
 2. 初始化安装依赖：`pip install -r requirements.txt`  
 
-3. 程序运行：`python3 jws-cli.py`  
+3. 程序运行：`python3 jws-cli.py -t example.com --auto`  
 
-![img.png](img.png)
 
 ## 域名收集
 
@@ -40,77 +39,13 @@
 （模块说明：想使用更多的数据接口可以联系我更新。）
 ```
 
-2. 有部分模块需要自行到文件`/db/config.yaml`配置API才能正常使用，绝大部分都是可以免费注册的：  
-
-![img_3.png](img/img_3.png)
+2. 有部分模块需要自行到文件`/db/config.yaml`配置API才能正常使用，绝大部分都是可以免费注册的。  
 
 
-3. 常规使用：`python3 jws-cli.py -t example.com --sub`  
-
-![img_2.png](img/img_2.png)
-
-4、爆破域名模式，有两个爆破模块，目前耗时比较长：`python3 jws-cli.py -t target.com --sub --brute`
-
-## 指纹识别
-
-1. url指纹识别：`python3 jws-cli.py -t https://www.example.com --finger `  
-
-![img_4.png](img/img_4.png)
-
-2. 域名收集+指纹识别：`python3 jws-cli.py -t example.com --sub --finger`
-
-## CDN识别
-
-1. CDN识别：`python3 jws-cli.py -t example.com --cdn`
-
-![img_6.png](img/img_6.png)
-
-## 端口扫描
-
-1. 可以在文件`/db/config.yaml`配置扫描参数：
-
-![img_7.png](img/img_7.png)
-
-2. 端口扫描+指纹识别：`python3 jws-cli.py -t example.com --port --finger`
-
-![img_9.png](img/img_9.png)
-
-3. 哦对了，端口扫描最好放到服务器上跑，比较稳定。
-
-## 目录扫描
-
-1. 目录扫描：`python3 jws-cli.py -t example.com --dir`
-
-## C段扫描
-
-1. C段扫描+指纹识别：`python3 jws-cli.py -t 192.168.2.1 --cidr --finger`
-
-![img_10.png](img/img_10.png)
-
-## POC扫描
-
-1. 程序内置了一个poc扫描框架，但是目前能使用的poc较少，后续开放poc编写规则以及模板。
-2. poc扫描： `python3 jws-cli.py -t http://example.com --poc`
-
-![img_12.png](img/img_12.png)
-
-3. 为了达到开箱即用的目的，现阶段支持使用第三方的扫描引擎：[afrog](https://github.com/zan8in/afrog "afrog")。， 将`afrog`在文件`/db/config.yaml`配置参数即可：
-
-![img_11.png](img/img_11.png)
-
-4. 调用afrog扫描：
-
-![img_13.png](img/img_13.png)
-
-## XRAY扫描
-
-1. 调用xray扫描： `python3 jws-cli.py -t http://example.com --xray`
-
-![img.png](img/img_14.png)
+3. 常规使用：`python3 jws-cli.py -t example.com --sub`
 
 
 # 报告输出
-1. `/reports/`目录下会生成对应目标的html报告文件:
+1. `/reports/`目录下会生成对应目标的html报告文件。
 
-![img_5.png](img/img_5.png)
 

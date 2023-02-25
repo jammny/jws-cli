@@ -39,9 +39,11 @@ def thread_task(task: Callable, args: list, thread_count: int = 100):
     # 开始线程
     for i in tasks:
         i.start()
+
     # 开始线程
     for i in tasks:
         i.join()
+
 
 def threadpool_task(task: Callable, args: list, thread_count):
     """
@@ -80,5 +82,5 @@ if __name__ == '__main__':
     # 线程
     thread_task(task=ping, args=[q], thread_count=4)
     # 线程池
-    threadpool_task(task=ping, args=[q], thread_count=3)
+    # threadpool_task(task=ping, args=[q], thread_count=1)
     print(f"用时：{time.time() - start_time}")

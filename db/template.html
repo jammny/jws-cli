@@ -27,7 +27,9 @@
             <li>IP端口</li>
             <li>端口资产</li>
             <li>C段资产</li>
-            <li>POC结果</li>
+            <li>WAF识别</li>
+            <li>目录扫描</li>
+            <li>POC扫描</li>
         </ul>
         <div class="layui-tab-content" style="height: 100%;">
             <div class="layui-tab-item layui-show"><table class="layui-hide" id="sub"></table></div>
@@ -112,6 +114,8 @@
                 cols: [[
                     {field:'target', title: '目标'},
                     {field:'port', title: '端口'},
+                    {field:'service', title: '服务'},
+                    {field:'banner', title: '标识'},
                 ]],
                 page: true,
                 limit: 50
