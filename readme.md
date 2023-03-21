@@ -71,7 +71,7 @@ auto_setting:
 常规使用：`python3 jws-cli.py -t http://example.com --xray`
 
 ## 邮件、微信通知
-注意：需要到config.yaml文件中进行配置信息。
+注意：需要到config.yaml文件中进行邮箱信息配置信息，微信关联一下邮箱就行了。
 
 # 报告输出
 `/reports/`目录下会生成对应目标的html报告文件，还有json结果文件。
