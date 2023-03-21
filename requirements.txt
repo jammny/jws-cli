@@ -9,7 +9,6 @@ httpx~=0.23.0
 parsel==1.7.0
 tldextract~=3.4.0
 cdx_toolkit~=0.9.34
-
 IPy~=1.1
 tinydb~=4.7.0
 scapy~=2.5.0
@@ -17,9 +16,6 @@ wafw00f~=2.2.0
 dirsearch~=0.4.3
 jinja2~=3.1.2
 eventlet~=0.33.3
-
 ping3~=4.0.4
-
 aiodns~=3.0.0
-
 dnspython~=2.3.0
