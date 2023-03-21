@@ -48,7 +48,7 @@ class Option(object):
 
         report = Report(name)
         # 域名收集
-        sub_results: list = self.args_sub(target_list, brute)
+        sub_results: list = self.args_sub(target_list, brute, report=False)
         # 生成报告
         report.run('valid_sub', sub_results)
         # 从扫描结果中将域名单独提取出来, 将数据写入tmp目录，保存成txt格式

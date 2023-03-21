@@ -33,8 +33,8 @@ auto_setting:
   port_scan: True
   cidr_scan: True
   dir_scan: True
-  poc_scan: True
-  xray_scan: True
+  poc_scan: False
+  xray_scan: False
 ```
 
 ## Usage
@@ -69,6 +69,7 @@ auto_setting:
 ## xray扫描
 
 常规使用：`python3 jws-cli.py -t http://example.com --xray`
+注意：使用xray的话，需要安装好谷歌浏览器。
 
 ## 邮件、微信通知
 注意：需要到config.yaml文件中进行邮箱信息配置信息，微信关联一下邮箱就行了。
