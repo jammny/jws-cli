@@ -9,12 +9,9 @@ import string
 
 
 class GetKey:
-    def __init__(self):
-        pass
-
     def random_key(self, length):
         """
-        获取随机n1
+        获取随机
         :param length:
         :return:
         """

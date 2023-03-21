@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 """
-作者：https://github.com/jammny
 前言：切勿将本工具和技术用于网络犯罪，三思而后行！
 文件描述： 程序入口。
 """
@@ -27,8 +26,9 @@ if __name__ == "__main__":
             auto: bool = typer.Option(False, "--autoscan", "--auto", help="自动化扫描."),
             sub: bool = typer.Option(False, "--subdomain", "--sub", help="子域名收集."),
             brute: bool = typer.Option(False, "--brute", help="域名爆破模式."),
+            report: bool = typer.Option(False, "--report", help="生成报告."),
             finger: bool = typer.Option(False, "--finger", help="指纹识别."),
-            cdn: bool = typer.Option(False, "--cdn", help="指纹识别."),
+            cdn: bool = typer.Option(False, "--cdn", help="CDN识别"),
             port: bool = typer.Option(False, "--port", help="端口扫描."),
             cidr: bool = typer.Option(False, "--cidr", help="C段扫描."),
             waf: bool = typer.Option(False, "--waf", help="waf识别."),
@@ -62,7 +62,7 @@ if __name__ == "__main__":
         if auto:
             task.args_auto(target_list, brute)  # 自动化扫描
         elif sub:
-            task.args_sub(target_list, brute)  # 子域名收集
+            task.args_sub(target_list, brute, report)  # 子域名收集
         elif finger:
             task.args_finger(target_list)  # 指纹识别
         elif cdn:

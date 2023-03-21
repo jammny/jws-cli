@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 """
-作者：https://github.com/jammny
 前言：切勿将本工具和技术用于网络犯罪，三思而后行！
 文件描述： 控制中心。
 """
@@ -164,16 +163,16 @@ class Option(object):
         self.args_xray(target=name)
 
         # 邮件发送
-        try:
-            SendEmail().run()
-        except:
-            logger.warning("邮件发送失败！")
+        mail_msg = f"{name} 扫描任务完成！"
+        file_name = f"{REPORTS}/{name}.html"
+        SendEmail(mail_msg, file_name).send()
         
         logger.info(f"报告输出路径：{REPORTS}/{name}.html")
 
-    def args_sub(self, target_list: list, brute_status: bool) -> list:
+    def args_sub(self, target_list: list, brute_status: bool, report: bool) -> list:
         """
         子域名收集
+        :param report: 是否需要生成报告
         :param target_list: 目标域名列表
         :param brute_status: 爆破模式状态
         :return: list
@@ -183,6 +182,16 @@ class Option(object):
         for target in target_list:
             tmp: list = Sub(target).run(brute_status)
             sub_results: list = tmp + sub_results
+        # 如果需要，生成报告
+        if report:
+            if len(target_list) > 1:
+                name = GetKey().random_key(6)
+            else:
+                name = target_list[0]
+            Report(name).run('valid_sub', sub_results)
+            domain: list = [i['subdomain'] for i in sub_results]
+            Report(name).write_tmp('valid_sub', domain)
+            logger.info(f"报告输出路径：{REPORTS}/{name}.html")
         return sub_results
 
     def args_finger(self, target_list: list) -> list:

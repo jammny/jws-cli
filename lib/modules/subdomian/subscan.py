@@ -230,7 +230,7 @@ class Sub(object):
             # 如果能够成功解析出IP，说明存在泛解析
             addr_info = socket.getaddrinfo(domain, None)
             self.root_generic: list = [addr[4][0] for addr in addr_info if ":" not in addr[4][0]]
-            logger.warn(f"域名{self.target}存在泛解析！默认忽略解析到{self.root_generic}的域名！")
+            logger.warn(f"域名{target}存在泛解析！默认忽略解析到{self.root_generic}的域名！")
         except:
             pass
 

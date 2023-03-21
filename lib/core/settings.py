@@ -84,3 +84,10 @@ MOD: dict = {
 MOD_DIR: dict = {
     "xray_dir": os.path.join(DIRNAME, 'thirdparty/xray'),
 }
+
+# 邮箱配置
+SEND_EMAIL = CONFIG_DATA['send_email']
+SEND_PASS = CONFIG_DATA['send_pass']
+REC_EMAIL = CONFIG_DATA['rec_email']
+SMTP_SERVER = CONFIG_DATA['smtp_server']
+SMTP_PORT = CONFIG_DATA['smtp_port']
