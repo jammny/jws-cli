@@ -1,13 +1,10 @@
 id: riddler
 # https://riddler.io/search
 
-type: html
+type: fuzzy
 
 rule:
-  while:
-
-  start_page:
-  add_num:
+  while: False
 
   request:
     url: "https://riddler.io/search?q=pld:{domain}"
@@ -17,12 +14,8 @@ rule:
       sec-ch-ua: '"Google Chrome";v="107", "Chromium";v="107", "Not=A?Brand";v="24"'
       sec-ch-ua-mobile: ?0
       sec-ch-ua-platform: '"Linux"'
-    # 响应很慢很慢
     timeout: 10
-
 
   response:
     code: 200
-    selector:
-      method: css
-      data: table[class="table search-resuts col-lg-12"] a::text
+

@@ -12,7 +12,6 @@ from httpx import Client
 from parsel import Selector
 
 from lib.utils.format import domain_format
-
 from lib.core.logger import logger
 from lib.core.settings import CONFIG_DATA
 
@@ -114,7 +113,7 @@ class Censys:
         """
         url: str = f"https://search.censys.io/certificates/_search?q={self.domain}&page={self.page}"
         try:
-            with Client(verify=False, cookies=cookies, timeout=10) as c:
+            with Client(verify=False, cookies=cookies, timeout=10, follow_redirects=True) as c:
                 response = c.get(url)
             if response.status_code == 200:
                 return response.text

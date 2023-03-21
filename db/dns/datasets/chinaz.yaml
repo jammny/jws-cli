@@ -1,7 +1,7 @@
 id: chinaz
 # https://alexa.chinaz.com
 
-type: html
+type: fuzzy
 
 rule:
   while: False
@@ -15,6 +15,4 @@ rule:
 
   response:
     code: 200
-    selector:
-      method: css
-      data: div[class="container yy-box average-flow"] tbody a::text
+

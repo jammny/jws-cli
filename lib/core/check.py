@@ -1,4 +1,11 @@
-import platform
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+"""
+作者：https://github.com/jammny
+前言：切勿将本工具和技术用于网络犯罪，三思而后行！
+文件描述： 程序完整性检查
+"""
+from platform import python_version
 from os import path, mkdir
 
 from colorama import Fore
@@ -7,16 +14,13 @@ from httpx import Client
 from lib.core.logger import logger
 from lib.core.settings import REPORTS, MOD, VERSION, TMP
 
+__all__ = ['CheckAll', ]
 
-class CheckAll:
-    """程序完整性检查"""
 
-    def __init__(self):
-        pass
-
+class CheckAll(object):
     def py_check(self):
         """py版本检测"""
-        py_version: str = platform.python_version()
+        py_version: str = python_version()
         a: list = py_version.split('.')
         b: int = int(a[0])
         c: int = int(a[1])
@@ -33,10 +37,10 @@ class CheckAll:
 
     def update_check(self):
         """软件更新检测"""
-        with Client(timeout=3, verify=False) as c:
+        with Client(timeout=5, verify=False) as c:
             try:
                 response = c.get("https://jammny.github.io/jws/version.txt")
-                v = response.text.rstrip()
+                v: str = response.text.rstrip()
                 if v != VERSION:
                     logger.info(f"New version: {VERSION} —> {Fore.RED}{v}{Fore.RESET} —> "
                                 f"{Fore.MAGENTA}https://github.com/jammny/jws-cli{Fore.RESET}")

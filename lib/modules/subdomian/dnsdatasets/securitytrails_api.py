@@ -20,9 +20,9 @@ class Securitytrails:
         self.key: str = CONFIG_DATA['securitytrails_key']
         self.domain: str = domain
         self.result_domain: list = []
-        self.page: int = 1
+
         self.url: str = f"https://api.securitytrails.com/v1/domain/{self.domain}/subdomains?children_only=false" \
-                        f"&include_inactive=true "
+                        f"&include_inactive=true"
 
     def parse_resqonse(self, response: dict) -> bool:
         """

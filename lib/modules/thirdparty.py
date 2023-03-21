@@ -1,9 +1,9 @@
-#!/usr/bin/env python 
-# -*- coding : utf-8-*-
-# coding:unicode_escape
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
 """
-作者：jammny
-文件描述：第三方程序的调用
+作者：https://github.com/jammny
+前言：切勿将本工具和技术用于网络犯罪，三思而后行！
+文件描述： 第三方控制模块
 """
 import os
 from os import system
@@ -48,10 +48,11 @@ def afrog(target_list=None, target=None):
         system(f"{MOD['afrog']} -T {TMP}/{target}/valid_no_waf_urls.txt -o {target}_afrog.html")
 
 
-def xray(target_list=None, target=None):
+def xray(target_list, target):
     """
-
-    :param :
+    poc扫描
+    :param name:
+    :param urls:
     :return:
     """
     os.chdir(MOD_DIR['xray_dir'])

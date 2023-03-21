@@ -1,12 +1,11 @@
 id: qianxun
 # https://www.dnsscan.cn/dns.html
 
-type: html
+type: fuzzy
 
 rule:
   while: True
-
-  start_page: 0
+  start_page: 1
   add_num: 1
 
   request:
@@ -20,9 +19,5 @@ rule:
     # 响应很慢很慢
     timeout: 30
 
-
   response:
     code: 200
-    selector:
-      method: css
-      data: div[class="htable"] table[class="table_solid"] a::text

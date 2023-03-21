@@ -17,8 +17,8 @@ FINGER: str = os.path.join(DIRNAME, 'db/finger.json')
 # 纯真ip数据库
 QQWRY: str = os.path.join(DIRNAME, 'db/qqwry.dat')
 
-# config.yaml配置数据
 with open(os.path.join(DIRNAME, 'db/config.yaml'), mode="r", encoding="utf-8") as f:
+    # config.yaml配置数据
     CONFIG_DATA = yaml.load(f.read(), Loader=yaml.FullLoader)
 
 # 版本信息
@@ -38,64 +38,45 @@ BANNER: str = (
     "\n"
 )
 
-"""
-子域名模块
-"""
-# 子域名爆破字典
-SUBNAMES: str = os.path.join(DIRNAME, 'db/subnames.txt')
-# 置换字典
-SUBWORIDS: str = os.path.join(DIRNAME, 'db/subwords.txt')
-# dns数据集配置文件
-DNS = os.path.join(DIRNAME, 'db/dns')
 
-"""
-目录扫描模块
-"""
+# 自动扫描配置
+AUTO_SETTING: dict = CONFIG_DATA['auto_setting']
+
+# 子域名模块
+SUBNAMES: str = os.path.join(DIRNAME, 'db/subnames.txt')
+SUBWORIDS: str = os.path.join(DIRNAME, 'db/subwords.txt')
+DNS: str = os.path.join(DIRNAME, 'db/dns/test')
+
+# 目录扫描模块
 DICC: str = os.path.join(DIRNAME, 'db/dicc.txt')
-DICC_CONFIG = os.path.join(DIRNAME, 'db/dirsearch.ini')
-"""
-CDN模块
-"""
+DICC_CONFIG: str = os.path.join(DIRNAME, 'db/dirsearch.ini')
+
+# CDN模块
 CDN_KEY: str = CONFIG_DATA['cdn_key']
 
-"""
-端口扫描
-"""
+# 端口扫描
 PORT: str = CONFIG_DATA['port']
 PORT_THREAD: int = CONFIG_DATA['port_thread']
 PORT_TIMEOUT: int = CONFIG_DATA['port_timeout']
 PORT_METHOD: int = CONFIG_DATA['port_method']
 
-"""
-C段扫描
-"""
+# C段扫描
 CIDR_METHOD: str = CONFIG_DATA['cidr_method']
 CIDR_BLACKLIST: list = CONFIG_DATA['cidr_blacklist']
 
-"""
-POC模块
-"""
-POC_ENGINE = CONFIG_DATA['poc_setting']
-# POC目录
+# POC模块
+POC_ENGINE: str = CONFIG_DATA['poc_setting']
 POC: str = os.path.join(DIRNAME, 'db/poc')
 
-"""
-爬虫/代理模块
-"""
-# 代理文件
+# 爬虫/代理模块
 HTTP_PROXY = os.path.join(DIRNAME, 'db/http_proxy.txt')
-# 获取User-Agents
 USER_AGENTS = CONFIG_DATA['user-agent']
 
-"""
-报告/结果输出
-"""
+# 报告/结果输出
 REPORTS: str = os.path.join(DIRNAME, 'reports')
 TMP: str = os.path.join(DIRNAME, 'reports/tmp')
 
-"""
-第三方模块
-"""
+# 第三方模块
 MOD: dict = {
     "afrog": os.path.join(DIRNAME, 'thirdparty/afrog/afrog'),
     "xray": os.path.join(DIRNAME, 'thirdparty/xray/xray'),

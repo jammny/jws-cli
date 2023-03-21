@@ -1,9 +1,10 @@
 id: alienvault
 
-type: json
+type: fuzzy
 
 rule:
   while: False
+
   request:
     header:
       User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
@@ -11,9 +12,6 @@ rule:
     timeout: 10
     url: https://otx.alienvault.com/api/v1/indicators/domain/{domain}/passive_dns
 
-# 解析数据格式：{'passive_dns': [{'hostname': ''}]}
+
   response:
     code: 200
-    key:
-      - passive_dns
-      - hostname

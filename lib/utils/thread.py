@@ -45,7 +45,7 @@ def thread_task(task: Callable, args: list, thread_count: int = 100):
         i.join()
 
 
-def threadpool_task(task: Callable, args: list, thread_count):
+def threadpool_task(task: Callable, args: list, thread_count=100):
     """
     线程池模板
     :param task: 需要多线程执行的任务

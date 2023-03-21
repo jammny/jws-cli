@@ -1,7 +1,7 @@
 id: ip138
 # https://site.ip138.com/
 
-type: html
+type: fuzzy
 
 rule:
   while: False
@@ -14,6 +14,4 @@ rule:
 
   response:
     code: 200
-    selector:
-      method: css
-      data: div[id="J_subdomain"] p a::text
+

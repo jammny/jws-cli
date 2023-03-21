@@ -1,37 +1,140 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 """
-作者：jammny
-文件描述:
+作者：https://github.com/jammny
+前言：切勿将本工具和技术用于网络犯罪，三思而后行！
+文件描述： 利用协程写了一个端口扫描模块。
 """
 import re
-import threading
+from time import time
+from typing import Callable
+from dataclasses import dataclass
+import socket
 
-from scapy.layers.inet import IP, TCP, UDP
+import eventlet
+from rich.console import Console
+from rich.table import Table
 
-from rich.progress import Progress, BarColumn, TransferSpeedColumn, TimeRemainingColumn
-from scapy.sendrecv import sr1
-from scapy.volatile import RandShort
-
-from lib.core.settings import PORT_TIMEOUT, PORT_METHOD
-from .rules import PROBES, signs_rules, SERVER
-from lib.utils.thread import threadpool_task
-
-from socket import AF_INET, SOCK_STREAM, socket
-
-lock = threading.Lock()
+from lib.modules.port.hostscan import HostScan
+from lib.modules.port.rules import PROBES, signs_rules, SERVER
+from lib.utils.format import runtime_format
+from lib.core.logger import logger
+from lib.core.settings import PORT, PORT_THREAD, PORT_METHOD, PORT_TIMEOUT
 
 
-class PortScan:
-    def __init__(self):
-        self.results = list()
+eventlet.monkey_patch(socket=True)
 
-    def get_banner(self, host, port):
+
+@dataclass()
+class Port:
+    target: list    # 目标列表
+
+    port_range: str = PORT  # 默认端口范围
+    result = []  # 存扫描结果
+
+    def run(self):
+        """
+        类统一入口
+        :return:
+        """
+        start = time()
+        # 将目标放进队列
+        logger.info(f"Get the target number：{len(self.target)}, thread counts: {PORT_THREAD}, method: {PORT_METHOD}")
+        # 端口扫描
+        if len(self.port_range) > 400:
+            thread_count = PORT_THREAD
+        else:
+            thread_count = len(self.port_range)
+        for host in self.target:
+            # 主机存活检测
+            res = HostScan().single_task(host)
+            if not res:
+                logger.debug(f"[TARGET] {host} is not alive.")
+                continue
+            ports_list = get_ports(self.port_range)
+            results = PortScan().run(host, ports_list, thread_count)
+            self.result += results
+        logger.info(f"Port scan task finished! Total time：{runtime_format(start, time())}")
+        show_table(self.result)
+        return self.result
+
+
+@dataclass()
+class PortScan(object):
+    port_results = []   # 存放端口扫描的结果
+
+    def coroutinepool_task(self, task: Callable, data: list, thread_count: int, task_args: tuple = ()) -> None:
+        """
+
+        :param task: 需要异步运行的函数
+        :param data: 需要加入到队列的数据
+        :param thread_count: 协程数
+        :param task_args: 需要异步运行的函数，夹带的参数
+        :return:
+        """
+        # 把数据放到列队
+        queue = eventlet.Queue()
+        for i in data:
+            queue.put(i)
+        args: tuple = task_args + (queue,)
+        # 创建协程池
+        pool = eventlet.GreenPool(thread_count)
+        # 循环创建协程并加入协程池
+        for _ in range(queue.qsize()):
+            pool.spawn_n(task, *args)
+        # 等待所有协程执行完毕
+        pool.waitall()
+
+    def tcp_scan(self, host: str, queue) -> None:
+        """
+        TCP 扫描
+        :param host:
+        :param queue:
+        :return:
+        """
+        try:
+            port: int = queue.get()
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)    # 创建套接字
+            sock.settimeout(PORT_TIMEOUT)   # 设置超时时间
+            res = sock.connect_ex((host, port))   # 连接主机和端口
+            sock.close()    # 关闭套接字
+            if res == 0:
+                # 打印端口信息
+                service, Banner = self.get_banner(host, port)
+                tmp = {'target': host, 'port': str(port), 'service': service, 'banner': Banner[:50]}
+                logger.debug(tmp)
+                self.port_results.append(tmp)
+        except:
+            pass
+
+    def udp_scan(self, host: str, queue) -> None:
+        try:
+            port: int = queue.get()
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            sock.settimeout(PORT_TIMEOUT)
+            sock.sendto(b'', (host, port))
+            data, addr = sock.recvfrom(1024)
+            sock.close()
+            # 打印端口信息
+            service, Banner = self.get_banner(host, port)
+            tmp = {'target': host, 'port': str(port), 'service': service, 'banner': Banner[:50]}
+            logger.debug(tmp)
+            self.port_results.append(tmp)
+        except socket.timeout:
+            pass
+
+    def get_banner(self, host, port) -> tuple:
+        """
+        获取指纹
+        :param host:
+        :param port:
+        :return:
+        """
         Banner = ''
         service = ''
         for probe in PROBES:
             try:
-                sd = socket(AF_INET, SOCK_STREAM)
+                sd = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 sd.settimeout(PORT_TIMEOUT)
                 sd.connect((host, int(port)))
                 sd.send(probe.encode(encoding='utf-8'))
@@ -51,13 +154,24 @@ class PortScan:
             service = self.get_server(port)
         return service, Banner
 
-    def get_server(self, port):
+    def get_server(self, port) -> str:
+        """
+        匹配指纹
+        :param port:
+        :return:
+        """
         for k, v in SERVER.items():
             if v == port:
                 return k
         return ''
 
-    def matchbanner(self, banner, slist):
+    def matchbanner(self, banner, slist) -> str:
+        """
+        匹配指纹
+        :param banner:
+        :param slist:
+        :return:
+        """
         for item in slist:
             item = item.split('|')
             p = re.compile(item[1])
@@ -65,99 +179,59 @@ class PortScan:
                 return item[0]
         return ''
 
-    def socket_scan(self, queue, host, task, progress):
+    def run(self, host: str, ports_list: list, thread_count: int) -> list:
         """
-        基于 socket tcp 连接方式，进行端口扫描
-        :param host: 扫描目标
-        :param queue: 队列中存放了待扫描的端口
+
+        :param host:
+        :param thread_count:
+        :param host: 目标
+        :param ports_list: 待扫描的端口列表
         :return:
         """
-        while True:
-            try:
-                with lock:
-                    if queue.empty():
-                        break
-                port = queue.get()
-                conn = socket(AF_INET, SOCK_STREAM)
-                conn.settimeout(PORT_TIMEOUT)
-                result = conn.connect_ex((host, port))
-                conn.close()
-                # 如果端口开放，返回0
-                if result == 0:
-                    progress.console.print(f"{host}:{port}")
-                    # 获取指纹
-                    service, banner = self.get_banner(host, str(port))
-                    tmp = {'target': host, 'port': str(port), 'service': service, 'banner': banner[:100]}
-                    self.results.append(tmp)
-            except Exception as e:
-                continue
-            finally:
-                # 更新进度
-                if not progress.finished:
-                    progress.update(task, advance=1)
-
-    def syn_scan(self, queue, host, task, progress):
-        while True:
-            try:
-                if queue.empty():
-                    break
-                port = queue.get()
-                sport = RandShort()
-                pkt = IP(dst=host) / TCP(flags="S", sport=sport, dport=port)  # 构造标志位为ACK的数据包
-                response = sr1(pkt, timeout=5, verbose=0)
-                if response is not None and response.haslayer(TCP) and response[TCP].flags == "SA":
-                    progress.console.print(f"{host}:{port}")
-                    # 获取指纹
-                    service, banner = self.get_banner(host, str(port))
-                    tmp = {'target': host, 'port': str(port), 'service': service, 'banner': banner[:100]}
-                    self.results.append(tmp)
-            except:
-                continue
-            finally:
-                # 更新进度
-                if not progress.finished:
-                    progress.update(task, advance=1)
-
-    def udp_scan(self, queue, host, task, progress):
-        while True:
-            try:
-                if queue.empty():
-                    break
-                port = queue.get()
-                sport = RandShort()
-                udp_packet = IP(dst=host)/UDP(dport=port, sport=sport)
-                response = sr1(udp_packet, timeout=5, verbose=0)
-                if response is not None and response.haslayer(UDP):
-                    progress.console.print(f"{host}:{port}")
-                    # 获取指纹
-                    service, banner = self.get_banner(host, str(port))
-                    tmp = {'target': host, 'port': str(port), 'service': service, 'banner': banner[:100]}
-                    self.results.append(tmp)
-            except Exception as e:
-                continue
-            finally:
-                # 更新进度
-                if not progress.finished:
-                    progress.update(task, advance=1)
-
-    def run(self, host, queue, thread_count):
-        """
-
-        :param hosts: 目标列表
-        :param queue: 队列中存放了待扫描的端口
-        :return:
-        """
-        # 进度条
-        progress = Progress(BarColumn(bar_width=40), "[progress.percentage]{task.percentage:>3.1f}%",
-                            TransferSpeedColumn(), "•", TimeRemainingColumn(), transient=True)
-        with progress:
-            task = progress.add_task(f'[red]', total=queue.qsize())
-            if PORT_METHOD == "socket":
-                threadpool_task(task=self.socket_scan, args=[queue, host, task, progress], thread_count=thread_count)
-            elif PORT_METHOD == "syn":
-                threadpool_task(task=self.syn_scan, args=[queue, host, task, progress], thread_count=thread_count)
-            elif PORT_METHOD == "udp":
-                threadpool_task(task=self.udp_scan, args=[queue, host, task, progress], thread_count=thread_count)
-        return self.results
+        if PORT_METHOD == "tcp":
+            self.coroutinepool_task(self.tcp_scan, ports_list, thread_count, (host,))
+        elif PORT_METHOD == "udp":
+            self.coroutinepool_task(self.udp_scan, ports_list, thread_count, (host,))
+        return self.port_results
 
 
+def get_ports(port_range: str) -> list:
+    """
+    将 1-65535 或 21,22,80-90,8000-9000 拆分
+    :param port_range:
+    :return:
+    """
+    port_list: list = []
+    if "," in port_range:
+        tmp: list = port_range.split(",")
+        for port in tmp:
+            if "-" in port:
+                ran: list = port.split("-")
+                for n in range(int(ran[0]), int(ran[1])+1):
+                    port_list.append(n)
+            else:
+                port_list.append(int(port))
+    elif "-" in port_range:
+        ran: list = port_range.split("-")
+        for n in range(int(ran[0]), int(ran[1]) + 1):
+            port_list.append(n)
+    else:
+        port_list.append(int(port_range))
+    return port_list
+
+
+def show_table(data: list) -> None:
+    """
+    表格展示数据
+    :param: data
+    :return:
+    """
+    table = Table(title="ports results", show_lines=False)
+    table.add_column("target", justify="left", style="cyan", no_wrap=True)
+    table.add_column("port", justify="left", style="magenta")
+    table.add_column("service", justify="left", style="red")
+    table.add_column("banner", justify="left", style="red")
+    for i in data:
+        table.add_row(i['target'], (i['port']), i['service'], (i['banner']))
+    console = Console()
+    console.print(table)

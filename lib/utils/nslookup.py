@@ -21,3 +21,4 @@ def a_record(domain):
             if j.rdtype == 1:
                 ip.append(j.address)
     return ip
+

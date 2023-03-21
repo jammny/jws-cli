@@ -1,8 +1,6 @@
 id: crt.sh
 # 通过crt.sh查询dns解析记录
 
-type: json
-
 rule:
   while: False
 
@@ -15,5 +13,3 @@ rule:
 
   response:
     code: 200
-    key:
-      - common_name

@@ -1,42 +1,86 @@
-#!/usr/bin/env python 
-# -*- coding : utf-8-*-
-# coding:unicode_escape
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
 """
-作者：jammny
-文件描述：
+作者：https://github.com/jammny
+前言：切勿将本工具和技术用于网络犯罪，三思而后行！
+文件描述：此模块专门用于处理数据。
 """
 import re
+from typing import Union
 
 from IPy import IP
 
-from lib.core.settings import CIDR_BLACKLIST
+try:
+    from lib.core.settings import CIDR_BLACKLIST
+except:
+    pass
 
 
-def domain_format(data: str):
+def domain_format(data: str) -> Union[str, None]:
     """
-    提取域名
-    :param data:
-    :return:
+    提取字符串中的域名数据
+    :param data: str
+    :return: str
     """
-    # 处理 https://www.baidu.com
-    if '://' in data:
-        data: str = data.split('://')[1]
-    # 处理 www.baidu.com:443/
-    if ":" in data:
-        domain: str = data.split(':')[0]
-    # 处理 www.baidu.com/test
-    elif "/" in data:
-        domain: str = data.split('/')[0]
-    # 处理 *.baidu.com
-    elif "*." in data:
-        domain: str = data.replace('*.', '')
-    else:
-        domain = data
     # 正则处理
-    res = re.search('((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}', domain)
+    res = re.search('((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}', data)
     if res:
-        domain = res.group()
-    return domain
+        return res.group()
+    else:
+        return
+
+
+def match_subdomains(domain: str, html: str, distinct: bool = True, fuzzy: bool = True) -> Union[list, set]:
+    """
+    正则匹配域名
+    :param domain: 目标域名
+    :param html: 需要提取域名的页面
+    :param distinct: 是否返回集合
+    :param fuzzy: 是否开启fuzz匹配
+    :return: dict | set
+    """
+    if fuzzy:
+        regexp = r'(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?\.){0,}' + domain.replace('.', r'\.')
+        result = re.findall(regexp, html, re.I)
+        if not result:
+            return set()
+        deal = map(lambda s: s.lower(), result)
+        if distinct:
+            return set(deal)
+        else:
+            return list(deal)
+    else:
+        regexp = r'(?:\>|\"|\'|\=|\,)(?:http\:\/\/|https\:\/\/)?' \
+                 r'(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?\.){0,}' \
+                 + domain.replace('.', r'\.')
+        result = re.findall(regexp, html, re.I)
+        if not result:
+            return set()
+        regexp = r'(?:http://|https://)'
+        deal = map(lambda s: re.sub(regexp, '', s[1:].lower()), result)
+        if distinct:
+            return set(deal)
+        else:
+            return list(deal)
+
+
+def runtime_format(start_time: float, end_time: float) -> str:
+    """
+    计算程序运行时长，格式化输出结果
+    :param start_time: 程序开始时间
+    :param end_time: 程序结束时间
+    :return: 程序运行时长
+    """
+    run_time: float = end_time - start_time
+    seconds: int = int(run_time)   # 秒
+    # milliseconds = int((run_time - seconds) * 1000)   # 毫秒
+    if seconds > 60:
+        mintues: int = seconds // 60
+        new_seconds: int = seconds % 60
+        formatted_time = f"{mintues}min {new_seconds}s"
+    else:
+        formatted_time = f"{seconds}s"
+    return formatted_time
 
 
 def blacklist_ipaddress(data):
@@ -63,42 +107,6 @@ def blacklist_cidr(ip):
         '112.90.80.0/24'
     ]
     return all(i not in cidr for i in black_list)
-
-
-def match_subdomains(domain, html, distinct=True, fuzzy=True):
-    """
-    正则
-
-    :param  str domain: main domain
-    :param  str html: response html text
-    :param  bool distinct: deduplicate results or not (default True)
-    :param  bool fuzzy: fuzzy match subdomain or not (default True)
-    :return set/list: result set or list
-    """
-    if fuzzy:
-        regexp = r'(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?\.){0,}' + domain.replace('.', r'\.')
-        result = re.findall(regexp, html, re.I)
-        if not result:
-            return set()
-        deal = map(lambda s: s.lower(), result)
-        if distinct:
-            return list(set(deal))
-        else:
-            return list(deal)
-
-    else:
-        regexp = r'(?:\>|\"|\'|\=|\,)(?:http\:\/\/|https\:\/\/)?' \
-                 r'(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?\.){0,}' \
-                 + domain.replace('.', r'\.')
-        result = re.findall(regexp, html, re.I)
-        if not result:
-            return set()
-        regexp = r'(?:http://|https://)'
-        deal = map(lambda s: re.sub(regexp, '', s[1:].lower()), result)
-        if distinct:
-            return set(deal)
-        else:
-            return list(deal)
 
 
 def rex_ip(data: list):

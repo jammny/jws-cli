@@ -14,7 +14,7 @@ from IPy import IP
 from lib.core.logger import logger
 from lib.core.settings import CIDR_METHOD
 from lib.modules.port.hostscan import HostScan
-from lib.modules.port.main import Port
+from lib.modules.port.portscan import Port
 
 from lib.utils.thread import get_queue
 

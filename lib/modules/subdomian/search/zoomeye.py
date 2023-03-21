@@ -1,37 +1,56 @@
-#!/usr/bin/env python 
-# -*- coding : utf-8-*-
-# coding:unicode_escape
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
 """
-作者：jammny
+作者：https://github.com/jammny
+前言：切勿将本工具和技术用于网络犯罪，三思而后行！
 文件描述：ZoomEye API接口调用
 """
-from random import choice
-from typing import Any
+from typing import Union
+from dataclasses import dataclass
 
 from httpx import Client
 
-from lib.core.settings import USER_AGENTS, CONFIG_DATA
+from lib.core.settings import CONFIG_DATA
 from lib.core.logger import logger
-
 from lib.utils.format import domain_format
 
 
-class ZoomEye:
-    def __init__(self, query) -> None:
-        self.mail: str = CONFIG_DATA['zoomeye_mail']
-        self.password: str = CONFIG_DATA['zoomeye_pass']
-        self.headers: dict = {"User-Agent": choice(USER_AGENTS)}
-        self.query: str = query  # 查询参数
-        self.url: str = f'https://api.zoomeye.org/web/search?query={query}'
-        self.results: list = []
+@dataclass()
+class ZoomEye(object):
+    query: str  # 查询参数
 
-    def login(self) -> Any:
+    mail: str = CONFIG_DATA['zoomeye_mail']
+    password: str = CONFIG_DATA['zoomeye_pass']
+    domain_results = set()
+
+    def send_request(self) -> Union[dict, None]:
+        """
+        ZoomEye 接口请求
+        :return:
+        """
+        jwt: Union[str, None] = self.login()    # 获取用户jwt口令
+        url: str = f'https://api.zoomeye.org/web/search?query={self.query}'
+        if not jwt:  # 判断是否登陆成功
+            return
+        try:
+            with Client(verify=False, timeout=10) as c:
+                response = c.get(url, headers={'Authorization': 'JWT ' + jwt})
+            if response.status_code == 200:
+                return response.json()
+            else:
+                logger.debug(f"ZoomEye connect error! Code： {response.status_code}")
+                return
+        except Exception as e:
+            logger.error(f"{url} {e}")
+            return
+
+    def login(self) -> Union[str, None]:
         """
         登陆获取用户token
         :return:
         """
         try:
-            with Client(headers=self.headers, verify=False) as c:
+            with Client(verify=False, timeout=10) as c:
                 response = c.post(url='https://api.zoomeye.org/user/login',
                                   json={'username': self.mail, 'password': self.password})
                 if response.status_code == 200:
@@ -41,10 +60,21 @@ class ZoomEye:
                     return access_token
                 else:
                     logger.warning("ZoomEye login failed!")
-                    return False
+                    return
         except Exception as e:
             logger.error(f"ZoomEye login failed！{e}")
-            return False
+            return
+
+    def get_domain(self) -> list:
+        """
+        域名收集调用
+        :return: 返回包含域名的列表
+        """
+        logger.info("Running ZoomEye ...")
+        response: Union[dict, None] = self.send_request()
+        if response:
+            self.parse_response(response)
+        return list(self.domain_results)
 
     def parse_response(self, response: dict) -> None:
         """
@@ -53,39 +83,9 @@ class ZoomEye:
         """
         for i in response['matches']:
             if i.__contains__('site'):
-                self.results.append(domain_format(i['site']))
-        logger.info(f"ZoomEye Query：{self.query}, {len(self.results)} results found!")
-        logger.debug(f"ZoomEye Query：{self.results}")
-
-    def send_request(self) -> Any:
-        """
-        ZoomEye 接口请求
-        :return:
-        """
-        jwt = self.login()
-        try:
-            if jwt:  # 判断是否登陆成功
-                with Client(headers=self.headers, verify=False) as c:
-                    response = c.get(self.url, headers={'Authorization': 'JWT ' + jwt})
-                if response.status_code == 200:
-                    return response.json()
-                else:
-                    logger.debug(f"ZoomEye connect error! Code： {response.status_code}")
-                    return False
-        except Exception as e:
-            logger.error(f"{self.url} {e}")
-            return False
-
-    def get_domain(self):
-        """
-        域名收集调用,
-        :return: 返回包含域名的列表
-        """
-        logger.info("Running ZoomEye ...")
-        response = self.send_request()
-        if response:
-            self.parse_response(response)
-        return self.results
+                self.domain_results.add(domain_format(i['site']))
+        logger.info(f"ZoomEye Query：{self.query}, {len(self.domain_results)} results found!")
+        logger.debug(f"ZoomEye Query：{self.domain_results}")
 
     def run(self):
         """

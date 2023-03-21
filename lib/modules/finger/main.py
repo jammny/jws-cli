@@ -15,7 +15,7 @@ from httpx import Client
 from tinydb import TinyDB
 
 
-from mmh3 import hash
+from pymmh3 import hash
 
 from lib.core.settings import FINGER, USER_AGENTS
 from lib.core.logger import logger

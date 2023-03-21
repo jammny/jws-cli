@@ -1,8 +1,23 @@
-import os
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+"""
+作者：https://github.com/jammny
+前言：切勿将本工具和技术用于网络犯罪，三思而后行！
+文件描述： 程序入口。
+"""
 import sys
 
+import typer
+import colorama
 
-def main():
+from lib.core.controller import Option
+from lib.core.settings import BANNER
+from lib.core.logger import logger
+from lib.core.check import CheckAll
+
+
+if __name__ == "__main__":
+    colorama.init(autoreset=True)  # 初始化
     app = typer.Typer()
 
     @app.command()
@@ -17,17 +32,17 @@ def main():
             port: bool = typer.Option(False, "--port", help="端口扫描."),
             cidr: bool = typer.Option(False, "--cidr", help="C段扫描."),
             waf: bool = typer.Option(False, "--waf", help="waf识别."),
-            dir: bool = typer.Option(False, "--dir", help="目录扫描."),
+            dir_: bool = typer.Option(False, "--dir", help="目录扫描."),
             poc: bool = typer.Option(False, "--poc", help="poc扫描."),
             xray: bool = typer.Option(False, "--xray", help="xray扫描."),
-    ):
+    ) -> None:
         # 输出Banner图案
         sys.stdout.write(BANNER)
         # 程序兼容性检测
         check = CheckAll()
         check.run()
         # 必要参数检测
-        task = Option(target)
+        task = Option()
         if target is None and file is None:
             logger.error('You need to provide the target！')
             logger.warning('TIPS：Enter "--help" for help')
@@ -45,53 +60,23 @@ def main():
             target_list: list = [target]
         # 开始任务
         if auto:
-            # 自动化扫描
-            task.args_auto(target_list, brute)
+            task.args_auto(target_list, brute)  # 自动化扫描
         elif sub:
-            # 子域名收集
-            task.args_sub(target_list, brute)
+            task.args_sub(target_list, brute)  # 子域名收集
         elif finger:
-            # 指纹识别
-            task.args_finger(target_list)
+            task.args_finger(target_list)  # 指纹识别
         elif cdn:
-            # 指纹识别
-            task.args_cdn(target_list)
+            task.args_cdn(target_list)  # 指纹识别
         elif port:
-            # 端口扫描
-            task.args_port(target_list)
+            task.args_port(target_list)  # 端口扫描
         elif cidr:
-            # C段扫描
-            task.args_cidr(target_list)
+            task.args_cidr(target_list)  # C段扫描
         elif waf:
-            # waf扫描
-            task.args_waf(target_list)
-        elif dir:
-            # 目录扫描
-            task.args_dir(target_list)
+            task.args_waf(target_list)  # waf扫描
+        elif dir_:
+            task.args_dir(target_list)  # 目录扫描
         elif poc:
-            # POC扫描
-            task.args_poc(target_list)
+            task.args_poc(target_list)  # POC扫描
         elif xray:
-            # Xray扫描
-            task.args_xray(target_list)
-    init(autoreset=True)
+            task.args_xray(target_list)  # Xray扫描
     app()
-
-
-if __name__ == "__main__":
-    try:
-        from lib.core.settings import BANNER
-        from lib.core.logger import logger
-        from lib.core.check import CheckAll
-        from lib.core.controller import Option
-        from lib.core.settings import BANNER
-        from lib.core.logger import logger
-        from lib.core.check import CheckAll
-        from colorama import init
-        import typer
-        main()
-    except ModuleNotFoundError as e:
-        moduleName: str = str(e).split("'")[1]
-        print(f"{moduleName} module was not found!")
-        print(f"Trying to install...")
-        os.system("pip install -r requirements.txt")
