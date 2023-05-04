@@ -141,7 +141,7 @@ rec_email:                        # 收件人邮箱
 
 ## 程序兼容性问题  
 
-由于scapy库依赖的限制，所以如果你想在windows上运行此程序，你可能需要安装好nmap工具环境。因为项目的开发环境是Kali Linux，所以其实我还是更建议在Linux上运行此程序，当然如果你在VPS（linux）上扫描体验会更好。</br>
+由于scapy库依赖的限制，所以如果你想在windows上运行此程序，你可能需要安装好nmap工具。因为项目的开发环境是Kali Linux，所以其实我还是更建议在Linux上运行此程序，当然如果你在VPS（linux）上扫描体验会更好。</br>
 
 程序兼容环境： windows、Linux </br>
 python版本 >= 3.8.0
