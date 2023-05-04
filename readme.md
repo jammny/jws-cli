@@ -1,87 +1,160 @@
 # JWS-CLI  
 
-> 前言：目标是做一款全自动化信息收集工具，仅需一行命令就解放双手。为了提升脚本小子的编程能力，因此有了这个项目。程序采用模块化设计，所以下面每个模块都可以单独使用。最后，切勿将本工具和技术用于网络犯罪，三思而后行！
+> 前言：目标是做一款全自动化信息收集工具，仅需一行命令就解放双手。为了提升脚本小子的编程能力，因此有了这个项目。大部分功能模块都是自主实现的，少部分模块直接引用了第三方程序（wafw00f、ffuf、afrog）。程序采用模块化设计，所以下面每个模块都可以单独使用。最后，切勿将本工具和技术用于网络犯罪，三思而后行！
 
-| 目标功能      | 完成状态    |
-|-----------|---------|
-| 子域名收集     | success |
-| 指纹识别      | success |
-| CDN识别     | success |
-| 端口扫描      | success |
-| C段扫描      | success |
-| waf识别     | success |
-| 目录扫描      | success |
-| POC扫描     | success |
-| Xray扫描    | success |
-| 支持批量扫描    | success |
-| 邮箱/微信推送报告 | success |
-| 代理负载均衡    | ——      |
+| 实现功能     | 完成状态    | 第三方模块         |
+|----------|---------|---------------|
+| 子域名收集    | success | ----         |
+| 指纹识别     | success | ----         |
+| CDN识别    | success | ----         |
+| 端口扫描     | success | ----         |
+| C段扫描     | success | ----  |
+| waf识别    | success | wafw00f       |
+| 目录扫描     | success | ffuf          |
+| POC扫描    | success | afrog         |
+| 支持批量扫描   | success | ----         |
+| 生成扫描报告   | success | ----         |
+| 邮箱推送报告   | success | ----         |
+| 代理负载均衡   | ----    | ----          |
+| 可视化WEB操作 | ----    | ----          |
+| 资产监控管理   | ----    | ----          |
 
-## 开始自动化扫描 
-1. 扫描器建议在Linux服务器上运行：`git clone https://github.com/jammny/jws-cli`
-
-2. 初始化安装依赖：`pip install -r requirements.txt`  
-
-3. 自动化扫描：`python3 jws-cli.py -t example.com --auto --brute`  
-
-4. 自动化批量扫描：`python3 jws-cli.py -f targets.txt --auto --brute`
-
-5. 可以通过到文件`/db/config.yaml`配置，自行选择需要执行的模块：
-```
-# 自动化扫描配置，可以选择关闭的模块
-auto_setting:
-  port_scan: True
-  cidr_scan: True
-  dir_scan: True
-  poc_scan: False
-  xray_scan: False
-```
+## 一键自动化扫描 
+1. 扫描器建议在Linux服务器上运行：`git clone https://github.com/jammny/jws-cli.git`
+2. 初始化安装依赖：`pip install -r requirements.txt`
+3. 自动化扫描：`python jws-cli.py -t example.com --auto`
+4. 自动化批量扫描：`python jws-cli.py -f targets.txt --auto`
 
 ## Usage
 
 ```yaml
-## 子域名收集，有部分模块需要自行到文件`/db/config.yaml`配置API才能正常使用，绝大部分都是可以免费注册的。
-常规使用：`python3 jws-cli.py -t example.com --sub`
-使用爆破：`python3 jws-cli.py -t example.com --sub --brute`
+## 自动化扫描
+python jws-cli.py -t example.com --auto
+
+## 子域名收集
+python jws-cli.py -t example.com --sub
 
 ## 指纹识别
-常规使用：`python3 jws-cli.py -t http://example.com --finger`
+python3 jws-cli.py -t http://example.com --finger
 
 ## CDN识别
-常规使用：`python3 jws-cli.py -t example.com --cdn`
+python3 jws-cli.py -t example.com --cdn
 
-## 端口扫描，扫描参数需要到件`/db/config.yaml`配置。
-常规使用：`python3 jws-cli.py -t 192.168.2.1 --port`
+## 端口扫描
+python3 jws-cli.py -t 192.168.2.1 --port
 
 ## C段扫描
-常规使用：`python3 jws-cli.py -t 192.168.2.1/24 --cidr`
+python3 jws-cli.py -t 192.168.2.0/24 --cidr
 
 ## waf识别
-常规使用：`python3 jws-cli.py -t example.com --waf`
+python3 jws-cli.py -t example.com --waf
 
-## 目录扫描， 目前是直接调用dirsearch来实现，需要到`/db/dirsearch.ini`配置。
-常规使用：`python3 jws-cli.py -t http://example.com --dir`
+## 目录扫描
+python3 jws-cli.py -t http://example.com --dir
 
-## poc扫描， 除了内置的poc框架之外，还支持调用其他漏扫引擎，需要到`/db/config.yaml`配置。
+## poc扫描
+python3 jws-cli.py -t http://example.com --poc
 
-常规使用：`python3 jws-cli.py -t http://example.com --poc`
+## fofa接口调用，将收集结果用于其他模块，提供4个灵活搭配组合：
+用于指纹识别：python3 jws-cli.py -q "FOFA语句" --finger
+用于poc扫描：python3 jws-cli.py -q "FOFA语句" --poc
 
-## xray扫描
-
-常规使用：`python3 jws-cli.py -t http://example.com --xray`
-注意：使用xray的话，需要安装好谷歌浏览器。
-
-## 邮件、微信通知
-注意：需要到config.yaml文件中进行邮箱信息配置信息，微信关联一下邮箱就行了。
 
 # 报告输出
 `/reports/`目录下会生成对应目标的html报告文件，还有json结果文件。
 `/reports/tmp/`目录下会生成每个模块输出的结果信息。
-
 ```
 
-## 联系我们
+## Config.yaml
+`/db/config.yaml`配置文件很重要，在这个文件里你可以自定义配置，自动化扫描时所需要开启的模块：
+```yaml
+## 自动化扫描配置，可以选择开启/关闭的模块
+auto_setting:
+  port_scan: True     # 开启/关闭 端口扫描
+  cidr_scan: True     # 开启/关闭 C段扫描
+  waf_scan: True      # 开启/关闭 WAF扫描
+  dir_scan: True      # 开启/关闭 目录扫描
+  poc_scan: True      # 开启/关闭 POC扫描
+```
+当然你可以给子域名收集模块配置更多的api，让它的能力更强大：<br/>
+```yaml
+## 子域名扫描配置
+sub_scan:
+  brute_scan: False      # 开启/关闭 爆破模式
+  brute_thread: 1000    # 爆破域名时候的线程
+  brute_fuzzy: False     # 开启/关闭 域名置换（注意：如果fuzz生成的字典较大，可能会导致爆破时间很长。）
 
-![img.png](./img/fighter.jpg)
+  api_key:
+    # zoomeye可以免费注册帐号密码
+    # https://www.zoomeye.org/
+    zoomeye_mail:
+    zoomeye_pass:
+
+    # hunter的api可免费获取，每天限量500条数据
+    # https://hunter.qianxin.com/
+    hunter_key:
+
+    # securitytrails的api可免费获取
+    # https://securitytrails.com
+    securitytrails_key:
+
+    # fullhunt的api可免费获取
+    # https://fullhunt.io/search
+    fullhunt_key:
+
+    # Binaryedge免费注册获取API, 有效期只有1个月，到期之后可以再次生成，每月可以查询250次。
+    # https://app.binaryedge.io/account/api
+    binaryedge_key:
+
+    # censys可以免费注册一个账号，填上你的账号密码即可。
+    # https://search.censys.io/
+    censys_username:
+    censys_password:
+
+    # fofa的api需要自费获取，因为我有key，所以就加一个吧
+    # https://fofa.info/
+    fofa_email:
+    fofa_key:
+    fofa_size: 1000
+```
+端口扫描范围格式支持解析："80,443"、"80,8080,8090-10000"、"1-65535"，如果你选择跳过IP存活检测，那么无论如何都会对每个目标进行端口扫描。反之，如果目标不存活那么它将被抛弃。
+```yaml
+## 端口扫描配置
+port_scan:
+  timeout: 5
+  thread_num : 1000
+  port_range: '21,22,23,80-99,135,139,442-445,666,800,801,808,880,888,889,1000-2379,3000-10010,11115,12018,12443,14000,16080,18000-18098,19001,19080,20000,20720,21000,21501,21502,28018,20880,27017'
+  skip_alive: True  # 跳过IP存活检测
+```
+
+将邮件关联到微信，就可以在微信查收HTML扫描报告：
+```yaml
+# 163邮箱信息配置
+smtp_server: smtp.163.com         # 邮箱服务器
+smtp_port: 465                    # 端口号
+send_email:                       # 发件人邮箱账号
+send_pass:                        # 发件人邮箱密码
+rec_email:                        # 收件人邮箱
+```
+
+当然可配置内容还有很多，其他模块的参数可以自行琢磨一下。
+
+## 程序兼容性问题  
+
+由于scapy库依赖的限制，所以如果你想在windows上运行此程序，你可能需要安装好nmap工具环境。因为项目的开发环境是Kali Linux，所以其实我还是更建议在Linux上运行此程序，当然如果你在VPS（linux）上扫描体验会更好。</br>
+
+程序兼容环境： windows、Linux </br>
+python版本 >= 3.8.0
+
+## Update
+
+| 更新时间（版本）          | 更新内容                                                                                                                                                                                          | 备注                                 |
+|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------|
+| 2023.5.4（v 0.0.6） | 1、移除xray扫描模块，发现xray批量执行的时候存在bug，导致程序卡死。<br/>2、移除系统自带的POC模块，用第三方模块afrog就足够了。<br/>3、修复windows协程bug。<br/>4、新增fofa参数项，让信息收集更加轻松。<br/>5、新增fuff第三方扫描模块，替换原来dirsearch，发现后者有点bug。 <br/>6、新增部分WAF识别规则。 | 程序还在测试阶段，如果<br/>使用过程中遇到问题请联<br/>系我。 |
+
+
+## Wechat
+
+![img.png](./db/fightersec_wechat.jpg)
 
 

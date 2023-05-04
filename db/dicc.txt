@@ -1,3 +1,11 @@
+FileService
+graph
+prometheus/graph
+actuator/health-component
+actuator/self
+actuator/health-component-instance
+actuator/readiness
+actuator/versions
 .blg
 sql/sql/
 j
@@ -626,7 +634,6 @@ api/v2/integrations/ceibal/
 console/base/config.json
 admin-area
 sidekiq
-?wp-ver-diff
 i-admin
 admin_tools
 perweb.nsf
@@ -1452,7 +1459,6 @@ admin_login.html
 forumdisplay
 mysqlmanager/
 api/v1/template?type=parttype
-?wp-stop-ver
 servlet/com.ibm.servlet.engine.webapp.SimpleFileServlet
 consumer
 config.inc.php.txt
@@ -2552,7 +2558,6 @@ signin
 rpc_admin
 _layouts/
 .parallel/
-?wp-html-rend
 AddressBookW2JE/services/AddressBook/wsdl/
 WEB-INF/conf/activemq.xml
 attachment.%EXT%
@@ -6196,7 +6201,6 @@ graphql/schema.yaml
 EvalServer
 .buildpath
 chat.%EXT%
-?Publisher
 options.%EXT%
 wcx_ftp.ini
 usage/
@@ -6592,7 +6596,6 @@ Service.asmx
 .softint.log
 x.shtml
 bbs/
-?Open
 orasso
 _logs/access_log
 ncadmin
@@ -6838,7 +6841,6 @@ administrator/account.html
 confluence/spaces/viewmailaccounts.action
 login/cpanel/
 .git/refs/heads
-?wp-verify-link
 cdadmin
 yonetim.php
 WEB-INF/ibm-web-ext.xmi
@@ -7799,7 +7801,6 @@ phpMyAdmin-2.6.0
 sa.php
 searchreplacedb2cli.php
 skin1_admin.css
-?wp-uncheckout
 help/help65_client.nsf
 lib/flex/varien/.settings
 databack.sql
@@ -8203,7 +8204,6 @@ phpmy-admin/
 bbadmin
 liquibase
 actuator/gateway/routes
-?wp-ver-info
 .merlin
 .git/COMMIT_EDITMSG
 WEB-INF/config/soapConfig.xml
@@ -8379,7 +8379,6 @@ api/v1/product/distinct/store
 showallsites
 abstractsadmin
 .hg/branch
-?wp-cs-dump
 cgi-bin/
 api/swagger
 inc-admin
@@ -10411,7 +10410,6 @@ sales.sql.gz
 library.%EXT%
 admin-database/
 osadmin
-?OpenServer
 Files/binder.backup
 Greenhouseservlet/
 .deployignore
@@ -10504,7 +10502,6 @@ Install
 .gnupg/
 usr/
 swagger/v1/swagger.yaml
-?wp-usr-prop
 phpMyAdmin2
 fantastico_fileslist.txt
 webapp/examples/SourceCodeViewer
@@ -10750,7 +10747,6 @@ media_admin
 adm_auth
 admin_admin.%EXT%
 .id
-?wp-start-ver
 RequestParamExample
 error_log.gz
 .Rhistory

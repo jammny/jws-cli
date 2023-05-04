@@ -4,29 +4,52 @@
 前言：切勿将本工具和技术用于网络犯罪，三思而后行！
 文件描述： 程序入口。
 """
-import sys
-
 import typer
-import colorama
+from rich import print
 
 from lib.core.controller import Option
 from lib.core.settings import BANNER
-from lib.core.logger import logger
+from lib.utils.log import logger
 from lib.core.check import CheckAll
 
 
+def args_check(target: str, file: str, query: str) -> list:
+    """参数检查
+
+    :param target: 目标域名
+    :param file: 本地文件
+    :param query: fofa查询语句
+    :raises typer.Exit: 没有必要参数 退出
+    :raises typer.Exit: 如果文件为null 退出
+    :return: 包含目标域名的列表
+    """
+    if not (target or file or query):
+
+        print('You need to provide the args, enter "--help" for help!')
+        raise typer.Exit(code=1)
+    # 文件读取目标
+    if file:
+        with open(file, mode='r', encoding='utf-8') as f:
+            tmp: list = f.readlines()
+            target_list: list = [i.rstrip("\n").replace(" ", "").rstrip("/") for i in tmp]   # 去掉多余的 \n 空格 /
+        if not target_list:
+            logger.error('The file is null!')
+            raise typer.Exit(code=1)
+    else:
+        target_list: list = [target.rstrip("/")]
+    return target_list
+
+
 if __name__ == "__main__":
-    colorama.init(autoreset=True)  # 初始化
     app = typer.Typer()
 
     @app.command()
     def main(
-            target: str = typer.Option(None, "--target", "-t", help="输入单个目标(必要参数).", ),
-            file: str = typer.Option(None, "--file", "-f", help="从文件中读取目标(必要参数).", ),
-            auto: bool = typer.Option(False, "--autoscan", "--auto", help="自动化扫描."),
-            sub: bool = typer.Option(False, "--subdomain", "--sub", help="子域名收集."),
-            brute: bool = typer.Option(False, "--brute", help="域名爆破模式."),
-            report: bool = typer.Option(False, "--report", help="生成报告."),
+            target: str = typer.Option(None, "--target", "-t", help="输入单个目标.", ),
+            file: str = typer.Option(None, "--file", "-f", help="从文件中读取目标.", ),
+            query: str = typer.Option(None, "--query", "-q", help="接口查询参数.", ),
+            auto: bool = typer.Option(False, "--auto", help="自动化扫描."),
+            sub: bool = typer.Option(False, "--sub", help="子域名收集."),
             finger: bool = typer.Option(False, "--finger", help="指纹识别."),
             cdn: bool = typer.Option(False, "--cdn", help="CDN识别"),
             port: bool = typer.Option(False, "--port", help="端口扫描."),
@@ -34,49 +57,29 @@ if __name__ == "__main__":
             waf: bool = typer.Option(False, "--waf", help="waf识别."),
             dir_: bool = typer.Option(False, "--dir", help="目录扫描."),
             poc: bool = typer.Option(False, "--poc", help="poc扫描."),
-            xray: bool = typer.Option(False, "--xray", help="xray扫描."),
+            fofa: bool = typer.Option(False, "--fofa", help="FOFA接口."),
     ) -> None:
-        # 输出Banner图案
-        sys.stdout.write(BANNER)
-        # 程序兼容性检测
-        check = CheckAll()
-        check.run()
-        # 必要参数检测
-        task = Option()
-        if target is None and file is None:
-            logger.error('You need to provide the target！')
-            logger.warning('TIPS：Enter "--help" for help')
-            raise typer.Exit(code=1)
-        # 文件读取目标
-        if file:
-            with open(file, mode='r', encoding='utf-8') as f:
-                tmp: list = f.readlines()
-                # 去掉\n
-                target_list: list = [i.rstrip("\n") for i in tmp]
-            if target_list is []:
-                logger.error('The file is null！')
-                raise typer.Exit(code=1)
-        else:
-            target_list: list = [target]
-        # 开始任务
+        print(BANNER)   # 输出Banner图案
+        target_list: list = args_check(target, file, query)  # 必要参数检测
+        CheckAll().run()    # 程序兼容性检测
         if auto:
-            task.args_auto(target_list, brute)  # 自动化扫描
+            Option.args_auto(target_list)  # 自动化扫描
+        elif fofa:
+            Option.args_fofa(query, finger, poc)  # fofa接口调用
         elif sub:
-            task.args_sub(target_list, brute, report)  # 子域名收集
+            Option.args_sub(target_list)  # 子域名收集
         elif finger:
-            task.args_finger(target_list)  # 指纹识别
+            Option.args_finger(target_list)  # 指纹识别
         elif cdn:
-            task.args_cdn(target_list)  # 指纹识别
+            Option.args_cdn(target_list)  # CDN识别
         elif port:
-            task.args_port(target_list)  # 端口扫描
+            Option.args_port(target_list)  # 端口扫描
         elif cidr:
-            task.args_cidr(target_list)  # C段扫描
+            Option.args_cidr(target_list)  # C段扫描
         elif waf:
-            task.args_waf(target_list)  # waf扫描
+            Option.args_waf(target_list)  # waf扫描
         elif dir_:
-            task.args_dir(target_list)  # 目录扫描
+            Option.args_dir(target_list)  # 目录扫描
         elif poc:
-            task.args_poc(target_list)  # POC扫描
-        elif xray:
-            task.args_xray(target_list)  # Xray扫描
+            Option.args_poc(target_list)  # POC扫描
     app()

@@ -1,35 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>JWS-CLI 扫描报告</title>
+  <title>JWS-CLI Report</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- 引入 layui.css -->
 <link href="https://unpkg.com/layui@2.7.6/dist/css/layui.css" rel="stylesheet">
 </head>
 <body>
 <div style="margin: 0 auto; max-width: 1140px;">
-  <!-- 导航栏 -->
   <ul class="layui-nav">
-    <li class="layui-nav-item layui-this"><p>JWS-CLI 扫描报告</p></li>
+    <li class="layui-nav-item layui-this"><p>JWS-CLI Report</p></li>
   </ul>
-  <blockquote class="layui-elem-quote">注意：请勿开展未授权的渗透攻击行为，本工具仅用于合法安全测试。</blockquote>
+  <blockquote class="layui-elem-quote">Note: Do not carry out unauthorized penetration attacks. This tool is only used for legitimate security tests.</blockquote>
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
         <legend>{{ target }}</legend>
     </fieldset>
     <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
         <ul class="layui-tab-title">
-            <li class="layui-this">子域名</li>
-            <li>域名资产</li>
-            <li>CDN识别</li>
-            <li>IP端口</li>
-            <li>端口资产</li>
-            <li>C段资产</li>
-            <li>WAF识别</li>
-            <li>目录扫描</li>
-            <li>POC扫描</li>
+            <li class="layui-this">Subdomain</li>
+            <li>Domain Asset</li>
+            <li>CDN Recognition</li>
+            <li>IP Port</li>
+            <li>Port Assets</li>
+            <li>CIDR Scan</li>
+            <li>CIDR Assets</li>
+            <li>WAF Recognition</li>
+            <li>Directory Scan</li>
+            <li>POC Scan</li>
         </ul>
         <div class="layui-tab-content" style="height: 100%;">
             <div class="layui-tab-item layui-show"><table class="layui-hide" id="sub"></table></div>
@@ -37,167 +35,168 @@
             <div class="layui-tab-item"><table class="layui-hide" id="cdn"></table></div>
             <div class="layui-tab-item"><table class="layui-hide" id="port"></table></div>
             <div class="layui-tab-item"><table class="layui-hide" id="port_web"></table></div>
+            <div class="layui-tab-item"><table class="layui-hide" id="cidr"></table></div>
             <div class="layui-tab-item"><table class="layui-hide" id="cidr_web"></table></div>
             <div class="layui-tab-item"><table class="layui-hide" id="waf"></table></div>
             <div class="layui-tab-item"><table class="layui-hide" id="dir"></table></div>
-            <div class="layui-tab-item">
-                <table class="layui-hide" id="poc"></table>
-                <!-- 插入afrog页面 -->
-                <iframe src="{{ target }}_afrog.html" width="100%" height="600px"></iframe>
-            </div>
+            <div class="layui-tab-item"><table class="layui-hide" id="poc"></table></div>
         </div>
     </div>
 
 
 </div>
 
-<!-- 注意：项目正式环境请勿引用该地址 -->
-<!-- 引入 layui.js -->
 <script src="https://unpkg.com/layui@2.7.6/dist/layui.js"></script>
 <script>
     layui.use(['table', 'element'], function(){
         const $ = layui.jquery, table = layui.table;
 
-        {% if data['valid_sub'] %}
-            // 表格：域名
+        {% if data['sub_results'] %}
             table.render({
                 elem: '#sub',
-                data: {{ data['valid_sub'] }},
+                data: {{ data['sub_results'] }},
                 cols: [[
-                    {field:'subdomain', title: '子域名'},
-                    {field:'method', title: '方法'},
-                    {field:'ip', title: 'IP'},
+                    {field:'subdomain', title: 'subdomain'},
+                    {field:'method', title: 'method'},
+                    {field:'ip', title: 'ip', sort: "true"},
                 ]],
                 page: true,
                 limit: 50
             });
         {% endif %}
 
-        {% if data['valid_sub_web'] %}
-            // 表格：指纹识别
+        {% if data['sub_finger_results'] %}
             table.render({
                 elem: '#sub_web',
-                data: {{ data['valid_sub_web'] }},
+                data: {{ data['sub_finger_results'] }},
                 cols: [[
-                    {field:'url', title: '链接'},
-                    {field:'cms', title: '指纹'},
-                    {field:'title', title: '标题'},
-                    {field:'code', title: '响应码'},
-                    {field:'ico_hash', title: '图标哈希值'},
+                    {field:'url', title: 'url'},
+                    {field:'cms', title: 'cms', sort: "true"},
+                    {field:'title', title: 'title'},
+                    {field:'code', title: 'code', sort: "true"},
+                    {field:'ico_hash', title: 'ico_hash'},
                 ]],
                 page: true,
                 limit: 50
             });
         {% endif %}
 
-        {% if data['valid_cdn'] %}
-            // 表格：CDN识别
+        {% if data['cdn_results'] %}
             table.render({
                 elem: '#cdn',
-                data: {{ data['valid_cdn'] }},
+                data: {{ data['cdn_results'] }},
                 cols: [[
-                    {field:'domain', title: '域名'},
-                    {field:'ip', title: 'IP'},
-                    {field:'cdn', title: 'CDN'},
-                    {field:'address', title: '物理地址'},
+                    {field:'domain', title: 'domain'},
+                    {field:'ip', title: 'ip', sort: "true"},
+                    {field:'cdn', title: 'cdn', sort: "true"},
+                    {field:'address', title: 'address'},
                 ]],
                 page: true,
                 limit: 50
             });
         {% endif %}
 
-        {% if data['valid_port'] %}
-            // 表格：端口扫描
+        {% if data['port_results'] %}
             table.render({
                 elem: '#port',
-                data: {{ data['valid_port'] }},
+                data: {{ data['port_results'] }},
                 cols: [[
-                    {field:'target', title: '目标'},
-                    {field:'port', title: '端口'},
-                    {field:'service', title: '服务'},
-                    {field:'banner', title: '标识'},
+                    {field:'ip', title: 'ip', sort: "true"},
+                    {field:'port', title: 'port', sort: "true"},
+                    {field:'protocol', title: 'protocol', sort: "true"},
                 ]],
                 page: true,
                 limit: 50
             });
         {% endif %}
 
-        {% if data['valid_port_web'] %}
-            // 表格：端口资产
+        {% if data['ip_finger_results'] %}
             table.render({
                 elem: '#port_web',
-                data: {{ data['valid_port_web'] }},
+                data: {{ data['ip_finger_results'] }},
                 cols: [[
-                    {field:'url', title: '链接'},
-                    {field:'cms', title: '指纹'},
-                    {field:'title', title: '标题'},
-                    {field:'code', title: '响应码'},
-                    {field:'ico_hash', title: '图标哈希值'},
+                    {field:'url', title: 'url'},
+                    {field:'cms', title: 'cms', sort: "true"},
+                    {field:'title', title: 'title'},
+                    {field:'code', title: 'code', sort: "true"},
+                    {field:'ico_hash', title: 'ico_hash'},
                 ]],
                 page: true,
                 limit: 50
             });
         {% endif %}
 
-        {% if data['valid_cidr_web'] %}
-            // 表格：C段资产
+        {% if data['cidr_results'] %}
+            table.render({
+                elem: '#cidr',
+                data: {{ data['cidr_results'] }},
+                cols: [[
+                    {field:'cidr', title: 'cidr', sort: "true"},
+                    {field:'ip', title: 'ip', sort: "true"},
+                    {field:'port', title: 'port', sort: "true"},
+                    {field:'protocol', title: 'protocol', sort: "true"},
+                ]],
+                page: true,
+                limit: 50
+            });
+        {% endif %}
+
+        {% if data['cidr_finger_results'] %}
             table.render({
                 elem: '#cidr_web',
-                data: {{ data['valid_cidr_web'] }},
+                data: {{ data['cidr_finger_results'] }},
                 cols: [[
-                    {field:'url', title: '链接'},
-                    {field:'cms', title: '指纹'},
-                    {field:'title', title: '标题'},
-                    {field:'code', title: '响应码'},
-                    {field:'ico_hash', title: '图标哈希值'},
+                    {field:'url', title: 'url'},
+                    {field:'cms', title: 'cms', sort: "true"},
+                    {field:'title', title: 'title'},
+                    {field:'code', title: 'code', sort: "true"},
+                    {field:'ico_hash', title: 'ico_hash'},
                 ]],
                 page: true,
                 limit: 50
             });
         {% endif %}
 
-        {% if data['valid_waf'] %}
-            // 表格：WAF
+        {% if data['waf_results'] %}
             table.render({
                 elem: '#waf',
-                data: {{ data['valid_waf'] }},
+                data: {{ data['waf_results'] }},
                 cols: [[
-                    {field:'url', title: '链接'},
-                    {field:'detected', title: '防护'},
-                    {field:'firewall', title: '防火墙'},
-                    {field:'manufacturer', title: '厂商'},
+                    {field:'url', title: 'url'},
+                    {field:'detected', title: 'detected', sort: "true"},
+                    {field:'firewall', title: 'firewall'},
+                    {field:'manufacturer', title: 'manufacturer'},
                 ]],
                 page: true,
                 limit: 50
             });
         {% endif %}
 
-        {% if data['valid_dir'] %}
-            // 表格：目录
+        {% if data['dir_results'] %}
             table.render({
                 elem: '#dir',
-                data: {{ data['valid_dir'] }},
+                data: {{ data['dir_results'] }},
                 cols: [[
-                    {field:'url', title: '链接'},
-                    {field:'status', title: '状态码'},
-                    {field:'content-length', title: '长度'},
-                    {field:'content-type', title: '类型'},
-                    {field:'redirect', title: '重定向'},
+                    {field:'url', title: 'url'},
+                    {field:'status', title: 'status', sort: "true"},
+                    {field:'length', title: 'length', sort: "true"},
+                    {field:'lines', title: 'lines', sort: "true"},
+                    {field:'words', title: 'words', sort: "true"},
+                    {field:'content-type', title: 'content-type'},
                 ]],
                 page: true,
                 limit: 50
             });
         {% endif %}
 
-        {% if data['valid_poc'] %}
-            // 表格：POC结果
+        {% if data['poc_results'] %}
             table.render({
                 elem: '#poc',
-                data: {{ data['valid_poc'] }},
+                data: {{ data['poc_results'] }},
                 cols: [[
-                    {field:'id', title: '漏洞名称'},
-                    {field:'severity', title: '风险等级'},
-                    {field:'poc', title: 'POC'},
+                    {field:'name', title: 'name'},
+                    {field:'severity', title: 'severity'},
+                    {field:'url', title: 'url'},
                 ]],
                 page: true,
                 limit: 50

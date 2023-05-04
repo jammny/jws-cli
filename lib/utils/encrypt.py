@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 """
 作者：jammny
-文件描述： 
+文件描述： 数据加密模块
 """
 import random
 import string

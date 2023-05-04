@@ -1,88 +1,78 @@
-import os
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+"""
+前言：切勿将本工具和技术用于网络犯罪，三思而后行！
+文件描述：程序常量数据配置
+"""
 import platform
 import yaml
+from pathlib import Path
+
 from rich.console import Console
 
 console = Console(color_system='auto', style=None)
 
-# 操作系统信息
-OSNAME: str = platform.system()
+DIRNAME: Path = Path.cwd()    # 当前工作目录
 
-# 当前工作目录
-DIRNAME: str = os.getcwd()
-
-# 指纹库数据
-FINGER: str = os.path.join(DIRNAME, 'db/finger.json')
-
-# 纯真ip数据库
-QQWRY: str = os.path.join(DIRNAME, 'db/qqwry.dat')
-
-with open(os.path.join(DIRNAME, 'db/config.yaml'), mode="r", encoding="utf-8") as f:
-    # config.yaml配置数据
+# 读取config.yaml配置数据
+with open(DIRNAME / "db/config.yaml", mode="r", encoding="utf-8") as f:
     CONFIG_DATA = yaml.load(f.read(), Loader=yaml.FullLoader)
 
-# 版本信息
-VERSION = CONFIG_DATA['version']
+VERSION = CONFIG_DATA['version']    # 当前程序版本信息
 
-# logo信息
+# banner信息
 BANNER: str = (
-    "\033[1;31m\n"
-    "   ___  _    _ _____        _____  _     _____ \n"
+    "[bold red]   ___  _    _ _____        _____  _     _____ \n"
     "  |_  || |  | /  ___|      /  __ \| |   |_   _|\n"
     "    | || |  | \ `--. ______| /  \/| |     | |  \n"
     "    | || |/\| |`--. \______| |    | |     | |  \n"
     "/\__/ /\  /\  /\__/ /      | \__/\| |_____| |_ \n"
-    "\____/  \/  \/\____/        \____/\_____/\___/ \n"
+    "\____/  \/  \/\____/        \____/\_____/\___/ [/bold red]\n"
     "\n"
-    f" \033[0m\033[1;34m jammny@fighter-team.cn    Version: {VERSION} \033[0m\n"
-    "\n"
+    f"https://github.com/jammny    Version: {VERSION}\n"
 )
 
+OSNAME: str = platform.system()    # 操作系统信息
+
+# 指纹识别模块
+FINGER: Path = DIRNAME / "db/finger.json"  # 指纹库路径
+
+# CDN模块
+QQWRYPATH: Path = DIRNAME / "db/qqwry.dat"  # 纯真ip数据库路径
 
 # 自动扫描配置
 AUTO_SETTING: dict = CONFIG_DATA['auto_setting']
 
 # 子域名模块
-SUBNAMES: str = os.path.join(DIRNAME, 'db/subnames.txt')
-SUBWORIDS: str = os.path.join(DIRNAME, 'db/subwords.txt')
-DNS: str = os.path.join(DIRNAME, 'db/dns/test')
+SUBNAMES: Path = DIRNAME / 'db/subnames.txt'
+SUBWORIDS: Path = DIRNAME / 'db/subwords.txt'
+DNS_PATH: Path = DIRNAME / "db/dns"
+SUB_CONFIG: dict = CONFIG_DATA['sub_scan']
 
 # 目录扫描模块
-DICC: str = os.path.join(DIRNAME, 'db/dicc.txt')
-DICC_CONFIG: str = os.path.join(DIRNAME, 'db/dirsearch.ini')
+DIR_CONFIG: dict = CONFIG_DATA['dir_scan']
 
-# CDN模块
-CDN_KEY: str = CONFIG_DATA['cdn_key']
+# 端口扫描模块
+PORT_CONFIG: dict = CONFIG_DATA['port_scan']
 
-# 端口扫描
-PORT: str = CONFIG_DATA['port']
-PORT_THREAD: int = CONFIG_DATA['port_thread']
-PORT_TIMEOUT: int = CONFIG_DATA['port_timeout']
-PORT_METHOD: int = CONFIG_DATA['port_method']
-
-# C段扫描
-CIDR_METHOD: str = CONFIG_DATA['cidr_method']
-CIDR_BLACKLIST: list = CONFIG_DATA['cidr_blacklist']
+# C段扫描模块
+CIDR_CONFIG: dict = CONFIG_DATA['cidr_scan']
 
 # POC模块
-POC_ENGINE: str = CONFIG_DATA['poc_setting']
-POC: str = os.path.join(DIRNAME, 'db/poc')
+POC_CONFIG: dict = CONFIG_DATA['poc_scan']
 
 # 爬虫/代理模块
-HTTP_PROXY = os.path.join(DIRNAME, 'db/http_proxy.txt')
 USER_AGENTS = CONFIG_DATA['user-agent']
 
 # 报告/结果输出
-REPORTS: str = os.path.join(DIRNAME, 'reports')
-TMP: str = os.path.join(DIRNAME, 'reports/tmp')
+REPORTS: Path = DIRNAME / "reports"
+TMP: Path = DIRNAME / "reports/tmp"
 
 # 第三方模块
 MOD: dict = {
-    "afrog": os.path.join(DIRNAME, 'thirdparty/afrog/afrog'),
-    "xray": os.path.join(DIRNAME, 'thirdparty/xray/xray'),
-}
-MOD_DIR: dict = {
-    "xray_dir": os.path.join(DIRNAME, 'thirdparty/xray'),
+    "afrog": DIRNAME / "thirdparty/afrog/afrog.exe" if OSNAME == "Windows" else DIRNAME / "thirdparty/afrog/afrog",
+    "ffuf": DIRNAME / "thirdparty/ffuf/ffuf.exe" if OSNAME == "Windows" else DIRNAME / "thirdparty/ffuf/ffuf",
+    "wafw00f": DIRNAME / "thirdparty/wafw00f/main.py",
 }
 
 # 邮箱配置

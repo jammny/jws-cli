@@ -11,7 +11,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from email.utils import formataddr
 
-from lib.core.logger import logger
+from lib.utils.log import logger
 from lib.core.settings import SEND_EMAIL, SEND_PASS, REC_EMAIL, SMTP_SERVER, SMTP_PORT
 
 
@@ -29,11 +29,13 @@ class SendEmail:
     def send(self):
         try:
             msg = MIMEMultipart()  # 设置电子邮件消息
-            msg['Subject'] = "JWS信息推送"  # 邮件的主题
-            msg['From'] = formataddr(("jws", self.my_sender))
+            msg['Subject'] = self.mail_msg  # 邮件的主题
+            msg['From'] = formataddr(("JWS", self.my_sender))
             msg['To'] = formataddr(("", self.my_user))
-            msg.attach(MIMEText(self.mail_msg, 'plain'))
+            msg.attach(MIMEText("The information collection scan report has been generated. Click the attachment to "
+                                "download it.", 'plain'))
 
+            # 压缩文件
             with open(self.file_name, 'rb') as f:
                 attach = MIMEApplication(f.read(), _subtype='zip')
                 attach.add_header('Content-Disposition', 'attachment', filename='jws_report.html')
@@ -43,7 +45,6 @@ class SendEmail:
             server.login(self.my_sender, self.my_pass)  # 括号中对应的是发件人邮箱账号、邮箱密码
             server.sendmail(self.my_sender, [self.my_user, ], msg.as_string())  # 括号中对应的是发件人邮箱账号、收件人邮箱账号、发送邮件
             server.quit()  # 关闭连接
-            logger.debug("邮件发送成功！")
+            logger.debug("Email sent successfully！")
         except Exception as e:
-            logger.error(f"邮件发送失败！ {e}")
-
+            logger.error(f"Email sending failed！ {e}")
