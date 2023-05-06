@@ -21,8 +21,8 @@ class CidrSystem(object):
         self.skip_alive: bool = CIDR_CONFIG['skip_alive']
 
     def run(self, cidr: list):
-        """
-        类执行入口
+        """类执行入口
+
         :param cidr:
         :return:
         """

@@ -51,19 +51,19 @@ if __name__ == "__main__":
 
     @app.command()
     def main(
-            target: str = Option(None, "--target", "-t", help="输入单个目标.", ),
+            target: str = Option(None, "--target", "-t", help="扫描单个目标.", ),
             file: str = Option(None, "--file", "-f", help="从文件中读取目标.", ),
             query: str = Option(None, "--query", "-q", help="接口查询参数.", ),
-            auto: bool = Option(False, "--auto", help="自动化扫描."),
-            sub: bool = Option(False, "--sub", help="子域名收集."),
-            finger: bool = Option(False, "--finger", help="指纹识别."),
-            cdn: bool = Option(False, "--cdn", help="CDN识别"),
-            port: bool = Option(False, "--port", help="端口扫描."),
-            cidr: bool = Option(False, "--cidr", help="C段扫描."),
-            waf: bool = Option(False, "--waf", help="waf识别."),
-            dir_: bool = Option(False, "--dir", help="目录扫描."),
-            poc: bool = Option(False, "--poc", help="poc扫描."),
-            fofa: bool = Option(False, "--fofa", help="FOFA接口."),
+            auto: bool = Option(False, "--auto", help="自动化扫描: python jws-cli.py -t example.com --auto"),
+            sub: bool = Option(False, "--sub", help="子域名收集: python jws-cli.py -t example.com --sub"),
+            finger: bool = Option(False, "--finger", help="指纹识别: python jws-cli.py -t https://example.com --finger"),
+            cdn: bool = Option(False, "--cdn", help="CDN识别: python jws-cli.py -t example.com --cdn"),
+            port: bool = Option(False, "--port", help="端口扫描: python jws-cli.py -t 127.0.0.1 --port"),
+            cidr: bool = Option(False, "--cidr", help="C段扫描: python jws-cli.py -t 192.168.1.0/24 --cidr"),
+            waf: bool = Option(False, "--waf", help="waf识别: python jws-cli.py -t https://example.com --waf"),
+            dir_: bool = Option(False, "--dir", help="目录扫描: python jws-cli.py -t https://example.com --dir"),
+            poc: bool = Option(False, "--poc", help="poc扫描: python jws-cli.py -t https://example.com --poc"),
+            fofa: bool = Option(False, "--fofa", help="FOFA接口: python jws-cli.py -q [FOFA语法] --fofa --finger/--poc"),
     ) -> None:
         print(BANNER)  # 输出Banner图案
         target_list: list = args_check(target, file, query)  # 必要参数检测

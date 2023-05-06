@@ -64,6 +64,8 @@ class CdnScan(object):
         :return:
         """
         data = self.cdn_result
+        if not data:
+            return
         table = Table(title="cdn results", show_lines=False)
         table.add_column("domain", justify="left", style="cyan", no_wrap=True)
         table.add_column("ip", justify="left", style="magenta")

@@ -170,12 +170,14 @@ class FingerJScan(object):
                 return result
         return ""
 
-    def show_table(self):
+    def show_table(self) -> None:
         """表格展示数据
         
         :return:
         """
         data: list = self.finger_results
+        if not data:
+            return
         table = Table(title="finger results", show_lines=False)
         table.add_column("url", justify="left", style="cyan", no_wrap=True)
         table.add_column("title", justify="left", style="magenta")
@@ -186,6 +188,7 @@ class FingerJScan(object):
             table.add_row(i['url'], i['title'], i['cms'], str(i['code']), i['ico_hash'])
         console = Console()
         console.print(table)
+        return
 
     def run(self, targets: list) -> list:
         """这里利用多线程批量执行任务

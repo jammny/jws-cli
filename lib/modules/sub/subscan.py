@@ -294,6 +294,8 @@ class SubScan(object):
         :return:
         """
         data: list = self.valid_result
+        if not data:
+            return
         table = Table(title="subdomain results", show_lines=False)
         table.add_column("subdomain", justify="left", style="cyan", no_wrap=True)
         table.add_column("method", justify="left", style="magenta")

@@ -19,8 +19,8 @@ class CidrFofa(object):
         self.cidr_results = []
 
     def fofa_request(self, queue: Queue):
-        """
-        使用fofa api 来收集C段信息
+        """使用fofa api 来收集C段信息
+
         :return:
         """
         cidr = queue.get()
@@ -39,12 +39,11 @@ class CidrFofa(object):
             self.cidr_results += tmp_results
 
     def run(self, cidr: list) -> list:
-        """
-        类执行入口
+        """类执行入口
+
         :param cidr: 目标cidr格式的列表
         :return:
         """
-
         logger.info("trying to use fofa api...")
         threadpool_task(task=self.fofa_request, queue_data=cidr, thread_count=1)
         return self.cidr_results
