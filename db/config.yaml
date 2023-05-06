@@ -1,5 +1,5 @@
-# 版本
-version: 0.0.7
+ # 版本
+version: 0.0.6
 
 
 # 开启/关闭 debug信息显示
@@ -11,8 +11,8 @@ auto_setting:
   port_scan: True     # 开启/关闭 端口扫描
   cidr_scan: True     # 开启/关闭 C段扫描
   waf_scan: True      # 开启/关闭 WAF扫描
-  dir_scan: True      # 开启/关闭 目录扫描
-  poc_scan: True      # 开启/关闭 POC扫描
+  dir_scan: False      # 开启/关闭 目录扫描
+  poc_scan: False      # 开启/关闭 POC扫描
 
 
 ## 子域名扫描配置
@@ -24,34 +24,34 @@ sub_scan:
   api_key:
     # zoomeye可以免费注册帐号密码
     # https://www.zoomeye.org/
-    zoomeye_mail: 798011609@qq.com
-    zoomeye_pass: Passw0rd!!
+    zoomeye_mail:
+    zoomeye_pass:
 
     # hunter的api可免费获取，每天限量500条数据
     # https://hunter.qianxin.com/
-    hunter_key: 7cb631a2a21ab85e68662948f68889d6c8edb835bce6bb1e95271b424342d31c
+    hunter_key:
 
     # securitytrails的api可免费获取
     # https://securitytrails.com
-    securitytrails_key: CaD8SUcCcH3z1yR4jwfVa92zBzkJojxE
+    securitytrails_key:
 
     # fullhunt的api可免费获取
     # https://fullhunt.io/search
-    fullhunt_key: 596474d2-38cd-46bc-ac29-b1586cba9479
+    fullhunt_key:
 
     # Binaryedge免费注册获取API, 有效期只有1个月，到期之后可以再次生成，每月可以查询250次。
     # https://app.binaryedge.io/account/api
-    binaryedge_key: 8f031c50-2c2b-4130-8a6a-940a97bff638
+    binaryedge_key:
 
     # censys可以免费注册一个账号，填上你的账号密码即可。
     # https://search.censys.io/
-    censys_username: jammny.hao@qq.com
-    censys_password: jammny123456
+    censys_username:
+    censys_password:
 
     # fofa的api需要自费获取，因为我有key，所以就加一个吧
     # https://fofa.info/
-    fofa_email: 1304945616@qq.com
-    fofa_key: 7ea86e7a709bada6ae044d3cbedee912
+    fofa_email:
+    fofa_key:
     fofa_size: 1000
 
 
@@ -71,7 +71,7 @@ cidr_scan:
       '腾讯云', '网宿', 'Amazon', '运营商','世纪互联BGP数据中心', '内部网', '局域网', '对方和您在同一内部网', '亚马逊', '127.0.0.1'
   ]
   skip_alive: False     # 跳过IP存活检测
-  occurrence_limit: 2   # 如果C段统计出现次数，大于2才扫描
+  occurrence_limit: 1   # 如果C段统计出现次数，大于1才扫描
 
 
 # POC扫描，参数配置
@@ -90,18 +90,12 @@ dir_scan:
   filter_regexp: "403"  # 从响应中过滤正则关键字
 
 
-# 企业查询配置
-firm_scan:
-  qcc_cookies: ""
-
-
-
 # 163邮箱信息配置
 smtp_server: smtp.163.com         # 邮箱服务器
 smtp_port: 465                    # 端口号
-send_email: jammnyhao@163.com     # 发件人邮箱账号
-send_pass: MCLOWLNPIKHMUNWD       # 发件人邮箱密码
-rec_email: 798011609@qq.com       # 收件人邮箱
+send_email:                       # 发件人邮箱账号
+send_pass:                        # 发件人邮箱密码
+rec_email:                        # 收件人邮箱
 
 
 # 自定义user-agent
