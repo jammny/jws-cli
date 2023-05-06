@@ -1,5 +1,5 @@
  # 版本
-version: 0.0.6
+version: 0.0.7
 
 
 # 开启/关闭 debug信息显示
@@ -19,7 +19,7 @@ auto_setting:
 sub_scan:
   brute_scan: True      # 开启/关闭 爆破扫描
   brute_thread: 1000    # 爆破域名时候的线程
-  brute_fuzzy: True     # 开启/关闭 域名置换（注意：如果fuzz生成的字典较大，可能会导致爆破时间很长。）
+  brute_fuzzy: False     # 开启/关闭 域名置换（注意：如果fuzz生成的字典较大，可能会导致爆破时间很长。）
 
   api_key:
     # zoomeye可以免费注册帐号密码
