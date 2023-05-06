@@ -17,10 +17,10 @@ from lib.modules.finger.fingerscan import FingerJScan
 from lib.modules.cdn.cdnscan import CdnScan
 from lib.modules.thirdparty import afrog, ffuf, wafw00f
 
-__all__ = ['Option', ]
+__all__ = ['Router', ]
 
 
-class Option(object):
+class Router(object):
     @staticmethod
     def args_auto(target_list: list) -> None:
         """自动化扫描
