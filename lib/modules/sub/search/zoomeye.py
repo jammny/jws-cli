@@ -84,8 +84,9 @@ class ZoomEye(object):
         for i in response['matches']:
             if i.__contains__('site'):
                 self.domain_results.add(domain_format(i['site']))
-        logger.info(f"ZoomEye Query：{self.query}, {len(self.domain_results)} results found!")
-        logger.debug(f"ZoomEye Query：{self.domain_results}")
+        if self.domain_results:
+            logger.info(f"ZoomEye Query：{self.query}, {len(self.domain_results)} results found!")
+            logger.debug(f"ZoomEye Query：{self.domain_results}")
 
     def run(self):
         """

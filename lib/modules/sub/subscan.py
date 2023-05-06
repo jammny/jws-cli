@@ -4,9 +4,7 @@
 前言：切勿将本工具和技术用于网络犯罪，三思而后行！
 文件描述： 子域名收集模块
 """
-import asyncio
 from queue import Queue
-import socket
 from time import time
 
 import dns
@@ -283,10 +281,13 @@ class SubScan(object):
         domains = dnsgen.run(data, wordlist)
         domains: list = list(domains)
         logger.info(f"Generate the fuzz dictionary：{len(domains)}")
-        # 因为之前爆破的数据已经合并了，所以这里可以覆盖掉原来的数据
-        self.brute_result = brute.Brute().run(domains, self.root_generic, self.brute_thread)
-        # 将原来的有效数据和置换爆破收集的域名合并，去重复
-        self.remove_duplicate()
+        if domains:
+            # 因为之前爆破的数据已经合并了，所以这里可以覆盖掉原来的数据
+            self.brute_result = brute.Brute().run(domains, self.root_generic, self.brute_thread)
+            # 将原来的有效数据和置换爆破收集的域名合并，去重复
+            self.remove_duplicate()
+        logger.info("Dnsgen fuzz finished.")
+
 
     def show_results(self,) -> None:
         """表格展示数据
