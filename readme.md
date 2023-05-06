@@ -35,29 +35,29 @@ python jws-cli.py -t example.com --auto
 python jws-cli.py -t example.com --sub
 
 ## 指纹识别
-python3 jws-cli.py -t http://example.com --finger
+python jws-cli.py -t https://example.com --finger
 
 ## CDN识别
-python3 jws-cli.py -t example.com --cdn
+python jws-cli.py -t example.com --cdn
 
 ## 端口扫描
-python3 jws-cli.py -t 192.168.2.1 --port
+python jws-cli.py -t 192.168.2.1 --port
 
 ## C段扫描
-python3 jws-cli.py -t 192.168.2.0/24 --cidr
+python jws-cli.py -t 192.168.2.0/24 --cidr
 
 ## waf识别
-python3 jws-cli.py -t example.com --waf
+python jws-cli.py -t example.com --waf
 
 ## 目录扫描
-python3 jws-cli.py -t http://example.com --dir
+python jws-cli.py -t https://example.com --dir
 
 ## poc扫描
-python3 jws-cli.py -t http://example.com --poc
+python jws-cli.py -t https://example.com --poc
 
 ## fofa接口调用，将收集结果用于其他模块，提供4个灵活搭配组合：
-用于指纹识别：python3 jws-cli.py -q "FOFA语句" --finger
-用于poc扫描：python3 jws-cli.py -q "FOFA语句" --poc
+用于指纹识别：python3 jws-cli.py -q "FOFA语句" --fofa --finger
+用于poc扫描：python3 jws-cli.py -q "FOFA语句" --fofa --poc
 
 
 # 报告输出
@@ -148,9 +148,10 @@ python版本 >= 3.8.0
 
 ## Update
 
-| 更新时间（版本）          | 更新内容                                                                                                                                                                                          | 备注                                |
-|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------|
-| 2023.5.4（v 0.0.6） | 1、移除xray扫描模块，发现xray批量执行的时候存在bug，导致程序卡死。<br/>2、移除系统自带的POC模块，用第三方模块afrog就足够了。<br/>3、修复windows协程bug。<br/>4、新增fofa参数项，让信息收集更加轻松。<br/>5、新增fuff第三方扫描模块，替换原来dirsearch，发现后者有点bug。 <br/>6、新增部分WAF识别规则。 | 遇到问题请联系我 |
+| 更新时间（版本）         | 更新内容                                                                                                                                 | 备注     |
+|------------------|--------------------------------------------------------------------------------------------------------------------------------------|--------|
+| 2023.5.6(v0.0.7) | 1、修复一些程序业务逻辑bug。<br/>2、新增firm接口，实现企业信息查询功能。<br/> 3、配置文件新增debug_info选项。  |    有问题联系我    |
+| 2023.5.4(v0.0.6) | 1、移除xray扫描模块。<br/>2、移除系统自带的POC模块。<br/>3、修复windows协程bug。<br/>4、新增fofa接口，可联动poc扫描。<br/>5、新增fuff，替换dirsearch完成目录扫描。 <br/>6、新增部分WAF识别规则。 | 有问题联系我 |
 
 
 ## Wechat

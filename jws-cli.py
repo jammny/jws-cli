@@ -63,6 +63,7 @@ if __name__ == "__main__":
             waf: bool = Option(False, "--waf", help="waf识别: python jws-cli.py -t https://example.com --waf"),
             dir_: bool = Option(False, "--dir", help="目录扫描: python jws-cli.py -t https://example.com --dir"),
             poc: bool = Option(False, "--poc", help="poc扫描: python jws-cli.py -t https://example.com --poc"),
+            firm: bool = Option(False, "--firm", help="国内企业信息查询: python jws-cli.py -t 百度 --firm"),
             fofa: bool = Option(False, "--fofa", help="FOFA接口: python jws-cli.py -q [FOFA语法] --fofa --finger/--poc"),
     ) -> None:
         print(BANNER)  # 输出Banner图案
@@ -88,4 +89,6 @@ if __name__ == "__main__":
             Router.args_dir(target_list)  # 目录扫描
         elif poc:
             Router.args_poc(target_list)  # POC扫描
+        elif firm:
+            Router.args_firm(target_list)  # 企业信息查询
     app()

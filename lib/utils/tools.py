@@ -10,10 +10,7 @@ from typing import Union
 
 from IPy import IP
 
-try:
-    from lib.core.settings import CIDR_CONFIG
-except:
-    pass
+from lib.core.settings import CIDR_CONFIG
 
 
 def domain_format(data: str) -> Union[str, None]:

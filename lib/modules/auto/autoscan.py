@@ -4,8 +4,6 @@
 前言：切勿将本工具和技术用于网络犯罪，三思而后行！
 文件描述： 自动化扫描任务模块
 """
-from time import time
-
 from lib.core.report import Report
 from lib.core.settings import AUTO_SETTING, REPORTS, POC_CONFIG
 from lib.modules.cdn.cdnscan import CdnScan
@@ -16,14 +14,14 @@ from lib.modules.sub.subscan import SubScan
 from lib.modules.thirdparty import wafw00f, ffuf, afrog
 from lib.utils.log import logger
 from lib.utils.send_mail import SendEmail
-from lib.utils.tools import rex_ip, blacklist_ipaddress, runtime_format
+from lib.utils.tools import rex_ip, blacklist_ipaddress
 
 
 class AutoScan:
     def __init__(self):
         self.urls = list()  # 用于添加URLs
 
-    def task(self, target) -> None:
+    def run(self, target: str):
         """任务执行
 
         :param target:
@@ -129,14 +127,4 @@ class AutoScan:
         SendEmail(mail_msg, file_name).send()
         logger.info(f"Report Output：{REPORTS}/{target}.html")
 
-    def run(self, target_list: list):
-        """类执行入口
 
-        :param target_list: 目标域名列表
-        :return:
-        """
-        start = time()
-        logger.info(f"Current task: AutoScan | Target numbers: {len(target_list)} | ")
-        for target in target_list:
-            self.task(target)
-        logger.info(f"AutoScan task finished! Total time: {runtime_format(start, time())}")

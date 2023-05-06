@@ -4,18 +4,21 @@
 前言：切勿将本工具和技术用于网络犯罪，三思而后行！
 文件描述： 控制中心。
 """
-from lib.core.settings import POC_CONFIG
+from time import time
 
+from lib.core.settings import POC_CONFIG
 from lib.core.report import save_results
 from lib.modules.auto.autoscan import AutoScan
-
 from lib.modules.cidr.cidrscan import Cidr
+from lib.modules.firm.firmscan import FirmScan
 from lib.modules.port.portscan import PortScan
 from lib.modules.sub.search.fofa_api import Fofa
 from lib.modules.sub.subscan import SubScan
 from lib.modules.finger.fingerscan import FingerJScan
 from lib.modules.cdn.cdnscan import CdnScan
 from lib.modules.thirdparty import afrog, ffuf, wafw00f
+from lib.utils.log import logger
+from lib.utils.tools import runtime_format
 
 __all__ = ['Router', ]
 
@@ -28,7 +31,11 @@ class Router(object):
         :param target_list: 目标域名列表
         :return:
         """
-        AutoScan().run(target_list)
+        start = time()
+        for target in target_list:
+            logger.info(f"Current task: AutoScan | Target numbers: {len(target_list)} | ")
+            AutoScan().run(target)
+        logger.info(f"AutoScan task finished! Total time: {runtime_format(start, time())}")
         return
 
     @staticmethod
@@ -137,3 +144,13 @@ class Router(object):
         """
         if POC_CONFIG['afrog_engine']:
             return afrog(target_list)
+
+    @staticmethod
+    def args_firm(target_list: list) -> list:
+        """企业信息查询
+
+        :param target_list: 目标企业名称
+        :return:
+        """
+        firm_results: list = FirmScan().run(target_list)
+        return
