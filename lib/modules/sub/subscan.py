@@ -6,6 +6,7 @@
 """
 from queue import Queue
 from time import time
+from typing import Optional
 
 import dns
 import tldextract
@@ -190,7 +191,7 @@ class SubScan(object):
         res: list = Custom(self.target, dataset).run()
         self.passive_result.extend(res)
 
-    def generic_parsing(self, target) -> None:
+    def generic_parsing(self, target) -> Optional[list]:
         """
         检测域名泛解析
         :return:
@@ -200,10 +201,10 @@ class SubScan(object):
             # 如果能够成功解析出IP，说明存在泛解析
             answers = dns.resolver.resolve(domain, 'A')
             ip: list = [str(rdata) for rdata in answers]
-            self.root_generic: list = ip
-            logger.warn(f"域名{target}存在泛解析！默认忽略解析到{self.root_generic}的域名！")
+            logger.warn(f"域名{target}存在泛解析！默认忽略解析到{ip}的域名！")
+            return ip
         except:
-            pass
+            return
 
     def check_domain_alive(self):
         """
@@ -266,6 +267,7 @@ class SubScan(object):
         data: list = [i['subdomain'] for i in self.valid_result]
         # 一级域名泛解析筛选
         threadpool_task(task=self.dnsgen_generic_parsing, queue_data=data)
+        logger.debug(f"generic parsing domain name: {self.dnsgen_generic_parsing}")
         # 读取置换用的字典
         with open(SUBWORIDS, mode='r', encoding='utf-8') as f:
             wordlist = f.read().splitlines()
@@ -287,7 +289,6 @@ class SubScan(object):
             # 将原来的有效数据和置换爆破收集的域名合并，去重复
             self.remove_duplicate()
         logger.info("Dnsgen fuzz finished.")
-
 
     def show_results(self,) -> None:
         """表格展示数据
@@ -335,7 +336,7 @@ class SubScan(object):
             queue_obj.get()()
         threadpool_task(task=task_run, queue_data=task)
 
-        self.generic_parsing(target)    # 判断根域名是否存在泛解析
+        self.root_generic = self.generic_parsing(target)    # 判断根域名是否存在泛解析
         self.check_domain_alive()   # 域名存活验证
 
         # 爆破任务

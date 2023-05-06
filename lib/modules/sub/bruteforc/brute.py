@@ -8,7 +8,6 @@ from time import time
 
 import dns.resolver
 from rich.progress import Progress
-from rich import print
 
 from lib.utils.log import logger
 from lib.utils.thread import threadpool_task
@@ -20,6 +19,14 @@ class Brute(object):
         self.brute_results = []
 
     def resolve_domain(self, root_generic: list, progress, task, queue_obj):
+        """
+
+        :param root_generic:
+        :param progress:
+        :param task:
+        :param queue_obj:
+        :return:
+        """
         try:
             domain = queue_obj.get()
             answers = dns.resolver.resolve(domain, 'A')
@@ -30,7 +37,6 @@ class Brute(object):
                     "method": "brute",
                     "ip": ip
                 })
-                print(domain)
         except Exception as e:
             pass
         finally:

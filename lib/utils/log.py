@@ -10,6 +10,10 @@ from pathlib import Path
 from rich.logging import RichHandler
 
 from lib.utils.tools import get_time
+from lib.core.settings import CONFIG_DATA
+
+
+LEVEL = "DEBUG" if CONFIG_DATA['debug_info'] else "INFO"
 
 
 class LoggingLevel:
@@ -25,7 +29,7 @@ class LoggingLevel:
 
 # 配置rich处理器
 logging.basicConfig(
-    level="DEBUG",
+    level=LEVEL,
     format="%(message)s",
     datefmt="[%X]",
     handlers=[RichHandler(rich_tracebacks=True, omit_repeated_times=False, markup=True)]
@@ -42,6 +46,6 @@ if not LOGPATH.exists():
     Path.mkdir(LOGPATH)
 LOGNAME = LOGPATH / f"{get_time()}.log"
 LOGGERFILE = logging.FileHandler(filename=LOGNAME, mode='w', encoding='utf-8')
-LOGGERFILE.setLevel(LoggingLevel.DEBUG)
+LOGGERFILE.setLevel("DEBUG")
 LOGGERFILE.setFormatter(FORMAT)
 logger.addHandler(LOGGERFILE)
