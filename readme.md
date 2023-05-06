@@ -59,6 +59,8 @@ python jws-cli.py -t https://example.com --poc
 用于指纹识别：python3 jws-cli.py -q "FOFA语句" --fofa --finger
 用于poc扫描：python3 jws-cli.py -q "FOFA语句" --fofa --poc
 
+## 企业信息查询
+python jws-cli.py -t 百度 --firm
 
 # 报告输出
 `/reports/`目录下会生成对应目标的html报告文件，还有json结果文件。
@@ -73,14 +75,14 @@ auto_setting:
   port_scan: True     # 开启/关闭 端口扫描
   cidr_scan: True     # 开启/关闭 C段扫描
   waf_scan: True      # 开启/关闭 WAF扫描
-  dir_scan: True      # 开启/关闭 目录扫描
-  poc_scan: True      # 开启/关闭 POC扫描
+  dir_scan: False      # 开启/关闭 目录扫描
+  poc_scan: False      # 开启/关闭 POC扫描
 ```
 当然你可以给子域名收集模块配置更多的api，让它的能力更强大：<br/>
 ```yaml
 ## 子域名扫描配置
 sub_scan:
-  brute_scan: False      # 开启/关闭 爆破模式
+  brute_scan: True      # 开启/关闭 爆破模式
   brute_thread: 1000    # 爆破域名时候的线程
   brute_fuzzy: False     # 开启/关闭 域名置换（注意：如果fuzz生成的字典较大，可能会导致爆破时间很长。）
 
@@ -150,12 +152,10 @@ python版本 >= 3.8.0
 
 | 更新时间（版本）         | 更新内容                                                                                                                                 | 备注     |
 |------------------|--------------------------------------------------------------------------------------------------------------------------------------|--------|
-| 2023.5.6(v0.0.7) | 1、修复一些程序业务逻辑bug。<br/>2、新增firm接口，实现企业信息查询功能。<br/> 3、配置文件新增debug_info选项。  |    有问题联系我    |
+| 2023.5.6(v0.0.7) | 1、修复一些程序业务逻辑bug。<br/>2、新增firm接口，实现企业信息查询功能，<br/>支持自动将结果生成excel表格。<br/> 3、配置文件新增debug_info选项。                                         |    有问题联系我    |
 | 2023.5.4(v0.0.6) | 1、移除xray扫描模块。<br/>2、移除系统自带的POC模块。<br/>3、修复windows协程bug。<br/>4、新增fofa接口，可联动poc扫描。<br/>5、新增fuff，替换dirsearch完成目录扫描。 <br/>6、新增部分WAF识别规则。 | 有问题联系我 |
 
 
 ## Wechat
 
 ![img.png](./db/fightersec_wechat.jpg)
-
-
