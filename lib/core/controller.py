@@ -153,4 +153,4 @@ class Router(object):
         :return:
         """
         firm_results: list = FirmScan().run(target_list)
-        return
+        return firm_results

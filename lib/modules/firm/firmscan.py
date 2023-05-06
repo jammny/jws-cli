@@ -104,13 +104,17 @@ class FirmScan(object):
         console.print(table)
 
     def run(self, target_list):
-        start: float = time()
         logger.info(f"Current task: FirmScan | Target numbers: {len(target_list)}")
         for target in target_list:
             logger.info(f"Current keyword: {target}")
             results = Aqc().run(target)
-            self.show_basicData(results['basicData'])
-            self.show_icp(results['icpInfo'])
-            self.show_investRecordData(results['investRecordData'])
-            self.show_shareholdersData(results['shareholdersData'])
-            self.show_copyright(results['copyright'])
+            basicData = results['basicData']
+            self.show_basicData(basicData)
+            icpInfo = results['icpInfo']
+            self.show_icp(icpInfo)
+            investRecordData = results['investRecordData']
+            self.show_investRecordData(investRecordData)
+            shareholdersData = results['shareholdersData']
+            self.show_shareholdersData(shareholdersData)
+            copyright_ = results['copyright']
+            self.show_copyright(copyright_)

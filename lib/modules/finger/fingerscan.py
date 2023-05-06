@@ -76,12 +76,12 @@ class FingerJScan(object):
         http_url, https_url = (f"http://{url}", f"https://{url}") if "http" not in url else (url, url)
         with Client(verify=False, follow_redirects=True, cookies={'rememberMe': '1'}) as client:
             try:
-                response: Response = client.get(http_url)   # 访问http
-                url: str = http_url
+                response: Response = client.get(https_url)   # 访问http
+                url: str = https_url
             except Exception as e:
                 try:
-                    response: Response = client.get(https_url)  # 访问https
-                    url: str = https_url
+                    response: Response = client.get(http_url)  # 访问https
+                    url: str = http_url
                 except Exception as e:
                     # logger.error(f"{url}, {e}")
                     return

@@ -211,18 +211,18 @@ class SubScan(object):
         判断域名存活
         :return:
         """
-
         logger.info("Running domain validation...")
         # 列表去重, 获取所以被动收集的内容
         passive_result: list = list(set(self.passive_result))
         dns_results = DnsResolver().run(passive_result)
         if dns_results:
             for data in dns_results:
-                self.valid_result.append({
-                    'subdomain': data[0],
-                    'method': 'passive',
-                    'ip': data[1]
-                })
+                if self.target in data[0]:
+                    self.valid_result.append({
+                        'subdomain': data[0],
+                        'method': 'passive',
+                        'ip': data[1]
+                    })
         logger.info(f"Subdomain Passive Scan: {len(self.valid_result)} results found!")
 
     def brute_(self) -> None:
