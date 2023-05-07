@@ -16,3 +16,4 @@ qqwry-py3==1.2.1
 dnspython==2.3.0
 wafw00f==2.2.0
 pandas==2.0.1
+openpyxl==3.1.2
