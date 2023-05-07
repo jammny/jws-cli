@@ -41,8 +41,6 @@ def args_check(target: str, file: str, query: str) -> list:
         with open(file, mode='r', encoding='utf-8') as f:
             tmp: list = f.readlines()
             target_list: list = [fuc(i) for i in tmp if fuc(i)]  # 去掉多余的 \n 空格 /
-            print(target_list)
-            raise Exit(code=1)
         if not target_list:
             logger.error('The file is null!')
             raise Exit(code=1)
