@@ -30,6 +30,9 @@ def args_check(target: str, file: str, query: str) -> list:
     :raises typer.Exit: 如果文件为null 退出
     :return: 包含目标域名的列表
     """
+    def fuc(s):
+        return s.rstrip("\n").replace(" ", "").rstrip("/")
+
     if not (target or file or query):
         print('You need to provide the args, enter "--help" for help!')
         raise Exit(code=1)
@@ -37,7 +40,9 @@ def args_check(target: str, file: str, query: str) -> list:
     if file:
         with open(file, mode='r', encoding='utf-8') as f:
             tmp: list = f.readlines()
-            target_list: list = [i.rstrip("\n").replace(" ", "").rstrip("/") for i in tmp]  # 去掉多余的 \n 空格 /
+            target_list: list = [fuc(i) for i in tmp if fuc(i)]  # 去掉多余的 \n 空格 /
+            print(target_list)
+            raise Exit(code=1)
         if not target_list:
             logger.error('The file is null!')
             raise Exit(code=1)
