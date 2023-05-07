@@ -124,7 +124,7 @@ class AutoScan:
         # 邮件发送
         mail_msg = f"{target} scanning task completed！"
         file_name = f"{REPORTS}/{target}.html"
-        SendEmail(mail_msg, file_name).send()
+        SendEmail(mail_msg, file_name).send(f"{target}.html")
         logger.info(f"Report Output：{REPORTS}/{target}.html")
 
 

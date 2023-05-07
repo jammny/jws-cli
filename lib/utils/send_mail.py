@@ -26,7 +26,7 @@ class SendEmail:
     smtp_server = SMTP_SERVER
     smtp_port = SMTP_PORT
 
-    def send(self):
+    def send(self, report_name: str):
         try:
             msg = MIMEMultipart()  # 设置电子邮件消息
             msg['Subject'] = self.mail_msg  # 邮件的主题
@@ -38,13 +38,13 @@ class SendEmail:
             # 压缩文件
             with open(self.file_name, 'rb') as f:
                 attach = MIMEApplication(f.read(), _subtype='zip')
-                attach.add_header('Content-Disposition', 'attachment', filename='jws_report.html')
+                attach.add_header('Content-Disposition', 'attachment', filename=report_name)
                 msg.attach(attach)
 
             server = smtplib.SMTP_SSL(self.smtp_server, self.smtp_port)  # 发件人邮箱中的SMTP服务器
             server.login(self.my_sender, self.my_pass)  # 括号中对应的是发件人邮箱账号、邮箱密码
             server.sendmail(self.my_sender, [self.my_user, ], msg.as_string())  # 括号中对应的是发件人邮箱账号、收件人邮箱账号、发送邮件
             server.quit()  # 关闭连接
-            logger.debug("Email sent successfully！")
+            logger.info("Email sent successfully！")
         except Exception as e:
             logger.error(f"Email sending failed！ {e}")
