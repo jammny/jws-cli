@@ -201,7 +201,7 @@ class SubScan(object):
             # 如果能够成功解析出IP，说明存在泛解析
             answers = dns.resolver.resolve(domain, 'A')
             ip: list = [str(rdata) for rdata in answers]
-            logger.warn(f"域名{target}存在泛解析！默认忽略解析到{ip}的域名！")
+            logger.warning(f"{target} has universal resolution. Default ignore parsing {ip}.")
             return ip
         except:
             return
