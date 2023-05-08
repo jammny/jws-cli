@@ -57,11 +57,6 @@ class Brute(object):
             while not progress.finished:
                 threadpool_task(task=self.resolve_domain, queue_data=domain_list,
                                 task_args=(root_generic, progress, task,), thread_count=thread_num)
-        if root_generic and len(self.brute_results) > 1000:
-            # 如果存在泛解析，爆破数据超过1000的结果抛弃。
-            self.brute_results = list()
-            logger.warning("Because the Domain names have universal resolution, and the result exceeded the threshold. "
-                           "Finally discard the brute result.")
         end = time()
         run_time = runtime_format(start, end)
         logger.info(f"Subdomain Brute Scan: {len(self.brute_results)} results found! Total time：{run_time}")

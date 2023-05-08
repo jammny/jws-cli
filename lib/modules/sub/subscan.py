@@ -225,10 +225,10 @@ class SubScan(object):
                     })
         logger.info(f"Subdomain Passive Scan: {len(self.valid_result)} results found!")
 
-    def brute_(self) -> None:
-        """
-        爆破模块
-        :return: {'subdomain': 'xxx', 'method': 'brute', 'ip': ['xxxx']}
+    def brute_(self) -> False:
+        """调用爆破模块
+
+        :return: 如果返回False，说明爆破结果无效
         """
         logger.info("Running Subdomain Brute...")
         # 读取一级字典, 清理\n，并拼接子域，处理成 www.domain.com 格式
@@ -236,8 +236,16 @@ class SubScan(object):
             domains = [f"{line.strip()}.{self.target}" for line in f.readlines()]
         logger.info(f"Number of dictionary：{len(domains)}")
         self.brute_result = brute.Brute().run(domains, self.root_generic, self.brute_thread)
+        if self.root_generic and len(self.brute_result) > 1000:
+            # 如果存在泛解析，爆破数据超过1000的结果抛弃。
+            self.brute_result = list()
+            logger.warning(
+                "Because the Domain names have universal resolution, and the result exceeded the threshold. "
+                "Finally discard the brute result.")
+            return False
         # 将被动收集和爆破收集的域名合并，去重复
         self.remove_duplicate()
+        return True
 
     def remove_duplicate(self) -> None:
         """
@@ -264,6 +272,7 @@ class SubScan(object):
         :return:
         """
         logger.info("Running dnsgen fuzz...")
+        print(self.valid_result)
         data: list = [i['subdomain'] for i in self.valid_result]
         # 一级域名泛解析筛选
         threadpool_task(task=self.dnsgen_generic_parsing, queue_data=data)
@@ -323,12 +332,12 @@ class SubScan(object):
         ]
         datasets: list = get_yaml(str(DNS_PATH))
         if self.brute_scan:
-            msg = f"Brute Scan:{self.brute_scan} | Brute Thread: {self.brute_thread} | Brute Fuzzy: {self.brute_fuzzy}"
+            msg: str = f"Brute Scan:{self.brute_scan} | Brute Thread: {self.brute_thread} | Brute Fuzzy: {self.brute_fuzzy}"
         else:
-            msg = f"Brute Scan:{self.brute_scan}"
+            msg: str = f"Brute Scan:{self.brute_scan}"
         logger.info(f"Current task: SubScan | Target: {target} | Loaded modules: {len(task + datasets)} | {msg}")
 
-        self.target = target    # 以前 self.target 用于获取目标域名，写了大量的 self.target 调用，懒得改了。
+        self.target: str = target    # 以前 self.target 用于获取目标域名，写了大量的 self.target 调用，懒得改了。
         threadpool_task(task=self.run_datasets, queue_data=datasets)    # 执行自定义的DNS数据集
 
         # 线程池执行内置的模块
@@ -341,8 +350,7 @@ class SubScan(object):
 
         # 爆破任务
         if self.brute_scan:
-            self.brute_()
-            if self.brute_fuzzy:
+            if self.brute_() and self.brute_fuzzy:
                 self.dnsgen_()  # 利用字典进行域名置换
 
         logger.info(f"Subdomain task finished! Total time：{runtime_format(start, time())}")
