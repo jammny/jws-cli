@@ -2,6 +2,10 @@
 version: 0.0.8
 
 
+# py可执行文件名字，比如说 python3.8 、 python3 ，默认python
+python_name: "python"
+
+
 # 开启/关闭 debug信息显示
 debug_info: False
 

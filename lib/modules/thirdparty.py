@@ -9,7 +9,7 @@ from os import system
 from pathlib import Path
 from typing import Union
 
-from lib.core.settings import TMP, MOD, DIR_CONFIG
+from lib.core.settings import TMP, MOD, DIR_CONFIG, CONFIG_DATA
 from lib.utils.encrypt import GetKey
 from lib.utils.log import logger
 
@@ -135,6 +135,7 @@ def wafw00f(target_list: list, target=None) -> list:
     :param target:
     :return:
     """
+    python_name = CONFIG_DATA['python_name']
     waf_results: list = []
     logger.info(f"Current task: WafScan | Target number: {len(target_list)} | Engine: wafw00f("
                 f"https://github.com/EnableSecurity/wafw00f)")
@@ -142,7 +143,7 @@ def wafw00f(target_list: list, target=None) -> list:
     target_path = f"{new_path}/url_targets.txt"
     if write_file(target_path, target_list):
         output: str = f"{new_path}/waf_results.json"
-        cmd: str = f"python {MOD['wafw00f']} -i {target_path} -o {new_path}/waf_results.json"
+        cmd: str = f"{python_name} {MOD['wafw00f']} -i {target_path} -o {new_path}/waf_results.json"
         system(cmd)
         logger.info(f"Output: {output}")
         res: list = read_jsonfile(output)
