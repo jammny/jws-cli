@@ -246,7 +246,7 @@ class SubScan(object):
         """
         data: list = [i['subdomain'] for i in self.valid_result]
         for i in self.brute_result:
-            if not data.__contains__(i['subdomain']) and i['ip'] != self.root_generic:
+            if not data.__contains__(i['subdomain']) and set(i['ip']) != set(self.root_generic):
                 self.valid_result.append(i)
 
     def dnsgen_generic_parsing(self, queue_obj: Queue):
