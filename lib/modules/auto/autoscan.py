@@ -27,7 +27,6 @@ class AutoScan:
         :param target:
         :return:
         """
-
         report = Report(target)
 
         # 第一步，域名收集
@@ -35,6 +34,7 @@ class AutoScan:
         report.run('sub_results', sub_results)
         if not sub_results:     # 如果没有收集到域名，直接退出
             logger.error("No subdomain name found!")
+            SendEmail(f"{target} scanning task completed！").send_msg("No subdomian name found.")
             return
         domains: list = [i['subdomain'] for i in sub_results]    # 从扫描结果中将域名单独提取出来, 并保存
         report.write_tmp('sub_results', domains)
@@ -122,9 +122,11 @@ class AutoScan:
         report.html()
 
         # 邮件发送
-        mail_msg = f"{target} scanning task completed！"
+        mail_header = f"{target} scanning task completed！"
         file_name = f"{REPORTS}/{target}.html"
-        SendEmail(mail_msg, file_name).send(f"{target}.html")
-        logger.info(f"Report Output：{REPORTS}/{target}.html")
+        report_name = f"{target}.html"
+        mail_msg = "The information collection scan report has been generated. Click the attachment to download it."
+        SendEmail(mail_header).send_file(mail_msg, file_name, report_name)
 
+        logger.info(f"Report Output：{REPORTS}/{target}.html")
 
