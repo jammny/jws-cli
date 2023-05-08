@@ -54,6 +54,8 @@
         {% if data['sub_results'] %}
             table.render({
                 elem: '#sub',
+                toolbar: '#toolbarDemo',
+                defaultToolbar: ['filter', 'exports', 'print'],
                 data: {{ data['sub_results'] }},
                 cols: [[
                     {field:'subdomain', title: 'subdomain'},
