@@ -70,6 +70,8 @@
         {% if data['sub_finger_results'] %}
             table.render({
                 elem: '#sub_web',
+                toolbar: '#toolbarDemo',
+                defaultToolbar: ['filter', 'exports', 'print'],
                 data: {{ data['sub_finger_results'] }},
                 cols: [[
                     {field:'url', title: 'url'},
@@ -86,6 +88,8 @@
         {% if data['cdn_results'] %}
             table.render({
                 elem: '#cdn',
+                toolbar: '#toolbarDemo',
+                defaultToolbar: ['filter', 'exports', 'print'],
                 data: {{ data['cdn_results'] }},
                 cols: [[
                     {field:'domain', title: 'domain'},
@@ -101,6 +105,8 @@
         {% if data['port_results'] %}
             table.render({
                 elem: '#port',
+                toolbar: '#toolbarDemo',
+                defaultToolbar: ['filter', 'exports', 'print'],
                 data: {{ data['port_results'] }},
                 cols: [[
                     {field:'ip', title: 'ip', sort: "true"},
@@ -115,6 +121,8 @@
         {% if data['ip_finger_results'] %}
             table.render({
                 elem: '#port_web',
+                toolbar: '#toolbarDemo',
+                defaultToolbar: ['filter', 'exports', 'print'],
                 data: {{ data['ip_finger_results'] }},
                 cols: [[
                     {field:'url', title: 'url'},
@@ -131,6 +139,8 @@
         {% if data['cidr_results'] %}
             table.render({
                 elem: '#cidr',
+                toolbar: '#toolbarDemo',
+                defaultToolbar: ['filter', 'exports', 'print'],
                 data: {{ data['cidr_results'] }},
                 cols: [[
                     {field:'cidr', title: 'cidr', sort: "true"},
@@ -146,6 +156,8 @@
         {% if data['cidr_finger_results'] %}
             table.render({
                 elem: '#cidr_web',
+                toolbar: '#toolbarDemo',
+                defaultToolbar: ['filter', 'exports', 'print'],
                 data: {{ data['cidr_finger_results'] }},
                 cols: [[
                     {field:'url', title: 'url'},
@@ -162,6 +174,8 @@
         {% if data['waf_results'] %}
             table.render({
                 elem: '#waf',
+                toolbar: '#toolbarDemo',
+                defaultToolbar: ['filter', 'exports', 'print'],
                 data: {{ data['waf_results'] }},
                 cols: [[
                     {field:'url', title: 'url'},
@@ -177,6 +191,8 @@
         {% if data['dir_results'] %}
             table.render({
                 elem: '#dir',
+                toolbar: '#toolbarDemo',
+                defaultToolbar: ['filter', 'exports', 'print'],
                 data: {{ data['dir_results'] }},
                 cols: [[
                     {field:'url', title: 'url'},
@@ -194,6 +210,8 @@
         {% if data['poc_results'] %}
             table.render({
                 elem: '#poc',
+                toolbar: '#toolbarDemo',
+                defaultToolbar: ['filter', 'exports', 'print'],
                 data: {{ data['poc_results'] }},
                 cols: [[
                     {field:'name', title: 'name'},
