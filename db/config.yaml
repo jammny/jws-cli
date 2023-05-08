@@ -1,5 +1,5 @@
  # 版本
-version: 0.0.7
+version: 0.0.8
 
 
 # 开启/关闭 debug信息显示
@@ -19,7 +19,7 @@ auto_setting:
 sub_scan:
   brute_scan: True      # 开启/关闭 爆破扫描
   brute_thread: 1000    # 爆破域名时候的线程
-  brute_fuzzy: False     # 开启/关闭 域名置换（注意：如果fuzz生成的字典较大，可能会导致爆破时间很长。）
+  brute_fuzzy: False    # 开启/关闭 域名置换（注意：如果fuzz生成的字典较大，可能会导致爆破时间很长。）
 
   api_key:
     # zoomeye可以免费注册帐号密码
@@ -71,7 +71,7 @@ cidr_scan:
       '腾讯云', '网宿', 'Amazon', '运营商','世纪互联BGP数据中心', '内部网', '局域网', '对方和您在同一内部网', '亚马逊', '127.0.0.1'
   ]
   skip_alive: False     # 跳过IP存活检测
-  occurrence_limit: 1   # 如果C段统计出现次数，大于1才扫描
+  occurrence_limit: 1   # C段划分统计出现次数，默认大于1才扫描
 
 
 # POC扫描，参数配置
@@ -82,7 +82,7 @@ poc_scan:
 # 目录扫描，参数配置
 dir_scan:
   threads: "30"   # 线程数
-  match_code: "200"
+  match_code: "200"   # 响应的HTTP状态码
   filter_code: ""    # 从响应中过滤HTTP状态码。逗号分隔的代码和范围列表
   filter_lines: ""   # 从响应中过滤行数
   filter_world: "1"   # 从响应中过滤单词
@@ -93,9 +93,9 @@ dir_scan:
 # 163邮箱信息配置
 smtp_server: smtp.163.com         # 邮箱服务器
 smtp_port: 465                    # 端口号
-send_email:                       # 发件人邮箱账号
-send_pass:                        # 发件人邮箱密码
-rec_email:                        # 收件人邮箱
+send_email:      # 发件人邮箱账号
+send_pass:        # 发件人邮箱密码
+rec_email:        # 收件人邮箱
 
 
 # 自定义user-agent
