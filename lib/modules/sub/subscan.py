@@ -272,7 +272,6 @@ class SubScan(object):
         :return:
         """
         logger.info("Running dnsgen fuzz...")
-        print(self.valid_result)
         data: list = [i['subdomain'] for i in self.valid_result]
         # 一级域名泛解析筛选
         threadpool_task(task=self.dnsgen_generic_parsing, queue_data=data)
