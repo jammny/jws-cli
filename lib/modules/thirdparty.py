@@ -66,6 +66,9 @@ def ffuf(target_list: list, target=None) -> list:
     :param target: 自动化扫描时候的目标
     :return:
     """
+    if not MOD['ffuf'].exists():
+        logger.error(f"Ffuf not found! Please pull the project back to local.")
+        return []
     dir_results: list = []
     args = ""
     mc = DIR_CONFIG['match_code']
@@ -112,6 +115,9 @@ def afrog(target_list: list, target=None) -> list:
     :param target: 自动化扫描时候的目标
     :return:
     """
+    if not MOD['afrog'].exists():
+        logger.error(f"Afrog not found! Please pull the project back to local.")
+        return []
     poc_results: list = []
     logger.info(f"Current task: PocScan | Target number: {len(target_list)} | Engine: afrog("
                 f"https://github.com/zan8in/afrog)")
@@ -135,6 +141,9 @@ def wafw00f(target_list: list, target=None) -> list:
     :param target:
     :return:
     """
+    if not MOD['wafw00f'].exists():
+        logger.error(f"Wafw00f not found! Please pull the project back to local.")
+        return []
     python_name = CONFIG_DATA['python_name']
     waf_results: list = []
     logger.info(f"Current task: WafScan | Target number: {len(target_list)} | Engine: wafw00f("

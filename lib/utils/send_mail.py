@@ -28,6 +28,10 @@ class SendEmail:
 
     def send_file(self, mail_msg: str, file_name: str, report_name: str):
         try:
+            if ',' in self.my_user:
+                receivers = self.my_user.split(',')
+            else:
+                receivers = [self.my_user]  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
             msg = MIMEMultipart()  # 设置电子邮件消息
             msg['Subject'] = self.mail_header  # 邮件的主题
             msg['From'] = formataddr(("JWS", self.my_sender))
@@ -42,7 +46,7 @@ class SendEmail:
 
             server = smtplib.SMTP_SSL(self.smtp_server, self.smtp_port)  # 发件人邮箱中的SMTP服务器
             server.login(self.my_sender, self.my_pass)  # 括号中对应的是发件人邮箱账号、邮箱密码
-            server.sendmail(self.my_sender, [self.my_user, ], msg.as_string())  # 括号中对应的是发件人邮箱账号、收件人邮箱账号、发送邮件
+            server.sendmail(self.my_sender, receivers, msg.as_string())  # 括号中对应的是发件人邮箱账号、收件人邮箱账号、发送邮件
             server.quit()  # 关闭连接
             logger.info("Email sent successfully！")
         except Exception as e:
@@ -50,7 +54,10 @@ class SendEmail:
 
     def send_msg(self, mail_msg: str):
         try:
-            receivers = [self.my_user]  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
+            if ',' in self.my_user:
+                receivers = self.my_user.split(',')
+            else:
+                receivers = [self.my_user]  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
             message = MIMEText(mail_msg, 'plain', 'utf-8')
             message['From'] = Header("JWS", 'utf-8')
             message['To'] = Header("测试", 'utf-8')

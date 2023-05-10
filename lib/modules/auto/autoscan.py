@@ -78,7 +78,8 @@ class AutoScan:
         # 将cdn识别的结果，进行ip云资产、cdn资产黑名单过滤，尽可能找出有效的C段
         if AUTO_SETTING['cidr_scan'] and cdn_results:
             cdn_tmp = [i['ip'][0] for i in cdn_results if len(i['ip']) == 1 and blacklist_ipaddress(i['address'][0])]
-            cidr_results: list = Cidr().run(cdn_tmp)
+
+            cidr_results: list = Cidr().run(cdn_tmp, auto=True)
             report.run('cidr_results', cidr_results)
             if cidr_results:
                 cidr_ip_port = [f"{i['ip']}:{i['port']}" for i in cidr_results]

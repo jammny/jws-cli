@@ -4,7 +4,10 @@
 前言：切勿将本工具和技术用于网络犯罪，三思而后行！
 文件描述： 
 """
-import pandas as pd
+try:
+    import pandas as pd
+except:
+    pass
 
 from rich.console import Console
 from rich.table import Table

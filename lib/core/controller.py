@@ -113,8 +113,10 @@ class Router(object):
         :return:
         """
         cidr_results: list = Cidr().run(target_list)
+        cidr_ip_port = [f"{i['ip']}:{i['port']}" for i in cidr_results]
+        cidr_ip_port = list(set(cidr_ip_port))
         if cidr_results:
-            save_results(keyword="cidr", data=[f"{str(i)}" for i in cidr_results])
+            save_results(keyword="cidr", data=cidr_ip_port)
         return cidr_results
 
     @staticmethod

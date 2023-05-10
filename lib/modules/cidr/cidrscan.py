@@ -24,9 +24,10 @@ class Cidr:
         self.cidr_results: list = []    # 存放结果
         self.method: str = CIDR_CONFIG['method']
 
-    def format_cidr(self, target_list: list):
+    def format_cidr(self, target_list: list, auto):
         """
         格式化IP信息 整理划分C段
+        :param auto:
         :param target_list:
         :return:
         """
@@ -42,20 +43,23 @@ class Cidr:
         for c in Counter(cdir).items():
             logger.info(f"cidr: {c[0]}, occurrence number:{c[1]}")
             # 如果大于设置的阈值，就添加进入目标
-            if c[1] > CIDR_CONFIG['occurrence_limit']:
+            if c[1] > CIDR_CONFIG['occurrence_limit'] and auto:
+                res.append(c[0])
+            else:
                 res.append(c[0])
         logger.info(f"According to the set threshold, the cidr range to be scanned is: {res}")
         return res
 
-    def run(self, target_list: list):
+    def run(self, target_list: list, auto=None):
         """
         类执行入口
+        :param auto:
         :param target_list:
         :return:
         """
         start: float = time()
         logger.info(f"Current task: CidrScan | Target numbers: {len(target_list)}")
-        cidr: list = self.format_cidr(target_list)    # 首先将IP整理成C段
+        cidr: list = self.format_cidr(target_list, auto)    # 首先将IP整理成C段
         if self.method == 'fofa':
             self.cidr_results = CidrFofa().run(cidr)
             if not self.cidr_results:    # 如果fofa不能用,就用系统默认扫描方法。
