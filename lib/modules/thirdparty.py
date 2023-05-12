@@ -92,14 +92,13 @@ def ffuf(target_list: list, target=None) -> list:
         args += f"-fs {fs} "
     if fr:
         args += f"-fr {fr} "
-
     logger.info(
         f"Current task: DirScan | Target number: {len(target_list)} | Engine: ffuf(https://github.com/ffuf/ffuf)")
     path_name, new_path = make_dir(target)
     target_path = f"{new_path}/url_targets.txt"
     if write_file(target_path, target_list):
         output = f"{new_path}/dir_results.json"
-        cmd = f"{MOD['ffuf']} -w {target_path}:URL -w db/dicc.txt:FUZZ -u URL/FUZZ -o {output} -v {args}"
+        cmd = f"{MOD['ffuf']} -w {target_path}:URL -w db/dicc.txt:FUZZ -u URL/FUZZ -o {output} -c {args}"
         system(cmd)
         logger.info(f"Output: {output}")
         res: dict = read_jsonfile(output)
