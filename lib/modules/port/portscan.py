@@ -7,15 +7,13 @@
 from time import time
 from dataclasses import dataclass
 
-from lib.core.report import Report
-
 from .async_scan import AsyncScan
 from .check_overflow import CheckOverFlow
 from .host_scan import HostScan
 
 from lib.utils.tools import runtime_format
 from lib.utils.log import logger
-from lib.core.settings import PORT_CONFIG, TMP
+from lib.core.settings import PORT_CONFIG
 
 
 @dataclass()
@@ -52,8 +50,9 @@ class PortScan(object):
             return [int(port_range)]
 
     def run(self, hosts: list, skip_alive=PORT_CONFIG['skip_alive']) -> list:
-        """
-        类执行入口
+        """类执行入口
+
+        :param hosts:
         :param skip_alive: 是否跳过主机发现
         :return:
         """
@@ -70,6 +69,10 @@ class PortScan(object):
                 continue
             scan = AsyncScan(host, portlist, self.thread_count)
             port_results: list = scan.run()
+            # 最后检测扫描结果是否异常
+            if len(port_results) > 500:
+                logger.warning(f"The scan result is abnormal. The number of open ports exceeds 500.")
+                port_results = []
             self.result += port_results
         logger.info(f"Port scan task finished! Total time：{runtime_format(start, time())}")
         return self.result
