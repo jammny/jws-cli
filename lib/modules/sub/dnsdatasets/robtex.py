@@ -96,8 +96,8 @@ class Robtex:
         if self.result_domain:
             # 去重复
             self.result_domain = list(set(self.result_domain))
-            logger.info(f"Robtex：{len(self.result_domain)} results found!")
-            logger.debug(f"Robtex：{self.result_domain}")
+        logger.info(f"Robtex：{len(self.result_domain)} results found!")
+        logger.debug(f"Robtex：{self.result_domain}")
         return self.result_domain
 
     def run(self):

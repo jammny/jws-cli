@@ -1,5 +1,5 @@
  # 版本
-version: 0.1.0
+version: 0.1.1
 
 
 # py可执行文件名字，比如说 python3.8 、 python3 ，默认python
@@ -21,7 +21,7 @@ auto_setting:
 
 ## 子域名扫描配置
 sub_scan:
-  brute_scan: True      # 开启/关闭 爆破扫描
+  brute_scan: False      # 开启/关闭 爆破扫描
   brute_thread: 1000    # 爆破域名时候的线程
   brute_fuzzy: False     # 开启/关闭 域名置换（注意：如果fuzz生成的字典较大，可能会导致爆破时间很长。）
 
@@ -47,21 +47,21 @@ sub_scan:
     # https://app.binaryedge.io/account/api
     binaryedge_key: ""
 
-    # censys可以免费注册一个账号，填上你的账号密码即可。
+    # censys可以免费注册api, 每个月有次数限制。
     # https://search.censys.io/
-    censys_username: ""
-    censys_password: ""
+    censys_id: ""
+    censys_secret: ""
 
     # fofa的api需要自费获取，因为我有key，所以就加一个吧
     # https://fofa.info/
     fofa_email: ""
-    fofa_key: "2"
+    fofa_key: ""
     fofa_size: "3000"
 
 
 ## 端口扫描配置
 port_scan:
-  timeout: 5
+  timeout: 3
   thread_num : 1000
   port_range: '21,22,23,80-99,135,139,442-445,666,800,801,808,880,888,889,1000-2379,3000-10010,11115,12018,12443,14000,16080,18000-18098,19001,19080,20000,20720,21000,21501,21502,28018,20880,27017'
   skip_alive: True  # 跳过IP存活检测

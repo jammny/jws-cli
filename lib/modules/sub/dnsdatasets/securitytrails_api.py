@@ -79,9 +79,8 @@ class Securitytrails:
         if response:
             self.parse_resqonse(response)
 
-        if self.result_domain:
-            logger.info(f"{self.name}：{len(self.result_domain)} results found!")
-            logger.debug(self.result_domain)
+        logger.info(f"{self.name}：{len(self.result_domain)} results found!")
+        logger.debug(self.result_domain)
         return self.result_domain
 
     def run(self):

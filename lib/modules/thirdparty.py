@@ -102,7 +102,7 @@ def ffuf(target_list: list, target=None) -> list:
         system(cmd)
         logger.info(f"Output: {output}")
         res: dict = read_jsonfile(output)
-        if res:
+        if res and len(res['results']) < 500:   # 处理假页面 异常
             dir_results += res['results']
     return dir_results
 

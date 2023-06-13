@@ -40,7 +40,6 @@ class CheckOverFlow:
         :return:
         """
         threadpool_task(task=self.scan_port, queue_data=self.portlist, task_args=(ip,), thread_count=20)
-        print(self.port_results)
         if len(self.port_results) >= self.threshold_value:
             logger.warning(f"IP {ip} port is overflowing, Scan has been skipped.")
             return True

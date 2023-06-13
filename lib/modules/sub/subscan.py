@@ -47,7 +47,7 @@ class SubScan(object):
         调用fofa api
         :return: ['xxx','xxx']
         """""
-        query: str = f'domain="{self.target}" && protocol="http"'
+        query: str = f'domain="{self.target}"&&(protocol="http"||protocol="https")'
         res: list = fofa_api.Fofa(query).get_domain()
         self.passive_result.extend(res)
 
@@ -65,7 +65,7 @@ class SubScan(object):
         调用hunter api
         :return:
         """
-        query: str = f'domain_suffix="{self.target}"'
+        query: str = f'domain="{self.target}"&&(protocol="http"||protocol="https")'
         res: list = hunter_api.Hunter(query).get_domain()
         self.passive_result.extend(res)
 

@@ -93,8 +93,8 @@ class So:
 
         if self.result_domain:
             self.result_domain = list(set(self.result_domain))
-            logger.info(f"360so SE：{len(self.result_domain)} results found!")
-            logger.debug(f"360so SE：{self.result_domain}")
+        logger.info(f"360so SE：{len(self.result_domain)} results found!")
+        logger.debug(f"360so SE：{self.result_domain}")
         return self.result_domain
 
     def run(self):

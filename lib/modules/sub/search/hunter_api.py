@@ -53,9 +53,8 @@ class Hunter(object):
 
         result: list = [i['domain'] for i in self.domain_result]
 
-        if result:
-            logger.info(f"Hunter Query：{self.query} , {len(result)} results found!")
-            logger.debug(f"Hunter: {result}")
+        logger.info(f"Hunter Query：{self.query} , {len(result)} results found!")
+        logger.debug(f"Hunter: {result}")
         return result
 
     def send_request(self) -> Union[dict, None]:

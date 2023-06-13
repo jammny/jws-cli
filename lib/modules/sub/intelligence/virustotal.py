@@ -85,9 +85,8 @@ class Virustotal:
                 break
             sleep(1)
 
-        if self.result_domain:
-            logger.info(f"Virustotal：{len(self.result_domain)} results found!")
-            logger.debug(f"Virustotal：{self.result_domain}")
+        logger.info(f"Virustotal：{len(self.result_domain)} results found!")
+        logger.debug(f"Virustotal：{self.result_domain}")
         return self.result_domain
 
     def run(self):

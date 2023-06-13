@@ -113,7 +113,7 @@ class Custom(object):
                 res.discard(self.domain)
                 if res:
                     self.result_domain = self.result_domain.union(res)
-        if self.result_domain:
-            logger.info(f"{self.id}： {len(self.result_domain)} results found!")
-            logger.debug(f"{self.id}： {self.result_domain}")
+
+        logger.info(f"{self.id}： {len(self.result_domain)} results found!")
+        logger.debug(f"{self.id}： {self.result_domain}")
         return list(self.result_domain)

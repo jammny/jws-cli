@@ -91,8 +91,9 @@ class Yandex:
         if self.result_domain:
             # 去重
             self.result_domain = list(set(self.result_domain))
-            logger.info(f"Yandex SE：{len(self.result_domain)} results found!")
-            logger.debug(f"Yandex SE：{self.result_domain}")
+
+        logger.info(f"Yandex SE：{len(self.result_domain)} results found!")
+        logger.debug(f"Yandex SE：{self.result_domain}")
         return self.result_domain
 
     def run(self):
