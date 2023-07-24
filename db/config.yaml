@@ -12,16 +12,16 @@ debug_info: False
 
 # 自动化测试，可以选择关闭的模块
 auto_setting:
-  port_scan: False     # 开启/关闭 端口扫描
-  cidr_scan: False     # 开启/关闭 C段扫描
-  waf_scan: False      # 开启/关闭 WAF扫描
+  port_scan: True     # 开启/关闭 端口扫描
+  cidr_scan: True     # 开启/关闭 C段扫描
+  waf_scan: True      # 开启/关闭 WAF扫描
   dir_scan: False      # 开启/关闭 目录扫描
   poc_scan: False      # 开启/关闭 POC扫描
 
 
 ## 子域名扫描配置
 sub_scan:
-  brute_scan: False      # 开启/关闭 爆破扫描
+  brute_scan: True      # 开启/关闭 爆破扫描
   brute_thread: 1000    # 爆破域名时候的线程
   brute_fuzzy: False     # 开启/关闭 域名置换（注意：如果fuzz生成的字典较大，可能会导致爆破时间很长。）
 
