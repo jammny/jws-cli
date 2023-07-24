@@ -7,7 +7,6 @@
 import ipaddress
 
 from lib.utils.log import logger
-from .cidr_table import show_table
 
 from lib.modules.port.host_scan import HostScan
 from lib.modules.port.portscan import PortScan

@@ -101,9 +101,8 @@ class FirmScan(object):
         table.add_column("pid", justify="left", style="cyan", no_wrap=True)
         table.add_column("name", justify="left", style="magenta")
         table.add_column("subRate", justify="left", style="red")
-        table.add_column("subMoney", justify="left", style="red")
         for i in data:
-            table.add_row(str(i['pid']), str(i['name']), str(i['subRate']), str(i['subMoney']))
+            table.add_row(str(i['pid']), str(i['name']), str(i['subRate']))
         console = Console()
         console.print(table)
 
@@ -189,9 +188,9 @@ def wirte_xlsx(file, basicData, icpInfo, copyright_, investRecordData, sharehold
                 softwareType.append(i['softwareType'])
             res3 = {
                 "软件名": softwareName,
-                "网站名": batchNum,
-                "主页": softwareWork,
-                "备案号": softwareType
+                "版本号": batchNum,
+                "厂商": softwareWork,
+                "软件类型": softwareType
             }
             pd.DataFrame(res3).to_excel(writer, sheet_name='软件著作信息', index=False)
 
@@ -217,16 +216,13 @@ def wirte_xlsx(file, basicData, icpInfo, copyright_, investRecordData, sharehold
             pid = []
             name = []
             subRate = []
-            subMoney = []
             for i in shareholdersData:
                 pid.append(i['pid'])
                 name.append(i['name'])
                 subRate.append(i['subRate'])
-                subMoney.append(i['subMoney'])
             res5 = {
                 "PID": pid,
                 "企业/个人": name,
                 "持股比例": subRate,
-                "投资资金": subMoney,
             }
             pd.DataFrame(res5).to_excel(writer, sheet_name='股东信息', index=False)
