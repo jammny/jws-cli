@@ -5,7 +5,7 @@
 
 ### 工具特点预览
 1. 对目标资产实现一键收集：子域名收集+CDN识别+端口扫描+WEB指纹识别+C段扫描+WAF识别。
-2. 支持把企业名称（如：百度）作为收集目标，程序将自动化收集关于目标企业的相关资产。
+2. 支持把企业全称（如：XX有限公司）作为收集目标，程序将自动化收集关于目标企业的相关资产。
 3. 支持通过编写配置文件来拓展DNS数据集，以增加子域名收集模块的灵活性。
 4. 支持调用你喜欢的第三方工具来代替程序本身的功能模块，如：使用ksubdomain代替自身的爆破模块。
 5. 不仅仅是信息收集，支持调用第三方工具对收集的资产进行漏洞扫描，如afrog。
@@ -16,7 +16,8 @@
 2. 安装依赖：`pip install -r requirements.txt`
 3. 一键自动化扫描：`python jws-cli.py -t example.com --auto`
 4. 一键自动化批量扫描：`python jws-cli.py -f targets.txt --auto`
-5. 使用帮助：`python jws-cli.py --help`
+5. 一键自动化收集目标企业资产：`python jws-cli.py -c "xx有限公司" --auto`
+6. 使用帮助：`python jws-cli.py --help`
 
 
 ### 配置文件
