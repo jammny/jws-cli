@@ -8,7 +8,7 @@ import socket
 
 __all__ = ['CheckOverFlow', ]
 
-from lib.utils.log import logger
+from lib.core.log import logger
 from lib.utils.thread import threadpool_task
 
 
@@ -39,9 +39,10 @@ class CheckOverFlow:
         任务执行入口
         :return:
         """
-        threadpool_task(task=self.scan_port, queue_data=self.portlist, task_args=(ip,), thread_count=20)
+        logger.info("Check overflowing...")
+        threadpool_task(task=self.scan_port, queue_data=self.portlist, task_args=(ip,), thread_count=30)
         if len(self.port_results) >= self.threshold_value:
-            logger.warning(f"IP {ip} port is overflowing, Scan has been skipped.")
+            logger.error(f"IP {ip} port is overflowing, Scan has been skipped.")
             return True
         else:
             return False

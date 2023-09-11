@@ -11,14 +11,14 @@ from scapy.layers.l2 import Ether, ARP
 from scapy.all import *
 from ping3 import ping
 
-from lib.utils.log import logger
+from lib.core.log import logger
 from lib.utils.thread import threadpool_task
 
 
 class HostScan(object):
 
     def __init__(self):
-        self.results: list = []    # 存储IP存活结果
+        self.port_resultss: list = []    # 存储IP存活结果
 
     def start_scan(self, queue_obj: any):
         """
@@ -46,7 +46,7 @@ class HostScan(object):
             # 发送arp请求，并获取响应结果。设置3s超时。
             res = sr1(pkt, timeout=3, verbose=0)
             if res:
-                self.results.append(ip)
+                self.port_resultss.append(ip)
                 logger.info(f"Method: ARP, {ip} is alive.")
             else:
                 self.ping_scan(ip)
@@ -60,7 +60,7 @@ class HostScan(object):
         :return:
         """
         if ping(ip):
-            self.results.append(ip)
+            self.port_resultss.append(ip)
             logger.info(f"Method: PING, {ip} is alive.")
         else:
             self.icmp_scan(ip)
@@ -79,7 +79,7 @@ class HostScan(object):
             icmp = sr1(pkt, timeout=3, verbose=False)
             if icmp:
                 logger.info(f"Method: ICMP, {ip} is alive.")
-                self.results.append(ip)
+                self.port_resultss.append(ip)
             else:
                 self.syn_scan(ip)
         except:
@@ -96,7 +96,7 @@ class HostScan(object):
             pkt = IP(dst=ip) / TCP(dport=80, flags="A")
             result = sr1(pkt, timeout=3, verbose=0)
             if int(result[TCP].flags) == 4:
-                self.results.append(ip)
+                self.port_resultss.append(ip)
                 logger.info(f"Method: SYN, {ip} is alive.")
             else:
                 self.udp_scan(ip)
@@ -115,14 +115,14 @@ class HostScan(object):
             # result.show()
             # 0x01 代表的ICMP字段值
             if int(result[IP].proto) == 0x01:
-                self.results.append(ip)
+                self.port_resultss.append(ip)
                 logger.info(f"Method: UDP, {ip} is alive.")
             else:
-                self.results.append(ip)
+                self.port_resultss.append(ip)
                 pass
                 # logger.error(f"{ip} is not alive.")
         except:
-            self.results.append(ip)
+            self.port_resultss.append(ip)
             pass
             # logger.error(f"{ip} is not alive.")
 
@@ -132,4 +132,4 @@ class HostScan(object):
         thread_count: 并发线程数
         """
         threadpool_task(task=self.start_scan, queue_data=data, thread_count=thread_count)
-        return self.results
+        return self.port_resultss

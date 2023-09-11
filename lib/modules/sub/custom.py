@@ -6,11 +6,11 @@
 """
 import ast
 import time
-from typing import Union
+from typing import Union, Set, Optional
 
 from httpx import Client
 
-from lib.utils.log import logger
+from lib.core.log import logger
 from lib.utils.tools import match_subdomains
 
 
@@ -23,10 +23,12 @@ class Custom(object):
         """
         self.domain: str = domain
         self.datasets: dict = datasets
-        self.result_domain: set = set()    # 存储结果
+
+        self.result_domain: set = set()    # 使用集合存储结果，数据免去重
+
         self.id: str = self.datasets['id']
         self.rule: dict = self.datasets['rule']
-        self.type = self.datasets['type']
+
         # 是否循环页数
         if self.rule['while']:
             self.page = self.rule['start_page']
@@ -41,8 +43,8 @@ class Custom(object):
         self.response: dict = self.rule['response']
         self.code: str = self.response['code']
 
-    def circular_process(self):
-        """循环处理， 处理那些有页数增加的
+    def circular_process(self) -> None:
+        """循环处理 那些有页数增加的配置
         
         :return:
         """
@@ -60,13 +62,13 @@ class Custom(object):
                 if res:
                     self.result_domain = self.result_domain.union(res)
                 else:
-                    logger.debug(f"{self.id} crawl to the end！")
                     break
             else:
                 break
             time.sleep(2)
+        return
 
-    def send_request(self) -> Union[str, None]:
+    def send_request(self) -> Optional[str]:
         """发送接口请求
         
         :return:
@@ -84,19 +86,19 @@ class Custom(object):
                     data: dict = ast.literal_eval(tmp)
                     response = c.post(self.url, data=data)
                 else:
-                    logger.error(f"不支持使用{self.method}方法！")
+                    logger.error(f"[red]{self.id}.yaml The wrong request method was configured![/red]")    # 配置了错误的方法
         except Exception as e:
-            logger.error(f'{self.url} {e}')
+            logger.error(f'[red]{self.id} {self.url} {e}[/red]')
             return
         # 判断响应码是否一致
         if response.status_code == self.code:
             return response.text
         else:
-            logger.error(f"{self.id} error! response code: {response.status_code}")
+            logger.error(f"[red]{self.id} {self.url}, response code error: {response.status_code}[/red]")
             # logger.debug(response.text)
             return
 
-    def run(self) -> list:
+    def run(self) -> Set['str']:
         """类执行入口
         
         :return:
@@ -107,13 +109,8 @@ class Custom(object):
         else:
             response_text: Union[str, None] = self.send_request()
             if response_text:
-                # 解析请求
-                res = match_subdomains(self.domain, response_text)
-                # 删除影响元素
-                res.discard(self.domain)
-                if res:
-                    self.result_domain = self.result_domain.union(res)
+                self.result_domain: Set['str'] = match_subdomains(self.domain, response_text)  # 正则提取页面中域名
+                self.result_domain.discard(self.domain)    # 删除元组中的根域名
 
-        logger.info(f"{self.id}： {len(self.result_domain)} results found!")
-        logger.debug(f"{self.id}： {self.result_domain}")
-        return list(self.result_domain)
+        logger.info(f"{self.id}: {len(self.result_domain)} results found!")
+        return self.result_domain

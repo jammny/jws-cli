@@ -1,6 +1,23 @@
-# JWS-CLI  
+#
 
-> 前言：目标是做一款全自动化信息收集工具，仅需一行命令就解放双手。本项目适用于辅助测试人员在攻防演练和SRC项目场景下进行快速信息收集和资产梳理。所以下面每个模块都可以单独使用。最后，切勿将本工具和技术用于网络犯罪，三思而后行！
+<p align="center">
+  <a href="http://afrog.net"><img src="images/afrog-logo.svg" width="60px" alt="afrog"></a>
+</p>
+<!-- </a> <h1 align="center">afrog</h1> -->
+
+<h4 align="center">JWS-CLI</h4>
+
+<p align="center">
+<img src="https://img.shields.io/github/go-mod/go-version/zan8in/afrog/v2?filename=go.mod">
+<a href="https://github.com/zan8in/afrog/releases"><img src="https://img.shields.io/github/downloads/zan8in/afrog/total">
+<a href="https://github.com/zan8in/afrog/graphs/contributors"><img src="https://img.shields.io/github/contributors-anon/zan8in/afrog">
+<a href="https://github.com/zan8in/afrog/releases/"><img src="https://img.shields.io/github/release/zan8in/afrog">
+<a href="https://github.com/zan8in/afrog/issues"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.swo.moe%2Fstats%2Fgithub%2Fjammny&query=count&color=181717&label=GitHub&labelColor=282c34&logo=github&suffix=+follows&cacheSeconds=3600">
+<a href="https://github.com/zan8in/afrog/discussions"><img src="https://img.shields.io/github/discussions/zan8in/afrog">
+</p>
+
+
+> 前言：目标是。本项目适用于辅助测试人员在攻防演练和SRC项目场景下进行快速信息收集和资产梳理。所以下面每个模块都可以单独使用。最后，切勿将本工具和技术用于网络犯罪，三思而后行！
 
 | 实现功能     | 完成状态    | 调用第三方模块 |
 |----------|---------|---------|

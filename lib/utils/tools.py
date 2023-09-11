@@ -6,16 +6,26 @@
 """
 import re
 import time
-from typing import Union
+from typing import Union, Optional, Set
 
 from IPy import IP
 
 from lib.core.settings import CIDR_CONFIG
 
 
+def match_ip(string: str) -> Set[str]:
+    """从字符串中提取IP
+
+    :param string: 需要处理的字符串
+    :return:
+    """
+    ip_pattern = r'\b(?:\d{1,3}\.){3}\d{1,3}\b'  # 此正则匹配标准IPv4地址
+    return set(re.findall(ip_pattern, string))
+
+
 def domain_format(data: str) -> Union[str, None]:
     """提取字符串中的域名数据
-    
+
     :param data: str
     :return: str
     """
@@ -80,16 +90,7 @@ def runtime_format(start_time: float, end_time: float) -> str:
     return formatted_time
 
 
-def blacklist_ipaddress(data):
-    """物理IP地址 黑名单过滤
-    
-    :return:
-    """
-    black_list = CIDR_CONFIG['blacklist']
-    for i in black_list:
-        if i in data:
-            return False
-    return True
+
 
 
 def blacklist_cidr(ip):
@@ -105,24 +106,6 @@ def blacklist_cidr(ip):
     ]
     return all(i not in cidr for i in black_list)
 
-
-def rex_ip(data: list):
-    """内网ip过滤
-    
-    :param data:
-    :return: dict
-    """
-    rex = re.compile(
-        '^(127\\.0\\.0\\.1)|(localhost)|(10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|(172\\.((1[6-9])|(2\\d)|(3[01]))\\.\\d{1,3}\\.\\d{1,3})|(192\\.168\\.\\d{1,3}\\.\\d{1,3})$')
-    internal_network_ip = [rex.search(i).group() for i in data if rex.search(i)]
-    external_network_ip = [i for i in data if not rex.search(i)]
-    # print(internal_network_ip)
-    # print(external_network_ip)
-    results = {
-        'internal_network_ip': internal_network_ip,
-        'external_network_ip': external_network_ip
-    }
-    return results
 
 
 def get_time():

@@ -7,8 +7,6 @@
 import itertools
 import re
 
-import tldextract
-
 WORDS = None
 NUM_COUNT = 3
 
@@ -31,7 +29,7 @@ def create_registrar():
 PERMUTATOR = create_registrar()
 FAST_PERMUTATOR = create_registrar()
 
-def partiate_domain(domain):
+def partiate_domain(subdomain: str, root_domain):
 	'''
 	Split domain base on subdomain levels.
 	Root+TLD is taken as one part, regardless of its levels (example.co.uk, example.com, ...)
@@ -40,10 +38,9 @@ def partiate_domain(domain):
 	# test.1.foo.example.com -> [test, 1, foo, example.com]
 	# test.2.foo.example.com.cn -> [test, 2, foo, example.com.cn]
 	# test.example.co.uk -> [test, example.co.uk]
-
-	ext = tldextract.extract(domain.lower())
-	parts = (ext.subdomain.split('.') + [ext.registered_domain])
-
+	domain = subdomain.lower().rstrip(f".{root_domain}")
+	parts = domain.split('.')
+	parts.append(root_domain)
 	return parts
 
 @PERMUTATOR
@@ -193,7 +190,7 @@ def replace_word_with_word(parts):
 	return domains
 
 
-def extract_custom_words(domains, wordlen):
+def extract_custom_words(domains, wordlen, root_domain):
 	'''
 	Extend the dictionary based on target's domain naming conventions
 	'''
@@ -201,7 +198,7 @@ def extract_custom_words(domains, wordlen):
 	valid_tokens = set()
 
 	for domain in domains:
-		partition = partiate_domain(domain)[:-1]
+		partition = partiate_domain(domain, root_domain)[:-1]
 		tokens = set(itertools.chain(*[word.lower().split('-') for word in partition]))
 		tokens = tokens.union({word.lower() for word in partition})
 		for t in tokens:
@@ -211,7 +208,7 @@ def extract_custom_words(domains, wordlen):
 	return valid_tokens
 
 
-def init_words(domains: list, wordlist, wordlen, fast):
+def init_words(domains: list, wordlist, wordlen, fast, root_domain):
 	"""
 	读取置换字典
 	"""
@@ -223,29 +220,37 @@ def init_words(domains: list, wordlist, wordlen, fast):
 	if fast:
 		WORDS = WORDS[:10]
 
-	WORDS = list(set(WORDS).union(extract_custom_words(domains, wordlen)))
+	WORDS = list(set(WORDS).union(extract_custom_words(domains, wordlen, root_domain)))
 
 
-def generate(domains, wordlist, wordlen=5, fast=False, skip_init=False):
-	"""
-	生成器，从提供的域生成排列
+def generate(domain_list, wordlist, root_domain, wordlen=5, fast=False, skip_init=False):
+	"""生成器，从提供的域生成排列
+
+	:param domain_list:
+	:param wordlist:
+	:param root_domain:
+	:param wordlen:
+	:param fast:
+	:param skip_init:
+	:return:
 	"""
 	if not skip_init:
-		init_words(domains, wordlist, wordlen, fast)
+		init_words(domain_list, wordlist, wordlen, fast, root_domain)
 
-	for domain in set(domains):
-		parts = partiate_domain(domain)
+	for domain in set(domain_list):
+		parts = partiate_domain(domain, root_domain)
 
 		for perm in (FAST_PERMUTATOR.members if fast else PERMUTATOR.members):
 			for possible_domain in perm(parts):
 				yield possible_domain
 
 
-def run(domains: list, wordlist):
+def run(subdomain_list: list, wordlist: list, root_domain: str):
 	"""
 	执行入口
+	:param root_domain: 根域名
 	:param wordlist: 置换用的字典
-	:param domains: 接手已存在的域名列表
+	:param subdomain_list: 接手已存在的子域名列表
 	:return: 返回生成好的 fuzz域名列表
 	"""
-	return generate(domains, wordlist)
+	return generate(subdomain_list, wordlist, root_domain)

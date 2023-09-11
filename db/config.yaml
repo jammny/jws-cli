@@ -1,113 +1,92 @@
- # 版本
-version: 0.1.1
+# 开启/关闭 调试模式
+debug_mode: False
+
+# 开启/关闭 数据表格展示
+show_table: True
 
 
-# py可执行文件名字，比如说 python3.8 、 python3 ，默认python
-python_name: "python"
+# 配置程序需要调用的api接口信息 #
+api_key:
+  # 零零信安
+  zero_key: ""
+  zero_size: 200
+
+  quake_key: ""
+  quake_size: 200
+
+  zoomeye_mail: ""  # zoomeye账号
+  zoomeye_pass: ""      # zoomeye密码
+  zoomeye_size: 200   # 最大检索量
+
+  hunter_key: ""
+  hunter_size: 200  # 最大检索量
+
+  fofa_email: ""
+  fofa_key: ""
+  fofa_size: 200   # 最大检索量
+
+  securitytrails_key: ""
+
+  fullhunt_key: ""
+
+  binaryedge_key: ""
+
+  censys_id: ""
+  censys_secret: ""
 
 
-# 开启/关闭 debug信息显示
-debug_info: False
-
-
-# 自动化测试，可以选择关闭的模块
+# 自动化扫描配置 #
+# 默认情况下，程序自动进行子域名收集和存活资产探测任务。你也可以根据自己的需求，自由搭配需要开启的扫描模块。
 auto_setting:
-  port_scan: True     # 开启/关闭 端口扫描
-  cidr_scan: True     # 开启/关闭 C段扫描
-  waf_scan: True      # 开启/关闭 WAF扫描
-  dir_scan: False      # 开启/关闭 目录扫描
-  poc_scan: False      # 开启/关闭 POC扫描
+  port_scan: True  # 开启/关闭 主机端口扫描。
+  cidr_scan: True  # 开启/关闭 C段资产扫描。
+  poc_scan: True   # 开启/关闭 POC漏洞扫描。
 
+  # 开启/关闭 智能模式。
+  # 智能模式下，会减少开销。仅对没有waf的url进行POC扫描。
+  smart_mode: True
 
-## 子域名扫描配置
-sub_scan:
-  brute_scan: True      # 开启/关闭 爆破扫描
-  brute_thread: 1000    # 爆破域名时候的线程
-  brute_fuzzy: False     # 开启/关闭 域名置换（注意：如果fuzz生成的字典较大，可能会导致爆破时间很长。）
-
-  api_key:
-    # zoomeye可以免费注册帐号密码
-    # https://www.zoomeye.org/
-    zoomeye_mail: ""
-    zoomeye_pass: ""
-
-    # hunter的api可免费获取，每天限量500条数据
-    # https://hunter.qianxin.com/
-    hunter_key: ""
-
-    # securitytrails的api可免费获取
-    # https://securitytrails.com
-    securitytrails_key: ""
-
-    # fullhunt的api可免费获取
-    # https://fullhunt.io/search
-    fullhunt_key: ""
-
-    # Binaryedge免费注册获取API, 有效期只有1个月，到期之后可以再次生成，每月可以查询250次。
-    # https://app.binaryedge.io/account/api
-    binaryedge_key: ""
-
-    # censys可以免费注册api, 每个月有次数限制。
-    # https://search.censys.io/
-    censys_id: ""
-    censys_secret: ""
-
-    # fofa的api需要自费获取，因为我有key，所以就加一个吧
-    # https://fofa.info/
-    fofa_email: ""
-    fofa_key: ""
-    fofa_size: "3000"
-
-
-## 端口扫描配置
-port_scan:
-  timeout: 3
-  thread_num : 1000
-  port_range: '21,22,23,80-99,135,139,442-445,666,800,801,808,880,888,889,1000-2379,3000-10010,11115,12018,12443,14000,16080,18000-18098,19001,19080,20000,20720,21000,21501,21502,28018,20880,27017'
-  skip_alive: True  # 跳过IP存活检测
-
-
-# C段扫描，参数配置
-cidr_scan:
-  method: fofa    # 扫描方式，可选参数：fofa, system
-  blacklist: [
+  # 支持通过定制化黑名单列表排除没有意义的C段资产，仅当 cidr_scan = True 时有效，列表中的值对应IP解析后的地址信息
+  filter_blacklist: [
       '微软', '阿里云', '阿里云BGP节点', '阿里云BGP服务器', '阿里巴巴', 'Microsoft', 'CDN', 'Azure', '华为', '华为云',
       '腾讯云', '网宿', 'Amazon', '运营商','世纪互联BGP数据中心', '内部网', '局域网', '对方和您在同一内部网', '亚马逊', '127.0.0.1'
   ]
-  skip_alive: False     # 跳过IP存活检测
-  occurrence_limit: 2   # 如果C段统计出现次数，大于1才扫描
+
+  # 开启/关闭 生成扫描报告
+  generate_report: True
+
+  # 邮箱信息配置
+  smtp_server: smtp.163.com         # smtp 邮箱服务器
+  smtp_port: 465                    # smtp 端口号
+  send_email: ""   # 发件人邮箱账号
+  send_pass: ""     # 发件人邮箱授权码
+  rec_email: ""     # 收件人邮箱, 如果有多个收件人需要使用英文逗号隔开
 
 
-# POC扫描，参数配置
+# 子域名扫描配置 #
+# 默认情况下，程序自动进行被动子域名信息收集，支持使用域名置换技术生成fuzz字典，支持额外调用ksubdomain来完成域名遍历任务。
+sub_scan:
+  # 爆破模式参数。
+  brute_engine: "ksubdomain"   # 可选参数：system 和 ksubdomain。
+  brute_fuzzy: False     # 开启/关闭 域名置换技术。
+
+
+# 端口扫描配置 #
+# 默认情况下，程序会对主机进行存活探测，并对存活的端口进行指纹识别。支持调用nimscan完成端口扫描任务，支持自定义要扫描的端口范围。
+port_scan:
+  engine: "nimscan"   # 可选参数：system 和 nimscan。
+  banner_status: True # 开启/关闭 指纹识别。
+  port_range: '21,22,23,80-99,135,139,442-445,666,800,801,808,880,888,889,1000-2379,3000-10010,11115,12018,12443,14000,16080,18000-18098,19001,19080,20000,20720,21000,21501,21502,28018,20880,27017'
+
+
+# C段扫描配置 #
+# 支持统计目标C段中，资产IP出现的次数；支持使用 occurrence_limit 参数跳过不符合条件的C段。
+cidr_scan:
+  engine: "fofa"    # 可选参数：system 和 fofa
+  occurrence_limit: 2   # 如果相同C段统计IP出现次数，次数>=2才扫描
+
+
+# POC扫描配置 #
+# 支持调用afrog完成扫描任务。
 poc_scan:
-  afrog_engine: True
-
-
-# 目录扫描，参数配置
-dir_scan:
-  threads: "30"   # 线程数
-  match_code: ""  # 需要匹配的HTTP状态码
-  filter_code: ""    # 从响应中过滤HTTP状态码。逗号分隔的代码和范围列表
-  filter_lines: ""   # 从响应中过滤行数
-  filter_world: ""   # 从响应中过滤单词
-  filter_size: ""    # 从响应中过滤大小
-  filter_regexp: ""  # 从响应中过滤正则关键字
-
-
-# 163邮箱信息配置
-smtp_server: smtp.163.com         # 邮箱服务器
-smtp_port: 465                    # 端口号
-send_email: ""     # 发件人邮箱账号
-send_pass: ""       # 发件人邮箱授权码
-rec_email: ""       # 收件人邮箱,如果有多个收件人需要使用英文逗号隔开
-
-
-# 自定义user-agent
-user-agent:
-  - Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
-  - Mozilla/5.0 (Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0
-  - Mozilla/5.0 (Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0
-  - Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:57.0) Gecko/20100101 Firefox/57.0
-  - Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:58.0) Gecko/20100101 Firefox/58.0
-  - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36
-  - Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0
+  engine: "afrog"   # 可选参数：afrog

@@ -4,155 +4,147 @@
 前言：切勿将本工具和技术用于网络犯罪，三思而后行！
 文件描述： 控制中心。
 """
-from time import time
+from lib.core.settings import POC_CONFIG, BRUTE_ENGINE, BRUTE_FUZZY, PORT_CONFIG, CIDR_CONFIG
+from lib.core.report import Report
+from lib.modules.auto.auto_scan import AutoScan
+from lib.modules.cidr.cidr_scan import Cidr
+from lib.modules.company.company_scan import CompanyScan
+from lib.modules.poc.poc_scan import PocScan
+from lib.modules.port.port_scan import PortScan
+from lib.modules.search.api_fofa import Fofa
 
-from lib.core.settings import POC_CONFIG
-from lib.core.report import save_results
-from lib.modules.auto.autoscan import AutoScan
-from lib.modules.cidr.cidrscan import Cidr
-from lib.modules.firm.firmscan import FirmScan
-from lib.modules.port.portscan import PortScan
-from lib.modules.sub.search.fofa_api import Fofa
-from lib.modules.sub.subscan import SubScan
-from lib.modules.finger.fingerscan import FingerJScan
-from lib.modules.cdn.cdnscan import CdnScan
-from lib.modules.thirdparty import afrog, ffuf, wafw00f
-from lib.utils.log import logger
-from lib.utils.tools import runtime_format
+from lib.modules.sub.sub_scan import SubScan
+from lib.modules.finger.finger_scan import FingerJScan
 
 __all__ = ['Router', ]
 
 
 class Router(object):
-    @staticmethod
-    def args_auto(target_list: list) -> None:
-        """自动化扫描
-
-        :param target_list: 目标域名列表
-        :return:
-        """
-        start = time()
-        for target in target_list:
-            logger.info(f"Current task: AutoScan | Target numbers: {len(target_list)} | ")
-            AutoScan().run(target)
-        logger.info(f"AutoScan task finished! Total time: {runtime_format(start, time())}")
-        return
+    def __init__(self, targets_list: list) -> None:
+        self.targets_list: list = targets_list  # 待扫描目标列表
 
     @staticmethod
-    def args_sub(target_list: list) -> None:
-        """子域名收集
+    def args_fofa(query: str, poc_status: bool) -> None:
+        """fofo接口调用，可搭配poc等模块使用
 
-        :param target_list: 目标域名列表
-        :return: list
-        """
-        for target in target_list:
-            sub_results = SubScan().run(target)
-            save_results(keyword="sub", data=[i['subdomain'] for i in sub_results], name=target)
-        return
-
-    @staticmethod
-    def args_fofa(query: str, finger_status: bool, poc_status: bool) -> None:
-        """Fofo接口调用，搭配finger、poc等模块使用
-        
         :param query: 查询参数
-        :param finger_status: 查询参数
         :param poc_status: 查询参数
         :return:
         """
         fofa_results: list = Fofa(query).run()
         if not fofa_results:
-            pass
-        elif finger_status:
-            finger_results: list = FingerJScan().run(fofa_results)
-            save_results(keyword="finger", data=[i['url'] for i in finger_results])
-        elif poc_status:
-            afrog(fofa_results)
+            return
+
+        target_list = [i[0] for i in fofa_results]
+        finger_results: list = FingerJScan().run(target_list)
+        if not finger_results:
+            return
+
+        if poc_status:
+            url_list = [i['url'] for i in finger_results]
+            engine = POC_CONFIG['engine']
+            scan = PocScan(engine)
+            scan.run(url_list)
+
         return
 
-    @staticmethod
-    def args_finger(target_list: list) -> list:
-        """指纹识别
-        
-        :param target_list: 目标域名列表
-        :return: list
-        """
-        finger_results: list = FingerJScan().run(target_list)
+    def args_auto(self, ) -> None:
+        """自动化扫描"""
+        targets_list: list = self.targets_list
+        for target in targets_list:
+            AutoScan().run(target)
+        return
+
+    def args_sub(self, finger=False) -> None:
+        """子域名收集"""
+
+        targets_list: list = self.targets_list
+        scan = SubScan(brute_fuzzy=BRUTE_FUZZY, engine=BRUTE_ENGINE)
+        for target in targets_list:
+            report = Report(target)
+            sub_results = scan.run(target)
+            if not sub_results:
+                continue
+            report.run('sub', sub_results)
+            data_list = [i['subdomain'] for i in sub_results]
+            report.write_txt('sub', data_list)
+
+            # 判断是否需要web识别 #
+            if not finger:
+                continue
+            finger_results: list = FingerJScan().run(data_list)
+            if finger_results:
+                report.run('sub_web', finger_results)
+                report.write_txt('sub_web', [i['url'] for i in finger_results])
+        return
+
+    def args_finger(self) -> None:
+        """指纹识别"""
+        targets_list: list = self.targets_list
+        finger_results: list = FingerJScan().run(targets_list)
         if finger_results:
-            save_results(keyword="finger", data=[i['url'] for i in finger_results])
-        return finger_results
+            report = Report()
+            report.run('finger_results', finger_results)
+            report.write_txt('finger', [i['url'] for i in finger_results])
+        return
 
-    @staticmethod
-    def args_cdn(target_list: list) -> list:
-        """CDN识别
-        
-        :param target_list: 目标域名列表
-        :return: list
-        """
-        cdn_results: list = CdnScan().run(target_list)
-        if cdn_results:
-            save_results(keyword="cdn", data=[str(i) for i in cdn_results])
-        return cdn_results
+    def args_port(self, finger=None) -> None:
+        """端口扫描"""
+        targets_list: list = self.targets_list
+        port_range: str = PORT_CONFIG['port_range']
+        engine: str = PORT_CONFIG['engine']
+        banner_status: bool = PORT_CONFIG['banner_status']
+        port_results: list = PortScan(port_range, engine, banner_status).run(targets_list)
+        if not port_results:
+            return
+        report = Report()
+        report.run('port_results', port_results)
+        data_list = [f"{i['host']}:{i['port']}" for i in port_results]
+        report.write_txt('port', data_list)
 
-    @staticmethod
-    def args_port(target_list: list) -> list:
-        """端口扫描
-        
-        :param target_list: 目标域名列表
-        :return:
-        """
-        port_results: list = PortScan().run(target_list)
-        if port_results:
-            save_results(keyword="port", data=[f"{i['ip']}:{i['port']}" for i in port_results])
-        return port_results
+        # 判断是否需要web识别 #
+        if not finger:
+            return
+        finger_results: list = FingerJScan().run(data_list)
+        if finger_results:
+            report.run('port_web', finger_results)
+            report.write_txt('port_web', [i['url'] for i in finger_results])
+        return
 
-    @staticmethod
-    def args_cidr(target_list: list) -> list:
-        """C段扫描
+    def args_cidr(self, finger) -> None:
+        """C段扫描"""
+        targets_list: list = self.targets_list
+        engine = CIDR_CONFIG['engine']
+        cidr_results: list = Cidr(engine).run(targets_list)
+        cidr_ip_port = [f"{i['host']}:{i['port']}" for i in cidr_results]
+        if not cidr_results:
+            return
+        report = Report()
+        report.run('cidr_results', cidr_results)
+        report.write_txt('cidr', list(set(cidr_ip_port)))
 
-        :param target_list: 目标域名列表
-        :return:
-        """
-        cidr_results: list = Cidr().run(target_list)
-        cidr_ip_port = [f"{i['ip']}:{i['port']}" for i in cidr_results]
-        cidr_ip_port = list(set(cidr_ip_port))
-        if cidr_results:
-            save_results(keyword="cidr", data=cidr_ip_port)
-        return cidr_results
+        # 判断是否需要web识别 #
+        if not finger:
+            return
+        finger_results: list = FingerJScan().run(cidr_ip_port)
+        if finger_results:
+            report.run('port_web', finger_results)
+            report.write_txt('port_web', [i['url'] for i in finger_results])
+        return
 
-    @staticmethod
-    def args_waf(target_list: list) -> list:
-        """WAF扫描
-        
-        :param target_list: 目标域名列表
-        :return:
-        """
-        return wafw00f(target_list)
+    def args_poc(self) -> None:
+        """poc扫描"""
+        targets_list = self.targets_list
+        engine = POC_CONFIG['engine']
+        PocScan(engine).run(targets_list)
+        return
 
-    @staticmethod
-    def args_dir(target_list: list) -> list:
-        """目录扫描
-
-        :param target_list: 目标域名列表
-        :return:
-        """
-        return ffuf(target_list)
-
-    @staticmethod
-    def args_poc(target_list: list) -> list:
-        """poc扫描
-
-        :param target_list: 目标域名列表
-        :return:
-        """
-        if POC_CONFIG['afrog_engine']:
-            return afrog(target_list)
-
-    @staticmethod
-    def args_firm(target_list: list) -> list:
+    def args_company(target_list: list) -> None:
         """企业信息查询
 
         :param target_list: 目标企业名称
         :return:
         """
-        firm_results: list = FirmScan().run(target_list)
-        return firm_results
+        scan = CompanyScan()
+        scan.run(target_list)
+        return

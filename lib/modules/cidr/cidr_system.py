@@ -6,18 +6,14 @@
 """
 import ipaddress
 
-from lib.utils.log import logger
-
-from lib.modules.port.host_scan import HostScan
-from lib.modules.port.portscan import PortScan
-
-from lib.core.settings import CIDR_CONFIG
+from lib.core.settings import PORT_CONFIG
+from lib.core.log import logger
+from lib.modules.port.port_scan import PortScan
 
 
 class CidrSystem(object):
     def __init__(self):
         self.cidr_results: list = []
-        self.skip_alive: bool = CIDR_CONFIG['skip_alive']
 
     def run(self, cidr: list):
         """类执行入口
@@ -28,13 +24,13 @@ class CidrSystem(object):
         for c in cidr:
             logger.info(f"Scanner {c}...")
             ip_list: list = [str(x) for x in ipaddress.ip_network(c).hosts()]  # 添加对应的C段IP数
-            if self.skip_alive:
-                hosts: list = ip_list
-            else:
-                hosts: list = HostScan().run(ip_list)    # 主机存活检测
+            hosts: list = ip_list
             if hosts:
-                port_results: list = PortScan().run(hosts)
-                # show_table(port_results)
+                port_range = PORT_CONFIG['port_range']
+                engine = PORT_CONFIG['engine']
+                banner_status = PORT_CONFIG['banner_status']
+                s = PortScan(port_range, engine, banner_status)
+                port_results = s.run(hosts)
                 for i in port_results:
                     i['cidr'] = c
                     self.cidr_results.append(i)

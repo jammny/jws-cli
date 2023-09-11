@@ -5,22 +5,21 @@
 文件描述：程序常量数据配置
 """
 import platform
-import yaml
 from pathlib import Path
 
-from rich.console import Console
+import yaml
 
-console = Console(color_system='auto', style=None)
 
-DIRNAME: Path = Path.cwd()    # 当前工作目录
+# 版本信息 #
+VERSION: str = "0.2.0"
 
-# 读取config.yaml配置数据
-with open(DIRNAME / "db/config.yaml", mode="r", encoding="utf-8") as f:
-    CONFIG_DATA = yaml.load(f.read(), Loader=yaml.FullLoader)
+# 操作系统信息 #
+OSNAME: str = platform.system()
 
-VERSION = CONFIG_DATA['version']    # 当前程序版本信息
+# 当前工作目录 #
+DIRNAME: Path = Path.cwd()
 
-# banner信息
+# Banner信息 #
 BANNER: str = (
     "[bold red]   ___  _    _ _____        _____  _     _____ \n"
     "  |_  || |  | /  ___|      /  __ \| |   |_   _|\n"
@@ -32,27 +31,47 @@ BANNER: str = (
     f"https://github.com/jammny    Version: {VERSION}\n"
 )
 
-OSNAME: str = platform.system()    # 操作系统信息
-
-# 指纹识别模块
+# 定义各种目录路径 #
+LOG = DIRNAME / "log"
+WAF_PLUGINS = DIRNAME / "db/plugins/waf"    # 插件目录
+REPORTS: Path = DIRNAME / "reports"     # 报告输出目录
+TMP: Path = DIRNAME / "reports/tmp"   # 缓存目录
+THIRDPARTY_PATH = DIRNAME / "thirdparty"    # 第三方程序目录
+CONFIG_PATH = DIRNAME / "db/config.yaml"    # 配置文件目录
 FINGER: Path = DIRNAME / "db/finger.json"  # 指纹库路径
 
-# CDN模块
-QQWRYPATH: Path = DIRNAME / "db/qqwry.dat"  # 纯真ip数据库路径
+# 读取配置数据 #
+try:
+    with open(CONFIG_PATH, mode="r", encoding="utf-8") as f:
+        CONFIG_DATA = yaml.load(f.read(), Loader=yaml.FullLoader)
+except Exception as e:
+    raise Exception
 
-# 自动扫描配置
+# 数据表格展示
+SHOW_TABLE: bool = CONFIG_DATA['show_table']
+
+# 自动化扫描配置 #
 AUTO_SETTING: dict = CONFIG_DATA['auto_setting']
+SMART_MODE: bool = AUTO_SETTING['smart_mode']
 
-# 子域名模块
-SUBNAMES: Path = DIRNAME / 'db/subnames.txt'
-SUBWORIDS: Path = DIRNAME / 'db/subwords.txt'
-DNS_PATH: Path = DIRNAME / "db/dns"
+# 邮箱配置 #
+SEND_EMAIL = AUTO_SETTING['send_email']
+SEND_PASS = AUTO_SETTING['send_pass']
+REC_EMAIL = AUTO_SETTING['rec_email']
+SMTP_SERVER = AUTO_SETTING['smtp_server']
+SMTP_PORT = AUTO_SETTING['smtp_port']
+
+# 子域名模块 #
 SUB_CONFIG: dict = CONFIG_DATA['sub_scan']
+SUBNAMES: Path = DIRNAME / 'db/dictionary/subnames.txt'
+SUBWORIDS: Path = DIRNAME / 'db/dictionary/subwords.txt'
+DNS_DATASETS_PATH: Path = DIRNAME / "db/subdomain"
+QQWRYPATH: Path = DIRNAME / "db/qqwry.dat"  # 纯真ip数据库路径
+BRUTE_FUZZY = SUB_CONFIG["brute_fuzzy"]
+BRUTE_ENGINE = SUB_CONFIG["brute_engine"]
+API_KEY: dict = CONFIG_DATA["api_key"]
 
-# 目录扫描模块
-DIR_CONFIG: dict = CONFIG_DATA['dir_scan']
-
-# 端口扫描模块
+# 端口扫描模块 #
 PORT_CONFIG: dict = CONFIG_DATA['port_scan']
 
 # C段扫描模块
@@ -61,23 +80,9 @@ CIDR_CONFIG: dict = CONFIG_DATA['cidr_scan']
 # POC模块
 POC_CONFIG: dict = CONFIG_DATA['poc_scan']
 
-# 爬虫/代理模块
-USER_AGENTS = CONFIG_DATA['user-agent']
-
-# 报告/结果输出
-REPORTS: Path = DIRNAME / "reports"
-TMP: Path = DIRNAME / "reports/tmp"
-
-# 第三方模块
-MOD: dict = {
-    "afrog": DIRNAME / "thirdparty/afrog/afrog.exe" if OSNAME == "Windows" else DIRNAME / "thirdparty/afrog/afrog",
-    "ffuf": DIRNAME / "thirdparty/ffuf/ffuf.exe" if OSNAME == "Windows" else DIRNAME / "thirdparty/ffuf/ffuf",
-    "wafw00f": DIRNAME / "thirdparty/wafw00f/main.py",
+# 第三方模块 #
+THIRDPARTY_APP: dict = {
+    "afrog": THIRDPARTY_PATH / "afrog.exe" if OSNAME == "Windows" else THIRDPARTY_PATH / "afrog",
+    "ksubdomain": THIRDPARTY_PATH / "ksubdomain.exe" if OSNAME == "Windows" else THIRDPARTY_PATH / "ksubdomain",
+    "nimscan": THIRDPARTY_PATH / "nimscan.exe" if OSNAME == "Windows" else THIRDPARTY_PATH / "nimscan",
 }
-
-# 邮箱配置
-SEND_EMAIL = CONFIG_DATA['send_email']
-SEND_PASS = CONFIG_DATA['send_pass']
-REC_EMAIL = CONFIG_DATA['rec_email']
-SMTP_SERVER = CONFIG_DATA['smtp_server']
-SMTP_PORT = CONFIG_DATA['smtp_port']

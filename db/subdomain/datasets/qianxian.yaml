@@ -1,0 +1,22 @@
+id: qianxun
+# https://www.dnsscan.cn/dns.html
+
+rule:
+  while: True
+
+  start_page: 1
+  add_num: 1
+
+  request:
+    url: "https://www.dnsscan.cn/dns.html?keywords={domain}&page={page}"
+    method: post
+    header:
+      User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36
+      Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+      Content-Type: application/x-www-form-urlencoded
+    data: "{'ecmsfrom': '127.0.0.1', 'show': '未知', 'num': '', 'classid': '',  'keywords': '{domain}'}"
+    # 响应很慢很慢
+    timeout: 30
+
+  response:
+    code: 200

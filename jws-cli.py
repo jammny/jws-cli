@@ -4,94 +4,63 @@
 前言：切勿将本工具和技术用于网络犯罪，三思而后行！
 文件描述： 程序入口。
 """
-try:
-    from typer import Exit, Typer, Option
-    from rich import print
-    from lib.core.controller import Router
-    from lib.core.settings import BANNER
-    from lib.utils.log import logger
-    from lib.core.check import CheckAll
-except NameError:
-    import sys
-    import os
-    print("Lack of python dependencies, try automatic installation.")
-    os.system("pip3 install -r requirements.txt")
-    print("Now you can try restarting the program.")
-    sys.exit(3)
+from rich import print
+from typer import Typer, Option
+
+from lib.core.settings import BANNER
+from lib.core.check import CheckAll, args_check
+from lib.core.controller import Router
 
 
-def args_check(target: str, file: str, query: str) -> list:
-    """参数检查
+app = Typer()
 
-    :param target: 目标域名
-    :param file: 本地文件
-    :param query: fofa查询语句
-    :raises typer.Exit: 没有必要参数 退出
-    :raises typer.Exit: 如果文件为null 退出
-    :return: 包含目标域名的列表
-    """
-    def fuc(s):
-        return s.rstrip("\n").replace(" ", "").rstrip("/")
 
-    if not (target or file or query):
-        print('You need to provide the args, enter "--help" for help!')
-        raise Exit(code=1)
-    # 文件读取目标
-    if file:
-        with open(file, mode='r', encoding='utf-8') as f:
-            tmp: list = f.readlines()
-            target_list: list = [fuc(i) for i in tmp if fuc(i)]  # 去掉多余的 \n 空格 /
-        if not target_list:
-            logger.error('The file is null!')
-            raise Exit(code=1)
-    else:
-        target_list: list = [target.rstrip("/")]
-    return target_list
+@app.command()
+def main(
+        target: str = Option(None, "--target", "-t", help="目标根域名/URL链接"),
+        file: str = Option(None, "--file", "-f", help="包含目标的文件名"),
+        query: str = Option(None, "--query", "-q", help="空间搜索引擎语法"),
+        company: str = Option(None, "--company", "-c", help="目标企业名称"),
+
+        auto: bool = Option(False, "--auto",
+                            help="自动化扫描: python jws-cli.py -t example.com --auto"),
+        finger: bool = Option(False, "--finger",
+                              help="WEB指纹识别: python jws-cli.py -t https://example.com --finger"),
+        sub: bool = Option(False, "--sub",
+                           help="子域名收集: python jws-cli.py -t example.com --sub [可选：--finger]"),
+        port: bool = Option(False, "--port",
+                            help="端口扫描: python jws-cli.py -t 192.168.2.1 --port [可选：--finger]"),
+        cidr: bool = Option(False, "--cidr",
+                            help="C端扫描: python jws-cli.py -t 192.168.2.1 --cidr [可选：--finger]"),
+        poc: bool = Option(False, "--poc",
+                           help="POC扫描: python jws-cli.py -t https://example.com --poc"),
+        fofa: bool = Option(False, "--fofa",
+                            help="FOFA搜集: python jws-cli.py -t https://example.com --fofa [可选：--poc]"),
+) -> None:
+    print(BANNER)  # 输出Banner图案
+    targets_list: list = args_check(target, file, query, company)  # 返回需要扫描的目标列表
+    check = CheckAll()
+    check.run()   # 程序兼容性检测
+
+    router = Router(targets_list)
+    if query and fofa:
+        Router.args_fofa(query, poc)  # fofa接口调用
+    elif auto:
+        router.args_auto()  # 自动化扫描
+    elif sub:
+        router.args_sub(finger)   # 域名收集
+    elif port:
+        router.args_port(finger)  # 端口扫描
+    elif cidr:
+        router.args_cidr(finger)  # C段扫描
+    elif finger:
+        router.args_finger()  # 指纹识别
+    elif poc:
+        router.args_poc()  # POC扫描
 
 
 if __name__ == "__main__":
-    app = Typer()
-
-    @app.command()
-    def main(
-            target: str = Option(None, "--target", "-t", help="扫描单个目标.", ),
-            file: str = Option(None, "--file", "-f", help="从文件中读取目标.", ),
-            query: str = Option(None, "--query", "-q", help="接口查询参数.", ),
-            auto: bool = Option(False, "--auto", help="自动化扫描: python jws-cli.py -t example.com --auto"),
-            sub: bool = Option(False, "--sub", help="子域名收集: python jws-cli.py -t example.com --sub"),
-            finger: bool = Option(False, "--finger", help="指纹识别: python jws-cli.py -t https://example.com --finger"),
-            cdn: bool = Option(False, "--cdn", help="CDN识别: python jws-cli.py -t example.com --cdn"),
-            port: bool = Option(False, "--port", help="端口扫描: python jws-cli.py -t 127.0.0.1 --port"),
-            cidr: bool = Option(False, "--cidr", help="C段扫描: python jws-cli.py -t 192.168.1.0/24 --cidr"),
-            waf: bool = Option(False, "--waf", help="waf识别: python jws-cli.py -t https://example.com --waf"),
-            dir_: bool = Option(False, "--dir", help="目录扫描: python jws-cli.py -t https://example.com --dir"),
-            poc: bool = Option(False, "--poc", help="poc扫描: python jws-cli.py -t https://example.com --poc"),
-            firm: bool = Option(False, "--firm", help="国内企业信息查询: python jws-cli.py -t 百度 --firm"),
-            fofa: bool = Option(False, "--fofa", help="FOFA接口: python jws-cli.py -q [FOFA语法] --fofa --finger/--poc"),
-    ) -> None:
-        print(BANNER)  # 输出Banner图案
-        target_list: list = args_check(target, file, query)  # 必要参数检测
-        CheckAll().run()  # 程序兼容性检测
-        if auto:
-            Router.args_auto(target_list)  # 自动化扫描
-        elif fofa:
-            Router.args_fofa(query, finger, poc)  # fofa接口调用
-        elif sub:
-            Router.args_sub(target_list)  # 子域名收集
-        elif finger:
-            Router.args_finger(target_list)  # 指纹识别
-        elif cdn:
-            Router.args_cdn(target_list)  # CDN识别
-        elif port:
-            Router.args_port(target_list)  # 端口扫描
-        elif cidr:
-            Router.args_cidr(target_list)  # C段扫描
-        elif waf:
-            Router.args_waf(target_list)  # waf扫描
-        elif dir_:
-            Router.args_dir(target_list)  # 目录扫描
-        elif poc:
-            Router.args_poc(target_list)  # POC扫描
-        elif firm:
-            Router.args_firm(target_list)  # 企业信息查询
     app()
+
+
+
