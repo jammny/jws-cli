@@ -36,7 +36,6 @@ def domain_format(data: str) -> Union[str, None]:
     else:
         return
 
-
 def match_subdomains(domain: str, html: str, distinct: bool = True, fuzzy: bool = True) -> Union[list, set]:
     """正则匹配域名
     

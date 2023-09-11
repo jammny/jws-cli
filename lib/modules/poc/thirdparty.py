@@ -39,7 +39,7 @@ def afrog(target_list: list, target=None) -> list:
 
     # 将需要扫描的URL写入指定目录下的txt文件，用于afrog读取 #
     path_name, new_path = make_dir(target)
-    target_path: str = f"{new_path}/url_all.txt"
+    target_path: str = f"{new_path}/poc_targets.txt"
     write_status: bool = write_txt(target_path, target_list)
 
     if not write_status:

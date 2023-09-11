@@ -4,13 +4,13 @@
 前言：切勿将本工具和技术用于网络犯罪，三思而后行！
 文件描述： 程序入口。
 """
-from rich import print
 from typer import Typer, Option
 
+from lib.core.log import console
 from lib.core.settings import BANNER
 from lib.core.check import CheckAll, args_check
 from lib.core.controller import Router
-
+from lib.modules.company.company_scan import CompanyScan
 
 app = Typer()
 
@@ -18,12 +18,11 @@ app = Typer()
 @app.command()
 def main(
         target: str = Option(None, "--target", "-t", help="目标根域名/URL链接"),
-        file: str = Option(None, "--file", "-f", help="包含目标的文件名"),
         query: str = Option(None, "--query", "-q", help="空间搜索引擎语法"),
-        company: str = Option(None, "--company", "-c", help="目标企业名称"),
+        file: str = Option(None, "--file", "-f", help="批量扫描, 多个目标之间需要换行分隔"),
+        company: str = Option(None, "--company", "-c", help='企业全称：python jws-cli.py -c "企业全称" --auto'),
 
-        auto: bool = Option(False, "--auto",
-                            help="自动化扫描: python jws-cli.py -t example.com --auto"),
+        auto: bool = Option(False, "--auto", help="自动化扫描: python jws-cli.py -t example.com --auto"),
         finger: bool = Option(False, "--finger",
                               help="WEB指纹识别: python jws-cli.py -t https://example.com --finger"),
         sub: bool = Option(False, "--sub",
@@ -35,9 +34,9 @@ def main(
         poc: bool = Option(False, "--poc",
                            help="POC扫描: python jws-cli.py -t https://example.com --poc"),
         fofa: bool = Option(False, "--fofa",
-                            help="FOFA搜集: python jws-cli.py -t https://example.com --fofa [可选：--poc]"),
+                            help='FOFA搜集: python jws-cli.py -q "fofa语法" --fofa [可选：--poc]'),
 ) -> None:
-    print(BANNER)  # 输出Banner图案
+    console.print(BANNER)  # 输出Banner图案
     targets_list: list = args_check(target, file, query, company)  # 返回需要扫描的目标列表
     check = CheckAll()
     check.run()   # 程序兼容性检测
@@ -45,6 +44,11 @@ def main(
     router = Router(targets_list)
     if query and fofa:
         Router.args_fofa(query, poc)  # fofa接口调用
+    elif company and auto:
+        domain_list = CompanyScan().run(company)
+        if domain_list:
+            r = Router(domain_list)
+            r.args_auto()  # 自动化扫描
     elif auto:
         router.args_auto()  # 自动化扫描
     elif sub:

@@ -33,6 +33,7 @@ def blacklist_ipaddress(data: list) -> bool:
 class AutoScan:
     def __init__(self):
         self.not_waf_url: set = set()  # 用于添加没waf的url目标
+        self.url: set = set()  # 全部可访问的URL链接
 
     def run(self, target: str):
         """任务执行
@@ -40,7 +41,9 @@ class AutoScan:
         :param target:
         :return:
         """
-        url_list = list()    # 全部可访问的URL链接
+        # 有些人分不清楚根域名，删除www. #
+        if target[0:4] == "www.":
+            target = target[4:]
 
         # 第一步，域名收集 #
         sub_results = SubScan(brute_fuzzy=BRUTE_FUZZY, engine=BRUTE_ENGINE).run(target)
@@ -70,7 +73,7 @@ class AutoScan:
         report.run('sub_web', finger_results)
         sub_web: list = [i['url'] for i in finger_results]
         report.write_txt('sub_web', sub_web)
-        url_list += sub_web
+        self.url = self.url.union(set(sub_web))
         # 筛选没有WAF的URL
         self.not_waf_url = self.not_waf_url.union(set([i['url'] for i in finger_results if i['waf'] == "None"]))
         
@@ -94,7 +97,7 @@ class AutoScan:
                     report.run('port_web', finger_results_2)
                     port_web: list = [i['url'] for i in finger_results_2]
                     report.write_txt('port_web', port_web)
-                    url_list += port_web
+                    self.url = self.url.union(set(port_web))
                     # 筛选没有WAF的URL
                     self.not_waf_url = self.not_waf_url.union(set([i['url'] for i in finger_results_2 if i['waf'] == "None"]))
 
@@ -115,17 +118,18 @@ class AutoScan:
                     report.run('cidr_web', finger_results_3)
                     cidr_web: list = [i['url'] for i in finger_results_3]
                     report.write_txt('cidr_web', cidr_web)
-                    url_list += cidr_web
+                    self.url = self.url.union(set(cidr_web))
                     self.not_waf_url = self.not_waf_url.union(set([i['url'] for i in finger_results_3 if i['waf'] == "None"]))
 
         # 筛选出没有防护的目标，方便后续扫描 #
-        report.write_txt('url_not_waf', self.not_waf_url)
-        report.write_txt('url_all', url_list)
+        report.write_txt('urls_not_waf', self.not_waf_url)
+        report.write_txt('urls', self.url)
+
         if SMART_MODE:
             logger.info("Intelligent scan has been enabled.")
             poc_targets: list = list(self.not_waf_url)
         else:
-            poc_targets: list = list(url_list)
+            poc_targets: list = list(self.url)
 
         # POC漏洞扫描 #
         if AUTO_SETTING['poc_scan'] and poc_targets:

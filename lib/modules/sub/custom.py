@@ -88,13 +88,13 @@ class Custom(object):
                 else:
                     logger.error(f"[red]{self.id}.yaml The wrong request method was configured![/red]")    # 配置了错误的方法
         except Exception as e:
-            logger.error(f'[red]{self.id} {self.url} {e}[/red]')
+            logger.error(f'[red]{self.id} {e}[/red]')
             return
         # 判断响应码是否一致
         if response.status_code == self.code:
             return response.text
         else:
-            logger.error(f"[red]{self.id} {self.url}, response code error: {response.status_code}[/red]")
+            logger.error(f"[red]{self.id}, response code error: {response.status_code}[/red]")
             # logger.debug(response.text)
             return
 

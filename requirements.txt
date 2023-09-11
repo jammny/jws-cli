@@ -5,15 +5,12 @@ pymmh3~=0.0.5
 httpx~=0.24.0
 parsel==1.8.1
 ping3~=4.0.4
-eventlet~=0.33.3
 tinydb~=4.7.1
-tldextract~=3.4.0
 IPy~=1.1
 scapy~=2.5
 jinja2~=3.1.2
 qqwry-py3~=1.2.1
 dnspython~=2.3.0
-pandas~=2.0.1
 pluginbase~=1.0.1
 python-Wappalyzer~=0.3.1
 tenacity

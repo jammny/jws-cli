@@ -7,30 +7,38 @@ show_table: True
 
 # 配置程序需要调用的api接口信息 #
 api_key:
-  # 零零信安
+  # 零零信安 https://0.zone/
   zero_key: ""
   zero_size: 200
 
+  # quake https://quake.360.net/quake/#/index
   quake_key: ""
   quake_size: 200
 
+  # zoomeye https://www.zoomeye.org/
   zoomeye_mail: ""  # zoomeye账号
   zoomeye_pass: ""      # zoomeye密码
   zoomeye_size: 200   # 最大检索量
 
+  # hunter https://hunter.qianxin.com/
   hunter_key: ""
   hunter_size: 200  # 最大检索量
 
+  # fofa https://fofa.info/
   fofa_email: ""
   fofa_key: ""
   fofa_size: 200   # 最大检索量
 
+  # securitytrails https://securitytrails.com/
   securitytrails_key: ""
 
+  # fullhunt https://fullhunt.io/search
   fullhunt_key: ""
 
+  # binaryedge https://binaryedge.io/
   binaryedge_key: ""
 
+  # censys https://search.censys.io/
   censys_id: ""
   censys_secret: ""
 
