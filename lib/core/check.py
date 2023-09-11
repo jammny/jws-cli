@@ -92,13 +92,15 @@ class CheckAll(object):
 
         :return:
         """
-        logger.debug("Checking for the latest version...")
-        with Client(timeout=3, verify=False) as c:
+        logger.info("Checking for the latest version...")
+        with Client(verify=False, timeout=3) as c:
             try:
                 response = c.get("https://jammny.github.io/jws/version.txt")
                 new_version: str = response.text.rstrip()
-                if new_version != VERSION:
-                    logger.info(f"Found new version: {new_version} —> https://github.com/jammny/jws-cli")
+                if new_version == VERSION:
+                    logger.info(f"You are currently using the latest version. {new_version}")
+                else:
+                    logger.info(f"[y]Found new version: {new_version} —> https://github.com/jammny/jws-cli[/y]")
             except:
                 pass
 
@@ -116,4 +118,4 @@ class CheckAll(object):
         self.py_version_check()
         self.dir_check()
         self.mod_check()
-        # self.update_check()
+        self.update_check()
