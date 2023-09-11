@@ -134,7 +134,9 @@ class AutoScan:
         # POC漏洞扫描 #
         if AUTO_SETTING['poc_scan'] and poc_targets:
             engine = POC_CONFIG['engine']
-            PocScan(engine).run(poc_targets, target)
+            poc_results: list = PocScan(engine).run(poc_targets, target)
+            if poc_results:
+                report.run('poc', poc_results)
 
         if AUTO_SETTING['generate_report']:
             report.html()   # 生成报告

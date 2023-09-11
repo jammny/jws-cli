@@ -25,5 +25,4 @@ class PocScan:
         if engine == "afrog":
             self.poc_results = afrog(targets_list, target)
 
-        logger.debug(self.poc_results)
         return self.poc_results

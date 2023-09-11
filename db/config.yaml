@@ -4,7 +4,6 @@ debug_mode: False
 # 开启/关闭 数据表格展示
 show_table: True
 
-
 # 配置程序需要调用的api接口信息 #
 api_key:
   # 零零信安 https://0.zone/
