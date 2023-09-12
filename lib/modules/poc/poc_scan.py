@@ -4,6 +4,8 @@
 前言：切勿将本工具和技术用于网络犯罪，三思而后行！
 文件描述： 
 """
+from typing import List
+
 from lib.modules.poc.thirdparty import afrog
 from lib.core.log import logger
 
@@ -13,7 +15,7 @@ class PocScan:
         self.engine = engine
         self.poc_results = []
 
-    def run(self, targets_list: list, target=None):
+    def run(self, targets_list: list, target=None) -> List[dict]:
         """
 
         :param target: 自动化扫描的时候，传入域名。
@@ -24,5 +26,4 @@ class PocScan:
         engine = self.engine
         if engine == "afrog":
             self.poc_results = afrog(targets_list, target)
-
         return self.poc_results

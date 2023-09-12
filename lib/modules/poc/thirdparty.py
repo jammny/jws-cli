@@ -49,16 +49,18 @@ def afrog(target_list: list, target=None) -> list:
     output: str = f"{new_path}/poc_afrog"
     command: str = f"{app} -T {target_path} -o {output}.html -j {output}.json"
     system(command)
-    res: list = read_json_file(output)
-    if res:
-        afrog_results: list = read_json_file(output)
-        logger.info(f"Output: {output}")
-        for i in afrog_results:
-            poc_results.append({
-                'id': i['pocinfo']['id'],
-                'name': i['pocinfo']['infoname'],
-                'seg': i['pocinfo']['infoseg'],
-                'url': i['fulltarget'],
-                'description': i['pocinfo']['infodescription'],
-            })
+    afrog_results: list = read_json_file(f"{output}.json")
+    if not afrog_results:
+        return poc_results
+
+    logger.info(f"Output: {output}.json")
+    for i in afrog_results:
+        poc_results.append({
+            'id': i['pocinfo']['id'],
+            'name': i['pocinfo']['infoname'],
+            'seg': i['pocinfo']['infoseg'],
+            'url': i['fulltarget'],
+            'description': i['pocinfo']['infodescription'],
+        })
+    print(poc_results)
     return poc_results

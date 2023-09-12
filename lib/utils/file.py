@@ -12,7 +12,7 @@ def read_json_file(path: str) -> Union[list, dict, None]:
         with open(path, mode='r', encoding="utf-8") as f:
             json_data: Union[list, dict] = json.load(f)
         return json_data
-    except:
+    except Exception as e:
         return
 
 
