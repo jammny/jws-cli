@@ -55,12 +55,15 @@ def afrog(target_list: list, target=None) -> list:
 
     logger.info(f"Output: {output}.json")
     for i in afrog_results:
+        try:
+            url = i['fulltarget']
+        except:
+            url = ""
         poc_results.append({
             'id': i['pocinfo']['id'],
             'name': i['pocinfo']['infoname'],
             'seg': i['pocinfo']['infoseg'],
-            'url': i['fulltarget'],
-            'description': i['pocinfo']['infodescription'],
+            'url': url,
         })
-    print(poc_results)
+
     return poc_results

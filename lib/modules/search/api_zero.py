@@ -52,7 +52,6 @@ class Zero(ApiBase):
 
         # 正则提取页面中域名
         self.result_domain: Set[str] = match_subdomains(domain, str(response_json))
-        print(self.result_domain)
 
         # 根据搜索出的检索量和设定配置，循环遍历页数 #
         try:
