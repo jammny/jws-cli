@@ -105,14 +105,13 @@ class AutoScan:
         if AUTO_SETTING['cidr_scan'] and external_network_ip:
             ip_list = [i['ip'][0] for i in sub_results if i['cdn'] == '' and blacklist_ipaddress(i['address'][0])]
             engine = CIDR_CONFIG['engine']
-            cidr_results: list = Cidr(engine).run(ip_list, auto=True)
+            cidr_results, cidr_counter = Cidr(engine).run(ip_list, auto=True)
+            report.write_txt('cidr_counter', cidr_counter)
             if cidr_results:
                 report.run('cidr', cidr_results)
-
                 cidr_host_port = [f"{i['host']}:{i['port']}" for i in cidr_results]
                 cidr_port: list = list(set(cidr_host_port))  # 去重
                 report.write_txt('cidr_port', cidr_port)
-
                 finger_results_3: list = FingerJScan().run(cidr_port)
                 if finger_results_3:
                     report.run('cidr_web', finger_results_3)

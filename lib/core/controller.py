@@ -115,13 +115,14 @@ class Router(object):
         """C段扫描"""
         targets_list: list = self.targets_list
         engine = CIDR_CONFIG['engine']
-        cidr_results: list = Cidr(engine).run(targets_list)
+        cidr_results, cidr_counter = Cidr(engine).run(targets_list)
         cidr_ip_port = [f"{i['host']}:{i['port']}" for i in cidr_results]
         if not cidr_results:
             return
         report = Report()
         report.run('cidr_results', cidr_results)
         report.write_txt('cidr', list(set(cidr_ip_port)))
+        report.write_txt('cidr_counter', cidr_counter)
 
         # 判断是否需要web识别 #
         if not finger:
