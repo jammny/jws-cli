@@ -4,7 +4,6 @@
 前言：切勿将本工具和技术用于网络犯罪，三思而后行！
 文件描述： 利用协程写了一个端口扫描模块。
 """
-from time import time
 from collections import Counter
 
 from IPy import IP
@@ -12,7 +11,6 @@ from IPy import IP
 from .thirdparty import CidrFofa
 from .cidr_system import CidrSystem
 
-from lib.utils.tools import runtime_format
 from lib.core.log import logger
 
 from lib.core.settings import CIDR_CONFIG, SHOW_TABLE
@@ -77,7 +75,6 @@ class Cidr:
         :param target_list:
         :return:
         """
-        start: float = time()
         engine = self.engine
 
         if not target_list:
@@ -93,15 +90,14 @@ class Cidr:
 
         if engine == 'fofa':
             self.cidr_results = CidrFofa().run(cidr)
-            if not self.cidr_results:    # 如果fofa不能用,就用系统默认扫描方法。
-                self.cidr_results = CidrSystem().run(cidr)
+            # if not self.cidr_results:    # 如果fofa不能用,就用系统默认扫描方法。
+                # self.cidr_results = CidrSystem().run(cidr)
         elif engine == 'system':
             self.cidr_results = CidrSystem().run(cidr)
 
         if SHOW_TABLE:
             self.show_table()
 
-        logger.info(f"CIDR task finished! Total time: {runtime_format(start, time())}")
-        logger.info(f"Effective collection quantity: {len(self.cidr_results)}")
+        logger.info(f"CIDR task finished! Effective collection quantity: {len(self.cidr_results)}")
         return self.cidr_results
 
