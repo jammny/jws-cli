@@ -50,7 +50,7 @@ class SendEmail:
             server.quit()  # 关闭连接
             logger.info("[g]Email sent successfully![/g]")
         except Exception as e:
-            logger.error(f"[r]Email sending failed! {e} [/r]")
+            logger.error(f"[red]Email sending failed! {e} [/red]")
 
     def send_msg(self, mail_msg: str):
         try:
@@ -67,4 +67,4 @@ class SendEmail:
             smtpObj.sendmail(self.my_sender, receivers, message.as_string())
             logger.info("Email sent successfully！")
         except Exception as e:
-            logger.error(f"Email sending failed！ {e}")
+            logger.error(f"[red]Email sending failed！ {e}[/red]")

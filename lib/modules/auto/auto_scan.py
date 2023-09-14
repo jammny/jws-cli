@@ -67,15 +67,15 @@ class AutoScan:
         
         # 将收集到的域名，进行web指纹识别 #
         finger_results: list = FingerJScan().run(targets_list)
-        if not finger_results:
-            logger.info("[bold yellow]No web link found![/bold yellow]")
-            return
-        report.run('sub_web', finger_results)
-        sub_web: list = [i['url'] for i in finger_results]
-        report.write_txt('sub_web', sub_web)
-        self.url = self.url.union(set(sub_web))
-        # 筛选没有WAF的URL
-        self.not_waf_url = self.not_waf_url.union(set([i['url'] for i in finger_results if i['waf'] == "None"]))
+        if finger_results:
+            report.run('sub_web', finger_results)
+            sub_web: list = [i['url'] for i in finger_results]
+            report.write_txt('sub_web', sub_web)
+            self.url = self.url.union(set(sub_web))
+            # 筛选没有WAF的URL
+            self.not_waf_url = self.not_waf_url.union(set([i['url'] for i in finger_results if i['waf'] == "None"]))
+        else:
+            logger.info("[bold yellow]No subdomain web found![/bold yellow]")
         
         # 对外网的IP进行端口扫描 #
         if not external_network_ip:
@@ -124,6 +124,7 @@ class AutoScan:
         report.write_txt('urls_not_waf', self.not_waf_url)
         report.write_txt('urls', self.url)
 
+        # 智能扫描
         if SMART_MODE:
             logger.info("Intelligent scan has been enabled.")
             poc_targets: list = list(self.not_waf_url)

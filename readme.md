@@ -115,8 +115,8 @@ port_scan:
 # C段扫描配置 #
 # 支持统计目标C段中，资产IP出现的次数；支持使用 occurrence_limit 参数跳过不符合条件的C段。
 cidr_scan:
-  engine: "fofa"    # 可选参数：system 和 fofa
-  occurrence_limit: 2   # 如果相同C段统计IP出现次数，次数>=2才扫描
+  engine: "system"    # 可选参数：system 和 fofa
+  occurrence_limit: 3   # 如果相同C段统计IP出现次数，次数>=3才扫描
 
 
 # POC扫描配置 #
