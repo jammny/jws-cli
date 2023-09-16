@@ -1,11 +1,9 @@
 import aiohttp
-import asyncio
 import json
 import logging
 import pkg_resources
 import re
 import requests
-import warnings
 
 from bs4 import BeautifulSoup
 from typing import Union

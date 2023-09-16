@@ -44,6 +44,7 @@ class AutoScan:
         # 有些人分不清楚根域名，删除www. #
         if target[0:4] == "www.":
             target = target[4:]
+        report = Report(target)
 
         # 第一步，域名收集 #
         sub_results = SubScan(brute_fuzzy=BRUTE_FUZZY, engine=BRUTE_ENGINE).run(target)

@@ -231,6 +231,8 @@ class FingerJScan(object):
         logger.info(f"[g]| Current task: FingerScan | Target numbers: {len(targets_list)} | Fingerprints numbers:"
                     f" {len(self.db.all())} |[/g]")
 
+        # fofa收集后的信息有重复，去重去重
+        targets_list = list(set(targets_list))
         threadpool_task(task=self.scan, queue_data=targets_list)
 
         if SHOW_TABLE:

@@ -103,7 +103,7 @@ class PortScan(object):
             bool_status: bool = check.run(host)
             if bool_status:
                 self.port_results.append(
-                    {'host': host, 'port': "overflow", 'service': "", 'banner': ""})
+                    {'host': host, 'port': "overflow", 'protocol': "", 'banner': ""})
                 continue
 
             # 判断使用什么引擎扫描 #
