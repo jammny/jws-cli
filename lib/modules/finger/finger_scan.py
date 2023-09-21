@@ -101,7 +101,6 @@ class FingerJScan(object):
         headers: dict = self.headers
         # 有时候我们可能需要扫描的列表中，只有IP+端口，这里可以自动补充http协议
         http_url, https_url = (f"http://{url}", f"https://{url}") if "http" not in url else (url, url)
-
         # 优先访问https #
         with Client(verify=False, follow_redirects=True, cookies=cookies, headers=headers, timeout=10) as client:
             try:
@@ -233,10 +232,12 @@ class FingerJScan(object):
 
         # fofa收集后的信息有重复，去重去重
         targets_list = list(set(targets_list))
+
         threadpool_task(task=self.scan, queue_data=targets_list)
 
-        if SHOW_TABLE:
+        if SHOW_TABLE and self.finger_results:
             self.show_table()
-
+        else:
+            logger.info(f"Connection to the target may not be established.")
         logger.info(f"Effective collection quantity: {len(self.finger_results)}")
         return self.finger_results

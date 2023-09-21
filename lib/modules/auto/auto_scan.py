@@ -4,8 +4,11 @@
 前言：切勿将本工具和技术用于网络犯罪，三思而后行！
 文件描述： 自动化扫描任务模块
 """
+from datetime import datetime
+
+from lib.core.dingding import dingtalk_robot
 from lib.core.report import Report
-from lib.core.settings import BRUTE_FUZZY, BRUTE_ENGINE, TMP, AUTO_SETTING, PORT_CONFIG, CIDR_CONFIG, SMART_MODE, \
+from lib.core.settings import BRUTE_FUZZY, BRUTE_ENGINE, AUTO_SETTING, PORT_CONFIG, CIDR_CONFIG, SMART_MODE, \
     REPORTS, POC_CONFIG
 from lib.modules.auto.utils import distinguish_between_ip
 from lib.modules.cidr.cidr_scan import Cidr
@@ -51,6 +54,13 @@ class AutoScan:
         if not sub_results:
             logger.info("[bold yellow]No subdomain name found![/bold yellow]")
             SendEmail(f"{target} scan complete.").send_msg("No subdomian name found.")
+            webhook = AUTO_SETTING['dingding_webhook']
+            secrets = AUTO_SETTING['dingding_secrets']
+            text = f'**{target} scan complete.** \n\n' \
+                   f'**<font color="#dd0000">No subdomian name found.</font>**\n\n' \
+                   f'**发送时间:** {datetime.now().strftime("%Y.%m.%d %H:%M:%S")}\n\n'
+                   #f'**相关网址:**[点击跳转](https://)\n'
+            dingtalk_robot(webhook=webhook, secret=secrets, text=text)
             # 如果没有收集到域名，直接退出
             return
         report = Report(target)
@@ -150,3 +160,11 @@ class AutoScan:
             SendEmail(mail_header).send_file(mail_msg, file_name, report_name)
             logger.info(f"Report Output：{REPORTS}/{target}.html")
 
+            # dingding
+            webhook = AUTO_SETTING['dingding_webhook']
+            secrets = AUTO_SETTING['dingding_secrets']
+            text = f'**{mail_header}** \n\n' \
+                   f'<font color="#dd0000">The information collection scan report has been generated.</font>\n\n' \
+                   f'**发送时间:** {datetime.now().strftime("%Y.%m.%d %H:%M:%S")}\n\n'
+                   #f'**相关网址:**[点击跳转](https://)\n'
+            dingtalk_robot(webhook=webhook, secret=secrets, text=text)

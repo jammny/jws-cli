@@ -99,4 +99,3 @@ class Report:
         """
         # 将数据写入数据库 #
         self.db_insert(key_name, value)
-

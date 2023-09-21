@@ -18,22 +18,22 @@
     </fieldset>
     <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
         <ul class="layui-tab-title">
-            <li class="layui-this">Subdomain</li>
-            <li>Domain Asset</li>
-            <li>Port</li>
-            <li>Port Assets</li>
-            <li>CIDR</li>
-            <li>CIDR Assets</li>
-            <li>POC Result</li>
+            {% if data['sub'] %}<li class="layui-this">Subdomain</li>{% endif %}
+            {% if data['sub_web'] %}<li>Domain Asset</li>{% endif %}
+            {% if data['port'] %}<li>Port</li>{% endif %}
+            {% if data['port_web'] %}<li>Port Assets</li>{% endif %}
+            {% if data['cidr'] %}<li>CIDR</li>{% endif %}
+            {% if data['cidr_web'] %}<li>CIDR Assets</li>{% endif %}
+            {% if data['poc'] %}<li>POC Result</li>{% endif %}
         </ul>
         <div class="layui-tab-content" style="height: 100%;">
-            <div class="layui-tab-item layui-show"><table class="layui-hide" id="sub"></table></div>
-            <div class="layui-tab-item"><table class="layui-hide" id="sub_web"></table></div>
-            <div class="layui-tab-item"><table class="layui-hide" id="port"></table></div>
-            <div class="layui-tab-item"><table class="layui-hide" id="port_web"></table></div>
-            <div class="layui-tab-item"><table class="layui-hide" id="cidr"></table></div>
-            <div class="layui-tab-item"><table class="layui-hide" id="cidr_web"></table></div>
-            <div class="layui-tab-item"><table class="layui-hide" id="poc"></table></div>
+            {% if data['sub'] %}<div class="layui-tab-item layui-show"><table class="layui-hide" id="sub"></table></div>{% endif %}
+            {% if data['sub_web'] %}<div class="layui-tab-item"><table class="layui-hide" id="sub_web"></table></div>{% endif %}
+            {% if data['port'] %}<div class="layui-tab-item"><table class="layui-hide" id="port"></table></div>{% endif %}
+            {% if data['port_web'] %}<div class="layui-tab-item"><table class="layui-hide" id="port_web"></table></div>{% endif %}
+            {% if data['cidr'] %}<div class="layui-tab-item"><table class="layui-hide" id="cidr"></table></div>{% endif %}
+            {% if data['cidr_web'] %}<div class="layui-tab-item"><table class="layui-hide" id="cidr_web"></table></div>{% endif %}
+            {% if data['poc'] %}<div class="layui-tab-item"><table class="layui-hide" id="poc"></table></div>{% endif %}
         </div>
     </div>
 

@@ -4,7 +4,7 @@
 前言：切勿将本工具和技术用于网络犯罪，三思而后行！
 文件描述： 控制中心。
 """
-from lib.core.settings import POC_CONFIG, BRUTE_ENGINE, BRUTE_FUZZY, PORT_CONFIG, CIDR_CONFIG
+from lib.core.settings import POC_CONFIG, BRUTE_ENGINE, BRUTE_FUZZY, PORT_CONFIG, CIDR_CONFIG, AUTO_SETTING
 from lib.core.report import Report
 from lib.modules.auto.auto_scan import AutoScan
 from lib.modules.cidr.cidr_scan import Cidr
@@ -120,7 +120,7 @@ class Router(object):
         if not cidr_results:
             return
         report = Report()
-        report.run('cidr_results', cidr_results)
+        report.run('cidr', cidr_results)
         report.write_txt('cidr', list(set(cidr_ip_port)))
         report.write_txt('cidr_counter', cidr_counter)
 
@@ -129,8 +129,10 @@ class Router(object):
             return
         finger_results: list = FingerJScan().run(cidr_ip_port)
         if finger_results:
-            report.run('port_web', finger_results)
-            report.write_txt('port_web', [i['url'] for i in finger_results])
+            report.run('cidr_web', finger_results)
+            report.write_txt('cidr_web', [i['url'] for i in finger_results])
+            if AUTO_SETTING['generate_report']:
+                report.html()  # 生成报告
         return
 
     def args_poc(self) -> None:
@@ -140,7 +142,7 @@ class Router(object):
         PocScan(engine).run(targets_list)
         return
 
-    def args_company(target_list: list) -> None:
+    def args_company(self, target_list: list) -> None:
         """企业信息查询
 
         :param target_list: 目标企业名称
