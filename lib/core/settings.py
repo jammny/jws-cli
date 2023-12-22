@@ -28,7 +28,7 @@ BANNER: str = (
     "/\__/ /\  /\  /\__/ /      | \__/\| |_____| |_ \n"
     "\____/  \/  \/\____/        \____/\_____/\___/ [/bold red]\n"
     "\n"
-    f"https://github.com/jammny    Version: {VERSION}\n"
+    f"https://github.com/jammny/jws-cli    {VERSION}\n"
 )
 
 # 定义各种目录路径 #
